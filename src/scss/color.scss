@@ -1,0 +1,12 @@
+$body-color: #f8f9fa;
+$white-color: #ffffff;
+$black-color: #000000;
+
+$myprimary-color: #003cb2;
+
+.bg-myprimary-color {
+  background-color: $myprimary-color;
+}
+.text-myprimary-color {
+  color: $myprimary-color;
+}

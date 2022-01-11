@@ -1,0 +1,52 @@
+{
+  "name": "meter-staking",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "./node_modules/.bin/eslint src",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "./node_modules/.bin/prettier --write src/*"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "commonjs": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "plugin:prettier/recommended",
+      "eslint:recommended"
+    ]
+  },
+  "dependencies": {
+    "@meterio/devkit": "^1.4.9",
+    "axios": "^0.21.1",
+    "bignumber.js": "^9.0.1",
+    "bnc-onboard": "^1.34.1",
+    "bootstrap-vue": "^2.21.2",
+    "clipboard-polyfill": "^3.0.3",
+    "core-js": "^3.6.5",
+    "ethers": "^5.4.4",
+    "vue": "^2.6.11",
+    "vue-qr": "^2.5.0",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.5.0",
+    "prettier": "^2.2.1"
+  }
+}

@@ -1,0 +1,16 @@
+// sm
+@media (max-width: 575px) {
+  .right-sm-0 {
+    right: 0 !important;
+  }
+}
+// lg
+@media (min-width: 992px) {
+  .right-lg-4 {
+    right: 1.5rem !important;
+  }
+}
+
+.right-3 {
+  right: 1rem;
+}

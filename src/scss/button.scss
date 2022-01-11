@@ -1,0 +1,41 @@
+button {
+  border: none;
+}
+.btn {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-mylight {
+  color: $black-color;
+  background-color: $white-color;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  border: 1px solid $white-color;
+}
+.btn-myprimary {
+  color: $white-color;
+  background-color: $myprimary-color;
+  border: none;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+}
+.btn-mylight:hover {
+  color: $black-color;
+}
+.btn-myprimary:hover {
+  color: $white-color;
+}
+
+.btn-mytext {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+// md
+@media (max-width: 767px) {
+  .btn-md-49-percent {
+    width: 49% !important;
+  }
+}

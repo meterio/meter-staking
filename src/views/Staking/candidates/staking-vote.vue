@@ -147,7 +147,7 @@ export default {
       return ''
     },
     candidateOptions() {
-      return this.candidates
+      const formatCandidate = this.candidates
         .map((c) => {
           return {
             text:
@@ -163,6 +163,14 @@ export default {
         .sort((a, b) => {
           return Math.random() > 0.5 ? 1 : -1;
         });
+
+      return [
+        {
+          text: 'Choose new candidate', 
+          value: ''
+        },
+        ...formatCandidate
+      ]
     },
     bucketOptions() {
       return this.buckets

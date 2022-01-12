@@ -20,33 +20,66 @@
       </thead>
       <tbody>
         <tr v-for="item in computedData" :key="item.address">
-          <td>{{ item.id }}</td>
-          <td>{{ item.owner }}</td>
-          <td>{{ item.candidate }}</td>
+          <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a></td>
+          <td>{{ item._owner }}</td>
+          <td>{{ item._candidate }}</td>
           <td>{{ item.candidateName }}</td>
           <td>{{ item.totalVotes }}</td>
           <td>{{ item.type }}</td>
-          <td>{{ item.state }}</td>
+          <td>{{ item.unbounded ? "Mature " + item.matureFromNow : item.state }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
-              <a class="opt-btn" @click="delegate">delegate</a>
+              <a class="opt-btn" @click="bucketOperations(item)">
+                {{
+                  item.candidate === '0x0000000000000000000000000000000000000000' ? 'delegate' : 'add more'
+                }}
+              </a>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
+    <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
+    <DelegateModal :bucketParams="delegateParams" @close="closeDelegateModal" />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 
+import BucketInformationModal from './bucket-info.vue'
+import UpdateBucketModal from './update-bucket.vue'
+import DelegateModal from './delegate.vue'
+
 export default {
   name: "BucketsTable",
+  components: {
+    BucketInformationModal,
+    UpdateBucketModal,
+    DelegateModal
+  },
   props: {
     data: {
       type: Array,
       required: true
+    }
+  },
+  data() {
+    return {
+      infoParams: {
+        show: false,
+        data: {}
+      },
+      bucketParams: {
+        show: false,
+        data: {}
+      },
+      delegateParams: {
+        show: false,
+        data: {}
+      }
     }
   },
   computed: {
@@ -54,17 +87,13 @@ export default {
     computedData() {
       return this.data.map(b => {
         const t = {
-          id: b.id.substr(0, 11) + '...',
-          owner: b.owner.substr(0, 11) + '...',
-          candidate: b.candidate.substr(0, 11) + '...',
+          ...b,
+          _id: b.id.substr(0, 11) + '...',
+          _owner: b.owner.substr(0, 11) + '...',
+          _candidate: b.candidate.substr(0, 11) + '...',
           votes: new BigNumber(b.value).div(1e18).toFormat(2) + 'MTRG',
           totalVotes: '0',
           bonus: '0',
-
-          owned: false,
-          candidateName: "",
-          matureFromNow: "",
-          state: ""
         }
 
         if (b.bonusVotes) {
@@ -78,7 +107,34 @@ export default {
     }
   },
   methods: {
-    delegate() {}
+    bucketOperations(bucket) {
+      if (bucket.candidate === '0x0000000000000000000000000000000000000000') {
+        this.delegate(bucket)
+      } else {
+        this.addMore(bucket)
+      }
+    },
+    addMore(bucket) {
+      this.bucketParams.show = true
+      this.bucketParams.data = bucket
+    },
+    delegate(bucket) {
+      this.delegateParams.show = true
+      this.delegateParams.data = bucket
+    },
+    info(bucket) {
+      this.infoParams.show = true
+      this.infoParams.data = bucket
+    },
+    closeInfoModal() {
+      this.infoParams.show = false
+    },
+    closeUpdateModal() {
+      this.bucketParams.show = false
+    },
+    closeDelegateModal() {
+      this.delegateParams.show = false
+    }
   }
 }
 </script>

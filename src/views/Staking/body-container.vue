@@ -14,11 +14,15 @@
                     type="button"
                     class="btn btn-primary">LIST ME AS CANDIDATE</button>
                 </div>
-                <div v-if="status === 'bucket'">
+                <div v-if="status === 'bucket'" class="d-flex justify-content-between">
                   <b-form-select
                     v-model="bucketFilterSelection"
                     :options="bucketFilterSelections"
                   ></b-form-select>
+                  <button
+                    @click="createVote"
+                    type="button"
+                    class="btn btn-primary text-nowrap ml-1">CREATE VOTE</button>
                 </div>
               </div>
             </div>
@@ -46,6 +50,8 @@
     </div>
 
     <StakingCandidateModal :stakingCandidateParams="stakingCandidateParams" @close="closeStakingCandidateModal" />
+    <!-- vote modal -->
+    <StakingVoteModal :voteParams="voteParams" @close="closeStakingVoteModal" />
   </div>
 </template>
 <script>
@@ -54,8 +60,10 @@ import CandidatesTable from './candidates/candidates-table.vue'
 import BucketsTable from './buckets/buckets-table.vue'
 import Pagination from '@/components/Pagination'
 import { mapActions, mapMutations, mapState } from 'vuex'
+import moment from 'moment'
 
 import StakingCandidateModal from './candidates/staking-candidate.vue'
+import StakingVoteModal from './candidates/staking-vote.vue'
 
 export default {
   name: "StakingBodyContainer",
@@ -64,7 +72,8 @@ export default {
     CandidatesTable,
     BucketsTable,
     Pagination,
-    StakingCandidateModal
+    StakingCandidateModal,
+    StakingVoteModal
   },
   computed: {
     ...mapState('candidate', ['candidates']),
@@ -91,7 +100,7 @@ export default {
       let filteredBuckets = []
       if (this.bucketFilterSelection === 1) {
         filteredBuckets = this.buckets
-          .filter((b) => b.owner === this.account)
+          // .filter((b) => b.owner === this.account)
           .map((b) => {
             b.owned = true;
             b.candidateName = this.candidateNameMap[b.candidate] || "-";
@@ -104,7 +113,7 @@ export default {
           });
       } else {
         filteredBuckets = this.buckets
-          .filter((b) => b.candidate.toLowerCase() === this.account)
+          // .filter((b) => b.candidate.toLowerCase() === this.account)
           .map((b) => {
             b.owned = false;
             b.candidateName = this.candidateNameMap[b.candidate] || "-";
@@ -126,6 +135,14 @@ export default {
           )
         }
       })
+    },
+    candidateNameMap() {
+      let map = {};
+      for (var i in this.candidates) {
+        const c = this.candidates[i];
+        map[c.address] = c.name;
+      }
+      return map;
     },
     currentData() {
       const start = (this.currentPage - 1) * this.perPage
@@ -149,6 +166,10 @@ export default {
       perPage: 10,
 
       stakingCandidateParams: {
+        show: false,
+        data: {}
+      },
+      voteParams: {
         show: false,
         data: {}
       },
@@ -182,6 +203,12 @@ export default {
     },
     closeStakingCandidateModal() {
       this.stakingCandidateParams.show = false
+    },
+    createVote() {
+      this.voteParams.show = true
+    },
+    closeStakingVoteModal() {
+      this.voteParams.show = false
     }
   }
 }

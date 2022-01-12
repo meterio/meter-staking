@@ -30,6 +30,7 @@
     "clipboard-polyfill": "^3.0.3",
     "core-js": "^3.6.5",
     "ethers": "^5.4.4",
+    "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-qr": "^2.5.0",
     "vue-router": "^3.2.0",

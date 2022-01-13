@@ -6,6 +6,7 @@ const state = {
   getCandidatesloading: true,
   stakingVoteLoading: {},
   stakingCandidateLoading: {},
+  updateCandidateLoading: {},
   candidates: [],
 }
 
@@ -20,6 +21,9 @@ const mutations = {
   },
   setStakingCandidateLoading(state, { name, hash }) {
     state.stakingCandidateLoading = Object.assign({}, { ...state.stakingCandidateLoading }, { [name]: hash })
+  },
+  setUpdateCandidateLoading(state, { name, hash }) {
+    state.updateCandidateLoading = Object.assign({}, { ...state.updateCandidateLoading }, { [name]: hash })
   },
   setCandidates(state, candidates) {
     state.candidates = candidates
@@ -75,6 +79,28 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setStakingCandidateLoading', { name, hash: 'end' })
+    }
+  },
+  async updateCandidate({ rootState, commit, dispatch }, { name, data }) {
+    try {
+      commit('setUpdateCandidateLoading', { name, hash: 'start' })
+      console.log('scriptData', data)
+      const tx = await rootState.wallet.signer.sendTransaction({
+        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        value: 1,
+        data,
+      })
+      console.log('tx', tx)
+      commit('setUpdateCandidateLoading', { name, hash: tx.hash })
+
+      await tx.wait()
+
+      commit('setUpdateCandidateLoading', { name, hash: 'end' })
+
+      dispatch('getCandidates')
+    } catch (e) {
+      console.log(e)
+      commit('setUpdateCandidateLoading', { name, hash: 'end' })
     }
   },
 }

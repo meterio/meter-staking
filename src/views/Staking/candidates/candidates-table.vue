@@ -22,12 +22,13 @@
           <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item.name }}</a></td>
           <td>{{ item._address }}</td>
           <td>{{ item.ipAddr }}</td>
-          <td>{{ item.commission }}</td>
+          <td>{{ item._commission }}</td>
           <td>{{ item.totalVotes }}</td>
           <td>{{ item.bucketsLen }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
               <a class="opt-btn" @click="vote(item)">VOTE</a>
+              <a class="opt-btn ml-1" @click="update(item)">UPDATE</a>
             </div>
           </td>
         </tr>
@@ -37,6 +38,8 @@
     <StakingVoteModal :voteParams="voteParams" @close="closeStakingVoteModal" />
     <!-- candidate information modal -->
     <CandidateInformationModal :infoParams="infoParams" @close="closeInfoModal" />
+    <!-- candidate update -->
+    <CandidateUpdateModal :updateCandidateParams="updateCandidateParams" @close="closeUpdateCandidateModal" />
   </div>
 </template>
 <script>
@@ -44,12 +47,14 @@ import { mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import StakingVoteModal from './staking-vote.vue'
 import CandidateInformationModal from './candidate-info.vue'
+import CandidateUpdateModal from './candidate-update.vue'
 
 export default {
   name: "CadidatesTable",
   components: {
     StakingVoteModal,
-    CandidateInformationModal
+    CandidateInformationModal,
+    CandidateUpdateModal
   },
   props: {
     data: {
@@ -66,11 +71,16 @@ export default {
       infoParams: {
         show: false,
         data: {}
+      },
+      updateCandidateParams: {
+        show: false,
+        data: {}
       }
     }
   },
   computed: {
     ...mapState('candidate', ['getCandidatesloading']),
+    ...mapState('wallet', ['account']),
     computedData() {
       return this.data.map(c => {
         return {
@@ -78,9 +88,9 @@ export default {
           _address: c.address.substr(0, 11) + '...',
           bucketsLen: c.buckets.length,
           totalVotes: new BigNumber(c.totalVotes).div(1e18).toFormat(2) + 'MTRG',
-          commission: c.commission/1e7 + '%',
+          _commission: c.commission/1e7 + '%',
 
-          owned: false
+          owned: String(c.address).toLowerCase() === this.account
         }
       })
     }
@@ -99,6 +109,14 @@ export default {
     },
     closeInfoModal() {
       this.infoParams.show = false
+    },
+    update(candidate) {
+      console.log(candidate)
+      this.updateCandidateParams.show = true
+      this.updateCandidateParams.data = candidate
+    },
+    closeUpdateCandidateModal() {
+      this.updateCandidateParams.show = false
     }
   }
 }

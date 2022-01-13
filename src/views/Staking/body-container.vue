@@ -100,7 +100,7 @@ export default {
       let filteredBuckets = []
       if (this.bucketFilterSelection === 1) {
         filteredBuckets = this.buckets
-          // .filter((b) => b.owner === this.account)
+          // .filter((b) => String(b.owner).toLowerCase() === this.account)
           .map((b) => {
             b.owned = true;
             b.candidateName = this.candidateNameMap[b.candidate] || "-";
@@ -113,7 +113,7 @@ export default {
           });
       } else {
         filteredBuckets = this.buckets
-          // .filter((b) => b.candidate.toLowerCase() === this.account)
+          // .filter((b) => String(b.candidate).toLowerCase() === this.account)
           .map((b) => {
             b.owned = false;
             b.candidateName = this.candidateNameMap[b.candidate] || "-";

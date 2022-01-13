@@ -17,10 +17,12 @@ Vue.config.productionTip = false
 import Divider from '@/components/Divider'
 import CustomizedModal from '@/components/CustomizedModal'
 import CryptoIcon from '@/components/CryptoIcon'
+import AddressLable from '@/components/AddressLable'
 
 Vue.component(Divider.name, Divider)
 Vue.component(CustomizedModal.name, CustomizedModal)
 Vue.component(CryptoIcon.name, CryptoIcon)
+Vue.component(AddressLable.name, AddressLable)
 
 new Vue({
   router,

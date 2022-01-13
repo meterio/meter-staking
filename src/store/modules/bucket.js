@@ -1,4 +1,5 @@
 import { getBuckets } from '@/api'
+import { contractAddress } from '@/constants'
 
 const namespaced = true
 
@@ -7,6 +8,7 @@ const state = {
   buckets: [],
   updateBucketLoading: {},
   delegateLoading: {},
+  unboundLoading: {},
 }
 
 const getters = {}
@@ -24,6 +26,9 @@ const mutations = {
   setDelegateLoading(state, { name, hash }) {
     state.delegateLoading = Object.assign({}, { ...state.delegateLoading }, { [name]: hash })
   },
+  setUnboundLoading(state, { name, hash }) {
+    state.unboundLoading = Object.assign({}, { ...state.unboundLoading }, { [name]: hash })
+  },
 }
 
 const actions = {
@@ -38,7 +43,7 @@ const actions = {
       commit('setUpdateBucketLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const tx = await rootState.wallet.signer.sendTransaction({
-        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        to: contractAddress,
         value: 1,
         data,
       })
@@ -60,7 +65,7 @@ const actions = {
       commit('setDelegateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const tx = await rootState.wallet.signer.sendTransaction({
-        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        to: contractAddress,
         value: 1,
         data,
       })
@@ -75,6 +80,28 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setDelegateLoading', { name, hash: 'end' })
+    }
+  },
+  async unbound({ rootState, commit, dispatch }, { name, data }) {
+    try {
+      commit('setUnboundLoading', { name, hash: 'start' })
+      console.log('scriptData', data)
+      const tx = await rootState.wallet.signer.sendTransaction({
+        to: contractAddress,
+        value: 1,
+        data,
+      })
+      console.log('tx', tx)
+      commit('setUnboundLoading', { name, hash: tx.hash })
+
+      await tx.wait()
+
+      commit('setUnboundLoading', { name, hash: 'end' })
+
+      dispatch('getBuckets')
+    } catch (e) {
+      console.log(e)
+      commit('setUnboundLoading', { name, hash: 'end' })
     }
   },
 }

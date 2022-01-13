@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in computedData" :key="item.address">
+        <tr v-for="(item, i) in computedData" :key="item.address">
           <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a></td>
           <td>{{ item._owner }}</td>
           <td>{{ item._candidate }}</td>
@@ -29,11 +29,17 @@
           <td>{{ item.unbounded ? "Mature " + item.matureFromNow : item.state }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
-              <a class="opt-btn" @click="bucketOperations(item)">
+              <b-button :id="'actions'+ i" variant="primary" class="font-weight-bold py-0 px-2" size="small">···</b-button>
+              <b-popover :target="'actions'+ i" triggers="hover">
+                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="unbound(item)">UNBOUND</a>
+                <a class="opt-btn d-block font-weight-bold" @click="delegate(item)">DELEGATE</a>
+                <a class="opt-btn d-block font-weight-bold" @click="addmore(item)">ADD MORE</a>
+              </b-popover>
+              <!-- <a class="opt-btn" @click="bucketOperations(item)">
                 {{
                   item.candidate === '0x0000000000000000000000000000000000000000' ? 'delegate' : 'add more'
                 }}
-              </a>
+              </a> -->
             </div>
           </td>
         </tr>
@@ -43,6 +49,7 @@
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
     <DelegateModal :bucketParams="delegateParams" @close="closeDelegateModal" />
+    <UnboundModal :unboundParams="unboundParams" @close="closeUnboundModal" />
   </div>
 </template>
 <script>
@@ -52,13 +59,15 @@ import { BigNumber } from 'bignumber.js'
 import BucketInformationModal from './bucket-info.vue'
 import UpdateBucketModal from './update-bucket.vue'
 import DelegateModal from './delegate.vue'
+import UnboundModal from './unbound.vue'
 
 export default {
   name: "BucketsTable",
   components: {
     BucketInformationModal,
     UpdateBucketModal,
-    DelegateModal
+    DelegateModal,
+    UnboundModal
   },
   props: {
     data: {
@@ -79,11 +88,16 @@ export default {
       delegateParams: {
         show: false,
         data: {}
+      },
+      unboundParams: {
+        show: false,
+        data: {}
       }
     }
   },
   computed: {
     ...mapState('bucket', ['loading']),
+    ...mapState('wallet', ['account']),
     computedData() {
       return this.data.map(b => {
         const t = {
@@ -107,14 +121,14 @@ export default {
     }
   },
   methods: {
-    bucketOperations(bucket) {
-      if (bucket.candidate === '0x0000000000000000000000000000000000000000') {
-        this.delegate(bucket)
-      } else {
-        this.addMore(bucket)
-      }
-    },
-    addMore(bucket) {
+    // bucketOperations(bucket) {
+    //   if (bucket.candidate === '0x0000000000000000000000000000000000000000') {
+    //     this.delegate(bucket)
+    //   } else {
+    //     this.addMore(bucket)
+    //   }
+    // },
+    addmore(bucket) {
       this.bucketParams.show = true
       this.bucketParams.data = bucket
     },
@@ -125,6 +139,13 @@ export default {
     info(bucket) {
       this.infoParams.show = true
       this.infoParams.data = bucket
+    },
+    unbound(bucket) {
+      this.unboundParams.show = true
+      this.unboundParams.data = bucket
+    },
+    closeUnboundModal() {
+      this.unboundParams.show = false
     },
     closeInfoModal() {
       this.infoParams.show = false

@@ -16,7 +16,9 @@
         </div>
         <div class="info-section mt-1">
           <div class="name">Candidate Address</div>
-          <div class="font-weight-bold content">{{ infoParams.data.address }}</div>
+          <div class="font-weight-bold content">
+            <AddressLable :address="infoParams.data.address" />
+          </div>
         </div>
         <div class="info-section mt-1">
           <div class="name">IP</div>

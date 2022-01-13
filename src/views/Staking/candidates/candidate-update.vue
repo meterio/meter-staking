@@ -116,6 +116,8 @@
 import { mapActions, mapState } from 'vuex'
 import { ScriptEngine } from '@meterio/devkit'
 
+import { getMeterScanUrl } from '@/api'
+
 export default {
   name: "CandidateUpdateModal",
   props: {
@@ -200,7 +202,7 @@ export default {
       this.updateCandidate({ name: this.formData.name, data: "0x" + dataBuffer.toString("hex")})
     },
     goMeterScan() {
-      const url = this.chainId === 82 ? 'https://scan.meter.io/tx': 'https://scan-warringstakes.meter.io/tx';
+      const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/${this.updateCandidateHash}`, '_blank')
     }
   }

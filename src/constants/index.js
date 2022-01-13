@@ -2,6 +2,10 @@ export const urls = {
   82: 'https://mainnet.meter.io',
   83: 'https://warringstakes.meter.io',
 }
+export const scanUrls = {
+  82: 'https://scan.meter.io',
+  83: 'https://scan-warringstakes.meter.io',
+}
 export const supportNetworkList = [
   {
     networkId: 82,
@@ -50,27 +54,9 @@ export const tokens = [
   },
 ]
 
-export const bnfmt1 = {
-  prefix: '$',
-  decimalSeparator: '.',
-  groupSeparator: ',',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  suffix: '',
-}
-export const bnfmt2 = {
-  prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  suffix: '',
-}
-
 export const regExpList = {
   address: '^0x[A-Za-z0-9]{40}$',
 }
+
+// the contract address send transaction to
+export const contractAddress = '0x616B696e672D6D6F64756c652d61646472657373'

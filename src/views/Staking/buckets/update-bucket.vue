@@ -85,6 +85,8 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import { ScriptEngine } from '@meterio/devkit'
 
+import { getMeterScanUrl } from '@/api'
+
 export default {
   name: "UpdateBucketModal",
   props: {
@@ -165,7 +167,7 @@ export default {
       this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData });
     },
     goMeterScan() {
-      const url = this.chainId === 82 ? 'https://scan.meter.io/tx': 'https://scan-warringstakes.meter.io/tx';
+      const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/${this.updateBucketHash}`, '_blank')
     }
   }

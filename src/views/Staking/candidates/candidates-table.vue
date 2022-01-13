@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in computedData" :key="item.address">
+        <tr v-for="(item, i) in computedData" :key="item.address">
           <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item.name }}</a></td>
           <td>{{ item._address }}</td>
           <td>{{ item.ipAddr }}</td>
@@ -27,8 +27,12 @@
           <td>{{ item.bucketsLen }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
-              <a class="opt-btn" @click="vote(item)">VOTE</a>
-              <a class="opt-btn ml-1" @click="update(item)">UPDATE</a>
+              <b-button :id="'actions'+ i" variant="primary" class="font-weight-bold py-0 px-2" size="small">···</b-button>
+              <b-popover :target="'actions'+ i" triggers="hover">
+                <a class="opt-btn d-block font-weight-bold" @click="vote(item)">VOTE</a>
+                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="update(item)">UPDATE</a>
+                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="uncandidate(item)">UNCANDIDATE</a>
+              </b-popover>
             </div>
           </td>
         </tr>
@@ -40,6 +44,8 @@
     <CandidateInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <!-- candidate update -->
     <CandidateUpdateModal :updateCandidateParams="updateCandidateParams" @close="closeUpdateCandidateModal" />
+    <!-- uncandidate -->
+    <UncandidateModal :uncandidateParams="uncandidateParams" @close="closeUncandidateModal" />
   </div>
 </template>
 <script>
@@ -48,13 +54,15 @@ import { BigNumber } from 'bignumber.js'
 import StakingVoteModal from './staking-vote.vue'
 import CandidateInformationModal from './candidate-info.vue'
 import CandidateUpdateModal from './candidate-update.vue'
+import UncandidateModal from './uncandidate.vue'
 
 export default {
   name: "CadidatesTable",
   components: {
     StakingVoteModal,
     CandidateInformationModal,
-    CandidateUpdateModal
+    CandidateUpdateModal,
+    UncandidateModal
   },
   props: {
     data: {
@@ -73,6 +81,10 @@ export default {
         data: {}
       },
       updateCandidateParams: {
+        show: false,
+        data: {}
+      },
+      uncandidateParams: {
         show: false,
         data: {}
       }
@@ -117,6 +129,13 @@ export default {
     },
     closeUpdateCandidateModal() {
       this.updateCandidateParams.show = false
+    },
+    uncandidate(candidate) {
+      this.uncandidateParams.show = true
+      this.uncandidateParams.data = candidate
+    },
+    closeUncandidateModal() {
+      this.uncandidateParams.show = false
     }
   }
 }

@@ -92,6 +92,8 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import { ScriptEngine } from '@meterio/devkit'
 
+import { getMeterScanUrl } from '@/api'
+
 export default {
   name: "DelegateModal",
   props: {
@@ -198,8 +200,8 @@ export default {
       this.delegate({ name: this.bucketParams.data.candidateName, data: scriptData });
     },
     goMeterScan() {
-      const url = this.chainId === 82 ? 'https://scan.meter.io/tx': 'https://scan-warringstakes.meter.io/tx';
-      window.open(`${url}/${this.delegateHash}`, '_blank')
+      const url = getMeterScanUrl(this.chainId)
+      window.open(`${url}/tx/${this.delegateHash}`, '_blank')
     }
   }
 }

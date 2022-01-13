@@ -16,7 +16,9 @@
         </div>
         <div class="info-section mt-1">
           <div class="name">Candidate</div>
-          <div class="font-weight-bold content">{{ infoParams.data.candidate }}</div>
+          <div class="font-weight-bold content">
+            <AddressLable :address="infoParams.data.candidate" />
+          </div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Votes</div>

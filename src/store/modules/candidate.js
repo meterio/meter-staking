@@ -1,4 +1,5 @@
 import { getCandidates } from '@/api'
+import { contractAddress } from '@/constants'
 
 const namespaced = true
 
@@ -7,6 +8,7 @@ const state = {
   stakingVoteLoading: {},
   stakingCandidateLoading: {},
   updateCandidateLoading: {},
+  uncandidateLoading: {},
   candidates: [],
 }
 
@@ -25,6 +27,9 @@ const mutations = {
   setUpdateCandidateLoading(state, { name, hash }) {
     state.updateCandidateLoading = Object.assign({}, { ...state.updateCandidateLoading }, { [name]: hash })
   },
+  setUncandidateLoading(state, { name, hash }) {
+    state.uncandidateLoading = Object.assign({}, { ...state.uncandidateLoading }, { [name]: hash })
+  },
   setCandidates(state, candidates) {
     state.candidates = candidates
   },
@@ -42,7 +47,7 @@ const actions = {
       commit('setStakingVoteLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const tx = await rootState.wallet.signer.sendTransaction({
-        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        to: contractAddress,
         value: 1,
         data,
       })
@@ -64,7 +69,7 @@ const actions = {
       commit('setStakingCandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const tx = await rootState.wallet.signer.sendTransaction({
-        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        to: contractAddress,
         value: 1,
         data,
       })
@@ -86,7 +91,7 @@ const actions = {
       commit('setUpdateCandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const tx = await rootState.wallet.signer.sendTransaction({
-        to: '0x616B696e672D6D6F64756c652d61646472657373',
+        to: contractAddress,
         value: 1,
         data,
       })
@@ -101,6 +106,28 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUpdateCandidateLoading', { name, hash: 'end' })
+    }
+  },
+  async uncandidate({ rootState, commit, dispatch }, { name, data }) {
+    try {
+      commit('setUncandidateLoading', { name, hash: 'start' })
+      console.log('scriptData', data)
+      const tx = await rootState.wallet.signer.sendTransaction({
+        to: contractAddress,
+        value: 1,
+        data,
+      })
+      console.log('tx', tx)
+      commit('setUncandidateLoading', { name, hash: tx.hash })
+
+      await tx.wait()
+
+      commit('setUncandidateLoading', { name, hash: 'end' })
+
+      dispatch('getCandidates')
+    } catch (e) {
+      console.log(e)
+      commit('setUncandidateLoading', { name, hash: 'end' })
     }
   },
 }

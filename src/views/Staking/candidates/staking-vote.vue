@@ -85,6 +85,8 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import { ScriptEngine } from '@meterio/devkit'
 
+import { getMeterScanUrl } from '@/api'
+
 export default {
   name: "StakingVoteModal",
   props: {
@@ -175,7 +177,7 @@ export default {
     bucketOptions() {
       return this.buckets
         .filter((b) => {
-          return b.owner == this.account;
+          return String(b.owner) == this.account;
         })
         .map((b) => {
           return {
@@ -249,7 +251,7 @@ export default {
       this.stakingVote({ name: this.voteParams.data.name, data: scriptData });
     },
     goMeterScan() {
-      const url = this.chainId === 82 ? 'https://scan.meter.io/tx': 'https://scan-warringstakes.meter.io/tx';
+      const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/${this.stakingVoteHash}`, '_blank')
     }
   }

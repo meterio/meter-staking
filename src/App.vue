@@ -26,11 +26,10 @@ export default {
     WalletBoard,
   },
   data() {
-    const { VUE_APP_BLOCKNATIVE_DAPP_ID, VUE_APP_INFURA_KEY, VUE_APP_MODE } = process.env
+    const { VUE_APP_BLOCKNATIVE_DAPP_ID, VUE_APP_INFURA_KEY } = process.env
     const dappId = VUE_APP_BLOCKNATIVE_DAPP_ID
     const infuraKey = VUE_APP_INFURA_KEY
-    const mode = VUE_APP_MODE
-    console.log(dappId, infuraKey, mode)
+    console.log(dappId, infuraKey)
     return {
       dappId,
       isSelecting: false,

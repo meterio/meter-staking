@@ -9,20 +9,13 @@
               <span class="text-capitalize font-weight-bold">{{ status }}</span>
               <div class="token-list-top-left-switch d-flex flex-column flex-sm-row">
                 <div v-if="status === 'candidate'">
-                  <button
-                    @click="listMeAsCandidate"
-                    type="button"
-                    class="btn btn-primary">LIST ME AS CANDIDATE</button>
+                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary">LIST ME AS CANDIDATE</button>
                 </div>
                 <div v-if="status === 'bucket'" class="d-flex justify-content-between">
-                  <b-form-select
-                    v-model="bucketFilterSelection"
-                    :options="bucketFilterSelections"
-                  ></b-form-select>
-                  <button
-                    @click="createVote"
-                    type="button"
-                    class="btn btn-primary text-nowrap ml-1">CREATE VOTE</button>
+                  <b-form-select v-model="bucketFilterSelection" :options="bucketFilterSelections"></b-form-select>
+                  <button @click="createVote" type="button" class="btn btn-primary text-nowrap ml-1">
+                    CREATE VOTE
+                  </button>
                 </div>
               </div>
             </div>
@@ -45,7 +38,13 @@
         <BucketsTable :data="currentData" />
       </div>
       <div class="pagination">
-        <Pagination :totalRows="totalRows" :currentPage="currentPage" :perPage="perPage" @pageChange="pageChange" />
+        <Pagination
+          v-if="currentData.length"
+          :totalRows="totalRows"
+          :currentPage="currentPage"
+          :perPage="perPage"
+          @pageChange="pageChange"
+        />
       </div>
     </div>
 
@@ -66,14 +65,14 @@ import StakingCandidateModal from './candidates/staking-candidate.vue'
 import StakingVoteModal from './candidates/staking-vote.vue'
 
 export default {
-  name: "StakingBodyContainer",
+  name: 'StakingBodyContainer',
   components: {
     Divider,
     CandidatesTable,
     BucketsTable,
     Pagination,
     StakingCandidateModal,
-    StakingVoteModal
+    StakingVoteModal,
   },
   computed: {
     ...mapState('candidate', ['candidates']),
@@ -85,7 +84,7 @@ export default {
     },
     filterData() {
       if (this.status === 'candidate') {
-        return this.candidates.filter(candidate => {
+        return this.candidates.filter((candidate) => {
           if (this.searchAim.trim() === '') {
             return true
           } else {
@@ -100,32 +99,28 @@ export default {
       let filteredBuckets = []
       if (this.bucketFilterSelection === 1) {
         filteredBuckets = this.buckets
-          // .filter((b) => String(b.owner).toLowerCase() === this.account)
+          .filter((b) => String(b.owner).toLowerCase() === this.account)
           .map((b) => {
-            b.owned = true;
-            b.candidateName = this.candidateNameMap[b.candidate] || "-";
-            b.matureFromNow = b.unbounded
-              ? moment.utc(1000 * Number(b.matureTime)).fromNow()
-              : "";
-            b.state = b.unbounded ? "unbounded" : "created";
-            b.type = b.autobid >= 100 ? "autobid" : "userbid";
-            return b;
-          });
+            b.owned = true
+            b.candidateName = this.candidateNameMap[b.candidate] || '-'
+            b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
+            b.state = b.unbounded ? 'unbounded' : 'created'
+            b.type = b.autobid >= 100 ? 'autobid' : 'userbid'
+            return b
+          })
       } else {
         filteredBuckets = this.buckets
-          // .filter((b) => String(b.candidate).toLowerCase() === this.account)
+          .filter((b) => String(b.candidate).toLowerCase() === this.account)
           .map((b) => {
-            b.owned = false;
-            b.candidateName = this.candidateNameMap[b.candidate] || "-";
-            b.matureFromNow = b.unbounded
-              ? moment.utc(1000 * Number(b.matureTime)).fromNow()
-              : "";
-            b.state = b.unbounded ? "unbounded" : "valid";
-            b.type = b.autobid >= 100 ? "autobid" : "userbid";
-            return b;
-          });
+            b.owned = false
+            b.candidateName = this.candidateNameMap[b.candidate] || '-'
+            b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
+            b.state = b.unbounded ? 'unbounded' : 'valid'
+            b.type = b.autobid >= 100 ? 'autobid' : 'userbid'
+            return b
+          })
       }
-      return filteredBuckets.filter(bucket => {
+      return filteredBuckets.filter((bucket) => {
         if (this.searchAim.trim() === '') {
           return true
         } else {
@@ -137,21 +132,21 @@ export default {
       })
     },
     candidateNameMap() {
-      let map = {};
+      let map = {}
       for (var i in this.candidates) {
-        const c = this.candidates[i];
-        map[c.address] = c.name;
+        const c = this.candidates[i]
+        map[c.address] = c.name
       }
-      return map;
+      return map
     },
     currentData() {
       const start = (this.currentPage - 1) * this.perPage
       const end = this.perPage * this.currentPage
       if (this.status === 'candidate') {
-        return this.filterData.slice(start , end)
+        return this.filterData.slice(start, end)
       }
-      return this.filterData.slice(start , end)
-    }
+      return this.filterData.slice(start, end)
+    },
   },
   watch: {
     filterData() {
@@ -167,18 +162,18 @@ export default {
 
       stakingCandidateParams: {
         show: false,
-        data: {}
+        data: {},
       },
       voteParams: {
         show: false,
-        data: {}
+        data: {},
       },
-      
+
       bucketFilterSelection: 1,
       bucketFilterSelections: [
         { text: 'buckets owned by me', value: 1 },
-        { text: 'buckets voted to me', value: 2 }
-      ]
+        { text: 'buckets voted to me', value: 2 },
+      ],
     }
   },
   created() {
@@ -188,14 +183,14 @@ export default {
   methods: {
     ...mapMutations({
       setShowSendModal: 'token/setShowSendModal',
-      setShowPassportModal: 'token/setShowPassportModal'
+      setShowPassportModal: 'token/setShowPassportModal',
     }),
     ...mapActions({
       getCandidates: 'candidate/getCandidates',
-      getBuckets: 'bucket/getBuckets'
+      getBuckets: 'bucket/getBuckets',
     }),
     pageChange(page) {
-      console.log("current page: ", page)
+      console.log('current page: ', page)
       this.currentPage = page
     },
     listMeAsCandidate() {
@@ -209,28 +204,28 @@ export default {
     },
     closeStakingVoteModal() {
       this.voteParams.show = false
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
-  .token-list-content {
-    top: -80px;
-    .token-list {
-      background-color: #fff;
-      border-radius: .5rem;
-      box-shadow: 0 10px 20px rgb(0 0 0 / 12%), 0 1px 4px rgb(0 0 0 / 8%);
-      .token-list-top {
-        .token-list-top-right {
-          input {
-            box-shadow: 0 1px 4px rgb(0 0 0 / 8%);
-            border-radius: 8px;
-          }
+.token-list-content {
+  top: -80px;
+  .token-list {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px rgb(0 0 0 / 12%), 0 1px 4px rgb(0 0 0 / 8%);
+    .token-list-top {
+      .token-list-top-right {
+        input {
+          box-shadow: 0 1px 4px rgb(0 0 0 / 8%);
+          border-radius: 8px;
         }
       }
     }
   }
-  ::v-deep .custom-control {
-    z-index: 0;
-  }
+}
+::v-deep .custom-control {
+  z-index: 0;
+}
 </style>

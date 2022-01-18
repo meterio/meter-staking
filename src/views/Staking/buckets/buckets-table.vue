@@ -5,7 +5,7 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <table v-else class="table table-hover table-responsive-sm table-font-size">
+    <table v-else-if="data.length" class="table table-hover table-responsive-sm table-font-size">
       <thead>
         <tr>
           <th scope="col">Bucket ID</th>
@@ -20,17 +20,21 @@
       </thead>
       <tbody>
         <tr v-for="(item, i) in computedData" :key="item.address">
-          <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a></td>
+          <td>
+            <a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a>
+          </td>
           <td>{{ item._owner }}</td>
           <td>{{ item._candidate }}</td>
           <td>{{ item.candidateName }}</td>
           <td>{{ item.totalVotes }}</td>
           <td>{{ item.type }}</td>
-          <td>{{ item.unbounded ? "Mature " + item.matureFromNow : item.state }}</td>
+          <td>{{ item.unbounded ? 'Mature ' + item.matureFromNow : item.state }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
-              <b-button :id="'actions'+ i" variant="primary" class="font-weight-bold py-0 px-2" size="small">···</b-button>
-              <b-popover :target="'actions'+ i" triggers="hover">
+              <b-button :id="'actions' + i" variant="primary" class="font-weight-bold py-0 px-2" size="small"
+                >···</b-button
+              >
+              <b-popover :target="'actions' + i" triggers="hover">
                 <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="unbound(item)">UNBOUND</a>
                 <a class="opt-btn d-block font-weight-bold" @click="delegate(item)">DELEGATE</a>
                 <a class="opt-btn d-block font-weight-bold" @click="addmore(item)">ADD MORE</a>
@@ -45,6 +49,7 @@
         </tr>
       </tbody>
     </table>
+    <span class="d-flex justify-content-center font-weight-bold py-5" v-else>NO DATA</span>
 
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
@@ -62,44 +67,44 @@ import DelegateModal from './delegate.vue'
 import UnboundModal from './unbound.vue'
 
 export default {
-  name: "BucketsTable",
+  name: 'BucketsTable',
   components: {
     BucketInformationModal,
     UpdateBucketModal,
     DelegateModal,
-    UnboundModal
+    UnboundModal,
   },
   props: {
     data: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       infoParams: {
         show: false,
-        data: {}
+        data: {},
       },
       bucketParams: {
         show: false,
-        data: {}
+        data: {},
       },
       delegateParams: {
         show: false,
-        data: {}
+        data: {},
       },
       unboundParams: {
         show: false,
-        data: {}
-      }
+        data: {},
+      },
     }
   },
   computed: {
     ...mapState('bucket', ['loading']),
     ...mapState('wallet', ['account']),
     computedData() {
-      return this.data.map(b => {
+      return this.data.map((b) => {
         const t = {
           ...b,
           _id: b.id.substr(0, 11) + '...',
@@ -111,14 +116,14 @@ export default {
         }
 
         if (b.bonusVotes) {
-          t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + 'MTRG';
+          t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + 'MTRG'
         }
         if (b.totalVotes) {
-          t.totalVotes = new BigNumber(b.totalVotes).div(1e18).toFormat(2) + 'MTRG';
+          t.totalVotes = new BigNumber(b.totalVotes).div(1e18).toFormat(2) + 'MTRG'
         }
         return t
       })
-    }
+    },
   },
   methods: {
     // bucketOperations(bucket) {
@@ -155,15 +160,15 @@ export default {
     },
     closeDelegateModal() {
       this.delegateParams.show = false
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
-  .table-font-size {
-    font-size: 14px;
-  }
-  .opt-btn {
-    cursor: pointer;
-  }
+.table-font-size {
+  font-size: 14px;
+}
+.opt-btn {
+  cursor: pointer;
+}
 </style>

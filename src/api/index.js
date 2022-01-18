@@ -7,7 +7,7 @@ export const getCurrentNetwork = (chainId) => {
   return supportNetworkList.filter((network) => network.networkId === Number(chainId))[0]
 }
 
-export const getSupportNetworkListByMode = (mode) => {
+export const getSupportNetworkListByMode = () => {
   return supportNetworkList
   // return supportNetworkList.filter((network) => {
   //   if (String(mode) === 'mainnet') {

@@ -5,7 +5,7 @@
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <table v-else class="table table-hover table-responsive-sm table-font-size">
+    <table v-else-if="data.length" class="table table-hover table-responsive-sm table-font-size">
       <thead>
         <tr>
           <th>Name</th>
@@ -19,7 +19,9 @@
       </thead>
       <tbody>
         <tr v-for="(item, i) in computedData" :key="item.address">
-          <td><a class="text-myprimary-color opt-btn" @click="info(item)">{{ item.name }}</a></td>
+          <td>
+            <a class="text-myprimary-color opt-btn" @click="info(item)">{{ item.name }}</a>
+          </td>
           <td>{{ item._address }}</td>
           <td>{{ item.ipAddr }}</td>
           <td>{{ item._commission }}</td>
@@ -27,8 +29,10 @@
           <td>{{ item.bucketsLen }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold">
-              <b-button :id="'actions'+ i" variant="primary" class="font-weight-bold py-0 px-2" size="small">···</b-button>
-              <b-popover :target="'actions'+ i" triggers="hover">
+              <b-button :id="'actions' + i" variant="primary" class="font-weight-bold py-0 px-2" size="small"
+                >···</b-button
+              >
+              <b-popover :target="'actions' + i" triggers="hover">
                 <a class="opt-btn d-block font-weight-bold" @click="vote(item)">VOTE</a>
                 <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="update(item)">UPDATE</a>
                 <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="uncandidate(item)">UNCANDIDATE</a>
@@ -38,6 +42,8 @@
         </tr>
       </tbody>
     </table>
+    <span class="d-flex justify-content-center font-weight-bold py-5" v-else>NO DATA</span>
+
     <!-- vote modal -->
     <StakingVoteModal :voteParams="voteParams" @close="closeStakingVoteModal" />
     <!-- candidate information modal -->
@@ -57,55 +63,55 @@ import CandidateUpdateModal from './candidate-update.vue'
 import UncandidateModal from './uncandidate.vue'
 
 export default {
-  name: "CadidatesTable",
+  name: 'CadidatesTable',
   components: {
     StakingVoteModal,
     CandidateInformationModal,
     CandidateUpdateModal,
-    UncandidateModal
+    UncandidateModal,
   },
   props: {
     data: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       voteParams: {
         show: false,
-        data: {}
+        data: {},
       },
       infoParams: {
         show: false,
-        data: {}
+        data: {},
       },
       updateCandidateParams: {
         show: false,
-        data: {}
+        data: {},
       },
       uncandidateParams: {
         show: false,
-        data: {}
-      }
+        data: {},
+      },
     }
   },
   computed: {
     ...mapState('candidate', ['getCandidatesloading']),
     ...mapState('wallet', ['account']),
     computedData() {
-      return this.data.map(c => {
+      return this.data.map((c) => {
         return {
           ...c,
           _address: c.address.substr(0, 11) + '...',
           bucketsLen: c.buckets.length,
           totalVotes: new BigNumber(c.totalVotes).div(1e18).toFormat(2) + 'MTRG',
-          _commission: c.commission/1e7 + '%',
+          _commission: c.commission / 1e7 + '%',
 
-          owned: String(c.address).toLowerCase() === this.account
+          owned: String(c.address).toLowerCase() === this.account,
         }
       })
-    }
+    },
   },
   methods: {
     vote(candidate) {
@@ -136,15 +142,15 @@ export default {
     },
     closeUncandidateModal() {
       this.uncandidateParams.show = false
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
-  .table-font-size {
-    font-size: 14px;
-  }
-  .opt-btn {
-    cursor: pointer;
-  }
+.table-font-size {
+  font-size: 14px;
+}
+.opt-btn {
+  cursor: pointer;
+}
 </style>

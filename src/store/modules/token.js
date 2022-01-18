@@ -5,8 +5,6 @@ import erc20 from '@/constants/erc20.json'
 import { getCurrentNetwork, getSupportNetworkListByMode } from '@/api'
 import { tokens } from '@/constants'
 
-const { VUE_APP_MODE } = process.env
-
 const namespaced = true
 const state = {
   renderLoading: false,
@@ -51,8 +49,7 @@ const actions = {
     console.log('init tokens data')
     const chainId = rootState.wallet.chainId
 
-    console.log('token VUE_APP_MODE: ', VUE_APP_MODE)
-    const supportNetworkList = getSupportNetworkListByMode(VUE_APP_MODE)
+    const supportNetworkList = getSupportNetworkListByMode()
     const supportnetworkIdList = supportNetworkList.map((network) => network.networkId)
     if (!supportnetworkIdList.includes(chainId)) {
       commit('setIsSupportNetwork', false)

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <SupportNetworkListItem v-for="network in supportNetwork" :key="network.name" :network="network" @click.native="clickItem(network)" />
+    <SupportNetworkListItem
+      v-for="network in supportNetwork"
+      :key="network.name"
+      :network="network"
+      @click.native="clickItem(network)"
+    />
   </div>
 </template>
 
@@ -9,21 +14,18 @@ import { mapState } from 'vuex'
 import SupportNetworkListItem from '@/components/SupportNetworkListItem'
 import { getSupportNetworkListByMode } from '@/api'
 export default {
-  name: "SupportNetworksList",
+  name: 'SupportNetworksList',
   components: {
-    SupportNetworkListItem
+    SupportNetworkListItem,
   },
   data() {
-    const { VUE_APP_MODE } = process.env
-    return {
-      mode: VUE_APP_MODE
-    }
+    return {}
   },
   computed: {
     ...mapState('wallet', ['provider', 'chainId']),
     supportNetwork() {
-      return this.getSupportNetworkListByMode(this.mode)
-    }
+      return this.getSupportNetworkListByMode()
+    },
   },
   methods: {
     getSupportNetworkListByMode,
@@ -31,36 +33,37 @@ export default {
       if (this.supportNetwork.networkId === this.chainId) {
         return
       }
-      this.provider.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: "0x" + Number(network.networkId).toString(16) }],
-      }).catch(err => {
-        if (err.code === 4902) {
-          this.provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: "0x" + Number(network.networkId).toString(16),
-                chainName: network.name,
-                nativeCurrency: {
-                  name: network.nativeTokenSymbol,
-                  symbol: network.nativeTokenSymbol,
-                  decimals: network.nativeTokenDecimals,
+      this.provider
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x' + Number(network.networkId).toString(16) }],
+        })
+        .catch((err) => {
+          if (err.code === 4902) {
+            this.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: '0x' + Number(network.networkId).toString(16),
+                  chainName: network.name,
+                  nativeCurrency: {
+                    name: network.nativeTokenSymbol,
+                    symbol: network.nativeTokenSymbol,
+                    decimals: network.nativeTokenDecimals,
+                  },
+                  rpcUrls: [network.rpcUrl],
+                  blockExplorerUrls: [network.blockExplorer],
                 },
-                rpcUrls: [network.rpcUrl],
-                blockExplorerUrls: [network.blockExplorer],
-              },
-            ],
-          });
-        } else {
-          console.log("switch ethereum chain error: ", err)
-        }
-      })
-    }
-  }
+              ],
+            })
+          } else {
+            console.log('switch ethereum chain error: ', err)
+          }
+        })
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

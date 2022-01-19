@@ -252,7 +252,7 @@ export default {
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/${this.stakingVoteHash}`, '_blank')
+      window.open(`${url}/tx/${this.stakingVoteHash}`, '_blank')
     }
   }
 }

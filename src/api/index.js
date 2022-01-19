@@ -1,7 +1,7 @@
 export * from './candidate'
 export * from './bucket'
 
-import { supportNetworkList, scanUrls } from '@/constants'
+import { supportNetworkList, contractAddress } from '@/constants'
 
 export const getCurrentNetwork = (chainId) => {
   return supportNetworkList.filter((network) => network.networkId === Number(chainId))[0]
@@ -19,5 +19,10 @@ export const getSupportNetworkListByMode = () => {
 }
 
 export const getMeterScanUrl = (chainId) => {
-  return scanUrls[chainId]
+  const currNetwork = supportNetworkList.find((n) => n.networkId === chainId)
+  return currNetwork.blockExplorer
+}
+
+export const getTxAddress = (chainId) => {
+  return contractAddress[chainId]
 }

@@ -241,7 +241,7 @@ export default {
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/${this.stakingCandidateHash}`, '_blank')
+      window.open(`${url}/tx/${this.stakingCandidateHash}`, '_blank')
     }
   }
 }

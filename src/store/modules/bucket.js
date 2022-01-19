@@ -1,5 +1,4 @@
-import { getBuckets } from '@/api'
-import { contractAddress } from '@/constants'
+import { getBuckets, getTxAddress } from '@/api'
 
 const namespaced = true
 
@@ -42,6 +41,7 @@ const actions = {
     try {
       commit('setUpdateBucketLoading', { name, hash: 'start' })
       console.log('scriptData', data)
+      const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 1,
@@ -64,6 +64,7 @@ const actions = {
     try {
       commit('setDelegateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
+      const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 1,
@@ -86,6 +87,7 @@ const actions = {
     try {
       commit('setUnboundLoading', { name, hash: 'start' })
       console.log('scriptData', data)
+      const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 1,

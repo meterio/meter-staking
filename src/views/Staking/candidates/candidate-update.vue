@@ -203,7 +203,7 @@ export default {
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/${this.updateCandidateHash}`, '_blank')
+      window.open(`${url}/tx/${this.updateCandidateHash}`, '_blank')
     }
   }
 }

@@ -168,7 +168,7 @@ export default {
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/${this.updateBucketHash}`, '_blank')
+      window.open(`${url}/tx/${this.updateBucketHash}`, '_blank')
     }
   }
 }

@@ -104,7 +104,7 @@ export default {
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/${this.unboundHash}`, '_blank')
+      window.open(`${url}/tx/${this.unboundHash}`, '_blank')
     }
   }
 }

@@ -1,11 +1,9 @@
 export const urls = {
   82: 'https://mainnet.meter.io',
   83: 'https://warringstakes.meter.io',
+  72: 'http://13.251.129.32:8669',
 }
-export const scanUrls = {
-  82: 'https://scan.meter.io',
-  83: 'https://scan-warringstakes.meter.io',
-}
+
 export const supportNetworkList = [
   {
     networkId: 82,
@@ -25,6 +23,16 @@ export const supportNetworkList = [
     nativeTokenDecimals: 18,
     rpcUrl: 'https://rpctest.meter.io',
     blockExplorer: 'https://scan-warringstakes.meter.io',
+    mode: 'testnet',
+  },
+  {
+    networkId: 72,
+    name: 'Verse Testnet',
+    nativeTokenName: 'MTRT',
+    nativeTokenSymbol: 'MTRT',
+    nativeTokenDecimals: 18,
+    rpcUrl: 'http://18.141.219.204:8545',
+    blockExplorer: 'http://18.141.219.204:8000',
     mode: 'testnet',
   },
 ]
@@ -52,6 +60,17 @@ export const tokens = [
     native: false,
     resourceId: '0x0000000000000000000000228ebBeE999c6a7ad74A6130E81b12f9Fe237Ba301',
   },
+  {
+    name: 'Verse Governance',
+    address: '0x000000000000004d65746572476f764552433230',
+    symbol: 'MTRG',
+    decimals: 18,
+    chainId: 72,
+    logoURI: 'https://raw.githubusercontent.com/meterio/token-list/master/data/MTRG/logo.png',
+    coinId: 'meter',
+    native: false,
+    resourceId: '0x',
+  },
 ]
 
 export const regExpList = {
@@ -59,4 +78,8 @@ export const regExpList = {
 }
 
 // the contract address send transaction to
-export const contractAddress = '0x616B696e672D6D6F64756c652d61646472657373'
+export const contractAddress = {
+  82: '0x616B696e672D6D6F64756c652d61646472657373',
+  83: '0x616B696e672D6D6F64756c652d61646472657373',
+  72: '0x616B696e672D6D6F64756c652d61646472657373',
+}

@@ -1,33 +1,30 @@
 <template>
-  <CustomizedModal v-model="unboundParams.show" @close="closeModal">
+  <CustomizedModal v-model="undelegateParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block text-capitalize">unbound</span>
+      <span class="d-block text-capitalize">undelegate</span>
     </template>
     <template #modal-body>
       <Divider />
-      <div v-if="computedUnboundLoading" class="d-flex justify-content-center py-5">
+      <div v-if="computedUndelegateLoading" class="d-flex justify-content-center py-5">
         <div class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>
         </div>
       </div>
       <div v-else class="modal-body">
         <b-form @submit.prevent="onSubmit">
-          <div class="alert alert-info my-1" role="alert">
-            This action will mark this bucket as unbounded, and you could only withdraw funds after a lock down period of 7 days (known as mature time)
-          </div>
           <div class="info-section">
             <div class="name">Bucket ID</div>
-            <div class="content text-break">{{ unboundParams.data.id }}</div>
+            <div class="content text-break">{{ undelegateParams.data.id }}</div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Bucket Owner</div>
             <div class="content">
-              <AddressLable :address="unboundParams.data.owner" />
+              <AddressLable :address="undelegateParams.data.owner" />
             </div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Bucket Amount</div>
-            <div class="content">{{ unboundParams.data.votes }}</div>
+            <div class="content">{{ undelegateParams.data.votes }}</div>
           </div>
           <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
         </b-form>
@@ -35,7 +32,7 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="unboundHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="undelegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
       </div>
     </template>
   </CustomizedModal>
@@ -49,9 +46,9 @@ import BigNumber from 'bignumber.js'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "UnboundModal",
+  name: "UndelegateModal",
   props: {
-    unboundParams: {
+    undelegateParams: {
       type: Object,
       default() {
         return {
@@ -66,9 +63,9 @@ export default {
   },
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
-    ...mapState('bucket', ['unboundLoading']),
-    computedUnboundLoading() {
-      const hash = this.unboundLoading[this.unboundParams.data.candidateName]
+    ...mapState('bucket', ['undelegateLoading']),
+    computedUndelegateLoading() {
+      const hash = this.undelegateLoading[this.undelegateParams.data.candidateName]
       if (hash) {
         if (hash === 'start' || String(hash).includes('0x')) {
           return true
@@ -76,8 +73,8 @@ export default {
       }
       return false
     },
-    unboundHash() {
-      const hash = this.unboundLoading[this.unboundParams.data.candidateName]
+    undelegateHash() {
+      const hash = this.undelegateLoading[this.undelegateParams.data.candidateName]
       if (hash && String(hash).includes('0x')) {
         return hash
       }
@@ -86,25 +83,25 @@ export default {
   },
   methods: {
     ...mapActions({
-      unboundAction: 'bucket/unbound'
+      undelegateAction: 'bucket/undelegate'
     }),
     closeModal() {
       this.$emit('close')
     },
     onSubmit() {
-      const value = new BigNumber(this.unboundParams.data.value).toFixed();
+      const value = new BigNumber(this.undelegateParams.data.value).toFixed();
       let holderAddr = this.account;
-      const dataBuffer = ScriptEngine.getUnboundData(
+      const dataBuffer = ScriptEngine.getUndelegateData(
         holderAddr,
-        this.unboundParams.data.id,
+        this.undelegateParams.data.id,
         value
       );
       const scriptData = '0x' + dataBuffer.toString('hex');
-      this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData });
+      this.undelegateAction({ name: this.undelegateParams.data.candidateName, data: scriptData });
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
-      window.open(`${url}/tx/${this.unboundHash}`, '_blank')
+      window.open(`${url}/tx/${this.undelegateHash}`, '_blank')
     }
   }
 }

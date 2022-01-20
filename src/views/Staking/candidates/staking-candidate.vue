@@ -14,7 +14,7 @@
         <b-form @submit.prevent="onSubmit">
           <!-- amount -->
           <b-form-group label="Amount:" label-for="amount">
-            <b-input-group append="MTRG">
+            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="amount"
                 v-model="formData.amount"
@@ -23,7 +23,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                Your amount must be gt 0 and lte {{ MTRGBalance }}.
+                Your amount must be gt 0 and lte {{ balances.energy }}.
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
@@ -153,7 +153,7 @@ export default {
   },
   computed: {
     ...mapState('candidate', ['stakingCandidateLoading']),
-    ...mapState('token', ['MTRGBalance']),
+    ...mapState('token', ['balances', 'currentNetwork']),
     ...mapState('wallet', ['account', 'chainId']),
     computedStakingCandidateLoading() {
       const hash = this.stakingCandidateLoading[this.formData.name]
@@ -176,7 +176,7 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      return amount.gt(0) && amount.lte(this.MTRGBalance)
+      return amount.gt(0) && amount.lte(this.balances.energy)
     }
   },
   methods: {

@@ -41,7 +41,7 @@
             label="Current amount"
             label-for="currentamount"
           >
-            <b-input-group append="MTRG">
+            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="currentamount"
                 v-model="formData.currentAmount"
@@ -55,7 +55,7 @@
             label="Extra amount"
             label-for="extraamount"
           >
-            <b-input-group append="MTRG">
+            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="extraamount"
                 v-model="formData.extraAmount"
@@ -64,7 +64,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                Your amount must be gt 0 and lte {{ MTRGBalance }}.
+                Your amount must be gt 0 and lte {{ balances.energy }}.
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
@@ -124,7 +124,7 @@ export default {
   computed: {
     ...mapState('bucket', ['updateBucketLoading']),
     ...mapState('wallet', ['account', 'chainId']),
-    ...mapState('token', ['MTRGBalance']),
+    ...mapState('token', ['balances', 'currentNetwork']),
     computedUpdateBucketLoading() {
       const hash = this.updateBucketLoading[this.bucketParams.data.candidateName]
       if (hash) {
@@ -146,7 +146,7 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.extraAmount)
-      return amount.gt(0) && amount.lte(this.MTRGBalance)
+      return amount.gt(0) && amount.lte(this.balances.energy)
     }
   },
   methods: {

@@ -13,7 +13,7 @@
           <th scope="col">Candidate Address</th>
           <th scope="col">Name</th>
           <th scope="col">Total Votes</th>
-          <th scope="col">Type</th>
+          <th scope="col">Autobid</th>
           <th scope="col">State</th>
           <th scope="col">Action</th>
         </tr>
@@ -25,25 +25,21 @@
           </td>
           <td>{{ item._owner }}</td>
           <td>{{ item._candidate }}</td>
-          <td>{{ item.candidateName }}</td>
+          <td><a class="text-myprimary-color opt-btn" @click="candidateInfo(item)">{{ item.candidateName }}</a></td>
           <td>{{ item.totalVotes }}</td>
           <td>{{ item.type }}</td>
           <td>{{ item.unbounded ? 'Mature ' + item.matureFromNow : item.state }}</td>
           <td>
-            <div class="token-operation text-myprimary-color font-weight-bold">
-              <b-button :id="'actions' + i" variant="primary" class="font-weight-bold py-0 px-2" size="small"
+            <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
+              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="addmore(item)">ADD MORE</a>
+              <b-button :id="'actions' + i" variant="light" class="font-weight-bold ml-1 py-0 px-2" size="small"
                 >···</b-button
               >
               <b-popover :target="'actions' + i" triggers="hover">
                 <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="unbound(item)">UNBOUND</a>
-                <a class="opt-btn d-block font-weight-bold" @click="delegate(item)">DELEGATE</a>
-                <a class="opt-btn d-block font-weight-bold" @click="addmore(item)">ADD MORE</a>
+                <a v-if="item.candidate === '0x0000000000000000000000000000000000000000'" class="opt-btn d-block font-weight-bold" @click="delegate(item)">DELEGATE</a>
+                <a v-else class="opt-btn d-block font-weight-bold" @click="undelegate(item)">UNDELEGATE</a>
               </b-popover>
-              <!-- <a class="opt-btn" @click="bucketOperations(item)">
-                {{
-                  item.candidate === '0x0000000000000000000000000000000000000000' ? 'delegate' : 'add more'
-                }}
-              </a> -->
             </div>
           </td>
         </tr>
@@ -55,16 +51,23 @@
     <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
     <DelegateModal :bucketParams="delegateParams" @close="closeDelegateModal" />
     <UnboundModal :unboundParams="unboundParams" @close="closeUnboundModal" />
+    <UndelegateModal :undelegateParams="undelegateParams" @close="closeUndelegateModal" />
+
+    <!-- candidate information modal -->
+    <CandidateInformationModal :infoParams="candidateInfoParams" @close="closeCandidateInfoModal" />
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 
 import BucketInformationModal from './bucket-info.vue'
 import UpdateBucketModal from './update-bucket.vue'
 import DelegateModal from './delegate.vue'
 import UnboundModal from './unbound.vue'
+import UndelegateModal from './undelegate.vue'
+
+import CandidateInformationModal from '../candidates/candidate-info.vue'
 
 export default {
   name: 'BucketsTable',
@@ -73,6 +76,8 @@ export default {
     UpdateBucketModal,
     DelegateModal,
     UnboundModal,
+    UndelegateModal,
+    CandidateInformationModal
   },
   props: {
     data: {
@@ -98,9 +103,18 @@ export default {
         show: false,
         data: {},
       },
+      undelegateParams: {
+        show: false,
+        data: {}
+      },
+      candidateInfoParams: {
+        show: false,
+        data: {},
+      },
     }
   },
   computed: {
+    ...mapState('token', ['currentNetwork']),
     ...mapState('bucket', ['loading']),
     ...mapState('wallet', ['account']),
     computedData() {
@@ -110,29 +124,25 @@ export default {
           _id: b.id.substr(0, 11) + '...',
           _owner: b.owner.substr(0, 11) + '...',
           _candidate: b.candidate.substr(0, 11) + '...',
-          votes: new BigNumber(b.value).div(1e18).toFormat(2) + 'MTRG',
+          votes: new BigNumber(b.value).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || '',
           totalVotes: '0',
           bonus: '0',
         }
 
         if (b.bonusVotes) {
-          t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + 'MTRG'
+          t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
         }
         if (b.totalVotes) {
-          t.totalVotes = new BigNumber(b.totalVotes).div(1e18).toFormat(2) + 'MTRG'
+          t.totalVotes = new BigNumber(b.totalVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
         }
         return t
       })
     },
   },
   methods: {
-    // bucketOperations(bucket) {
-    //   if (bucket.candidate === '0x0000000000000000000000000000000000000000') {
-    //     this.delegate(bucket)
-    //   } else {
-    //     this.addMore(bucket)
-    //   }
-    // },
+    ...mapActions({
+      getCandidate: 'candidate/getCandidate'
+    }),
     addmore(bucket) {
       this.bucketParams.show = true
       this.bucketParams.data = bucket
@@ -141,9 +151,18 @@ export default {
       this.delegateParams.show = true
       this.delegateParams.data = bucket
     },
+    undelegate(bucket) {
+      this.undelegateParams.show = true
+      this.undelegateParams.data = bucket
+    },
     info(bucket) {
       this.infoParams.show = true
       this.infoParams.data = bucket
+    },
+    async candidateInfo({ candidate }) {
+      const data = await this.getCandidate({ address: candidate })
+      this.candidateInfoParams.show = true
+      this.candidateInfoParams.data = data
     },
     unbound(bucket) {
       this.unboundParams.show = true
@@ -160,6 +179,12 @@ export default {
     },
     closeDelegateModal() {
       this.delegateParams.show = false
+    },
+    closeUndelegateModal() {
+      this.undelegateParams.show = false
+    },
+    closeCandidateInfoModal() {
+      this.candidateInfoParams.show = false
     },
   },
 }

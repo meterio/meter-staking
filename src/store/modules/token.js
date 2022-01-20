@@ -2,14 +2,18 @@ import { ethers } from 'ethers'
 import { BigNumber } from 'bignumber.js'
 
 import erc20 from '@/constants/erc20.json'
-import { getCurrentNetwork, getSupportNetworkListByMode } from '@/api'
+import { getCurrentNetwork, getSupportNetworkListByMode, getBalance } from '@/api'
 import { tokens } from '@/constants'
 
 const namespaced = true
 const state = {
   renderLoading: false,
   currentNetwork: {},
-  MTRGBalance: 0,
+  balances: {
+    native: 0,
+    energy: 0,
+    bound: 0,
+  },
 
   isSupportNetwork: true,
 }
@@ -17,17 +21,14 @@ const state = {
 const getters = {}
 
 const mutations = {
-  setMTRGBalance(state, MTRGBalance) {
-    state.MTRGBalance = MTRGBalance
+  setBalances(state, { native, energy, bound }) {
+    state.balances = Object.assign({}, { ...state.balances }, { native, energy, bound })
   },
   setRenderLoading(state, renderLoading) {
     state.renderLoading = renderLoading
   },
   setCurrentNetwork(state, currentNetwork) {
     state.currentNetwork = currentNetwork
-  },
-  setCloseSendModal(state) {
-    state.showSendModal = false
   },
   setIsSupportNetwork(state, isSupportNetwork) {
     state.isSupportNetwork = isSupportNetwork
@@ -38,7 +39,7 @@ const mutations = {
 
   clearRelevantInfo(state) {
     state.renderLoading = false
-    state.MTRGBalance = 0
+    state.balances = {}
     state.currentNetwork = {}
     state.showSendModal = false
   },
@@ -75,35 +76,21 @@ const actions = {
       commit('setRenderLoading', false)
     }
   },
-  async getTokenBalance({ state, commit, dispatch }) {
+  async getTokenBalance({ rootState, commit }) {
     console.log('get tokens balance')
-
-    const balance = await dispatch('getNewToken')
-    commit('setMTRGBalance', balance)
-  },
-  async updateToken({ state, dispatch }) {
-    const balance = await dispatch('getNewToken')
-    commit('setMTRGBalance', balance)
-  },
-  async getNewToken({ rootState, state }) {
-    const web3Provider = rootState.wallet.web3Provider
-    const signer = rootState.wallet.signer
     const account = rootState.wallet.account
     const chainId = rootState.wallet.chainId
+    const data = await getBalance(chainId, account)
 
-    const token = tokens.find((t) => t.chainId === chainId)
-
-    let balance = 0
-    if (token.native) {
-      balance = await signer.getBalance(ethers.providers.balance)
-    } else {
-      const contract = new ethers.Contract(token.address, erc20, web3Provider)
-      balance = await contract.balanceOf(account)
+    if (!data) {
+      return
     }
 
-    const _balance = new BigNumber(String(balance)).div(`1e${token.decimals}`)
-
-    return _balance
+    commit('setBalances', {
+      native: new BigNumber(data.energy).div(1e18),
+      energy: new BigNumber(data.balance).div(1e18),
+      bound: new BigNumber(data.boundbalance).div(1e18),
+    })
   },
 }
 

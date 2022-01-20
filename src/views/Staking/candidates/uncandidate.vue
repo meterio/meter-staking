@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="uncandidateParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">uncandidate</span>
+      <span class="d-block text-capitalize">uncandidate</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -17,25 +17,25 @@
           </div>
           <div class="info-section">
             <div class="name">Name</div>
-            <div class="font-weight-bold content">{{ uncandidateParams.data.name }}</div>
+            <div class="content">{{ uncandidateParams.data.name }}</div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Description</div>
-            <div class="font-weight-bold content">{{ uncandidateParams.data.description }}</div>
+            <div class="content">{{ uncandidateParams.data.description }}</div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Candidate Address</div>
-            <div class="font-weight-bold content">
+            <div class="content">
               <AddressLable :address="uncandidateParams.data.address" />
             </div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Candidate IP</div>
-            <div class="font-weight-bold content">{{ uncandidateParams.data.ipAddr }}</div>
+            <div class="content">{{ uncandidateParams.data.ipAddr }}</div>
           </div>
           <div class="info-section mt-1">
             <div class="name">Total Votes</div>
-            <div class="font-weight-bold content">{{ uncandidateParams.data.totalVotes }} MTRG</div>
+            <div class="content">{{ computedTotalVotes }} <span>{{ currentNetwork.governanceTokenSymbol || '' }}</span></div>
           </div>
           <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
         </b-form>
@@ -54,6 +54,7 @@ import { mapActions, mapState } from 'vuex'
 import { ScriptEngine } from '@meterio/devkit'
 
 import { getMeterScanUrl } from '@/api'
+import BigNumber from 'bignumber.js'
 
 export default {
   name: "UncandidateModal",
@@ -74,6 +75,7 @@ export default {
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
     ...mapState('candidate', ['uncandidateLoading']),
+    ...mapState('token', ['currentNetwork']),
     computedUncandidateLoading() {
       const hash = this.uncandidateLoading[this.uncandidateParams.data.name]
       if (hash) {
@@ -90,6 +92,9 @@ export default {
       }
       return ''
     },
+    computedTotalVotes() {
+      return new BigNumber(this.uncandidateParams.data.totalVotes).div(1e18).toFormat(2)
+    }
   },
   methods: {
     ...mapActions({
@@ -119,5 +124,8 @@ export default {
   .modal-footer {
     padding: 0 32px;
     overflow-y: auto;
+  }
+  .content {
+    color: gray;
   }
 </style>

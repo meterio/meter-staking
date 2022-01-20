@@ -42,7 +42,7 @@
           </b-form-group>
           <!-- amount -->
           <b-form-group v-if="formData.source === 'bound'" label="Amount:" label-for="amount">
-            <b-input-group append="MTRG">
+            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="amount"
                 v-model="formData.amount"
@@ -51,7 +51,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                Your amount must be gt 0 and lte {{ MTRGBalance }}.
+                Your amount must be gt 0 and lte {{ balances.energy }}.
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
@@ -117,7 +117,7 @@ export default {
         { text: "Lock for four weeks", value: 4 },
       ],
       sourceOptions: [
-        { text: "MTRG balance", value: "bound" },
+        { text: "Governance balance", value: "bound" },
         { text: "Existing bucket", value: "delegate" },
       ]
     }
@@ -131,7 +131,7 @@ export default {
     ...mapState('candidate', ['candidates', 'stakingVoteLoading']),
     ...mapState('bucket', ['buckets']),
     ...mapState('wallet', ['account', 'chainId']),
-    ...mapState('token', ['MTRGBalance']),
+    ...mapState('token', ['balances', 'currentNetwork']),
     computedStakingVoteLoading() {
       const hash = this.stakingVoteLoading[this.voteParams.data.name]
       if (hash) {
@@ -187,7 +187,7 @@ export default {
               b.id.substr(b.id.length - 6) +
               " (" +
               new BigNumber(b.votes).dividedBy(1e18).toFixed() +
-              " MTRG)",
+              " " + this.currentNetwork.governanceTokenSymbol || '' + ")",
             value: b.id,
           };
         });
@@ -197,7 +197,7 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      return amount.gt(0) && amount.lte(this.MTRGBalance)
+      return amount.gt(0) && amount.lte(this.balances.energy)
     }
   },
   methods: {

@@ -1,21 +1,15 @@
 export * from './candidate'
 export * from './bucket'
+export * from './token'
 
 import { supportNetworkList, contractAddress } from '@/constants'
 
 export const getCurrentNetwork = (chainId) => {
-  return supportNetworkList.filter((network) => network.networkId === Number(chainId))[0]
+  return supportNetworkList.find((network) => network.networkId === chainId)
 }
 
 export const getSupportNetworkListByMode = () => {
   return supportNetworkList
-  // return supportNetworkList.filter((network) => {
-  //   if (String(mode) === 'mainnet') {
-  //     return network.mode === mode
-  //   } else {
-  //     return true
-  //   }
-  // })
 }
 
 export const getMeterScanUrl = (chainId) => {

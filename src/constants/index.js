@@ -1,3 +1,4 @@
+// url for restful api prefix
 export const urls = {
   82: 'https://mainnet.meter.io',
   83: 'https://warringstakes.meter.io',
@@ -10,6 +11,9 @@ export const supportNetworkList = [
     name: 'Meter',
     nativeTokenName: 'MTR',
     nativeTokenSymbol: 'MTR',
+    governanceTokenName: 'MTRG',
+    governanceTokenSymbol: 'MTRG',
+    governanceTokenDecimals: 18,
     nativeTokenDecimals: 18,
     rpcUrl: 'https://rpc.meter.io',
     blockExplorer: 'https://scan.meter.io',
@@ -21,16 +25,22 @@ export const supportNetworkList = [
     nativeTokenName: 'MTR',
     nativeTokenSymbol: 'MTR',
     nativeTokenDecimals: 18,
+    governanceTokenName: 'MTRG',
+    governanceTokenSymbol: 'MTRG',
+    governanceTokenDecimals: 18,
     rpcUrl: 'https://rpctest.meter.io',
     blockExplorer: 'https://scan-warringstakes.meter.io',
     mode: 'testnet',
   },
   {
     networkId: 72,
-    name: 'Verse Testnet',
+    name: 'Testnet',
     nativeTokenName: 'MTRT',
     nativeTokenSymbol: 'MTRT',
     nativeTokenDecimals: 18,
+    governanceTokenName: 'MTRG',
+    governanceTokenSymbol: 'MTRG',
+    governanceTokenDecimals: 18,
     rpcUrl: 'http://18.141.219.204:8545',
     blockExplorer: 'http://18.141.219.204:8000',
     mode: 'testnet',
@@ -61,7 +71,7 @@ export const tokens = [
     resourceId: '0x0000000000000000000000228ebBeE999c6a7ad74A6130E81b12f9Fe237Ba301',
   },
   {
-    name: 'Verse Governance',
+    name: 'Meter Governance',
     address: '0x000000000000004d65746572476f764552433230',
     symbol: 'MTRG',
     decimals: 18,
@@ -75,6 +85,7 @@ export const tokens = [
 
 export const regExpList = {
   address: '^0x[A-Za-z0-9]{40}$',
+  ip: '',
 }
 
 // the contract address send transaction to

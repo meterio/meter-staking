@@ -8,6 +8,7 @@ const state = {
   updateBucketLoading: {},
   delegateLoading: {},
   unboundLoading: {},
+  undelegateLoading: {},
 }
 
 const getters = {}
@@ -28,6 +29,9 @@ const mutations = {
   setUnboundLoading(state, { name, hash }) {
     state.unboundLoading = Object.assign({}, { ...state.unboundLoading }, { [name]: hash })
   },
+  setUndelegateLoading(state, { name, hash }) {
+    state.undelegateLoading = Object.assign({}, { ...state.undelegateLoading }, { [name]: hash })
+  },
 }
 
 const actions = {
@@ -44,7 +48,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -67,7 +71,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -90,7 +94,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -104,6 +108,29 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUnboundLoading', { name, hash: 'end' })
+    }
+  },
+  async undelegate({ rootState, commit, dispatch }, { name, data }) {
+    try {
+      commit('setUndelegateLoading', { name, hash: 'start' })
+      console.log('scriptData', data)
+      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const tx = await rootState.wallet.signer.sendTransaction({
+        to: contractAddress,
+        value: 0,
+        data,
+      })
+      console.log('tx', tx)
+      commit('setUndelegateLoading', { name, hash: tx.hash })
+
+      await tx.wait()
+
+      commit('setUndelegateLoading', { name, hash: 'end' })
+
+      dispatch('getBuckets')
+    } catch (e) {
+      console.log(e)
+      commit('setUndelegateLoading', { name, hash: 'end' })
     }
   },
 }

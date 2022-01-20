@@ -1,4 +1,4 @@
-import { getCandidates, getTxAddress } from '@/api'
+import { getCandidates, getCandidate, getTxAddress } from '@/api'
 
 const namespaced = true
 
@@ -41,6 +41,9 @@ const actions = {
     commit('setCandidates', candidates)
     commit('setGetCandidatesLoading', false)
   },
+  async getCandidate({ rootState }, { address }) {
+    return await getCandidate(rootState.wallet.chainId, address)
+  },
   async stakingVote({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setStakingVoteLoading', { name, hash: 'start' })
@@ -48,7 +51,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -59,6 +62,7 @@ const actions = {
       commit('setStakingVoteLoading', { name, hash: 'end' })
 
       dispatch('getCandidates')
+      dispatch('bucket/getBuckets', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setStakingVoteLoading', { name, hash: 'end' })
@@ -71,7 +75,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -94,7 +98,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)
@@ -117,7 +121,7 @@ const actions = {
       const contractAddress = getTxAddress(rootState.wallet.chainId)
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
-        value: 1,
+        value: 0,
         data,
       })
       console.log('tx', tx)

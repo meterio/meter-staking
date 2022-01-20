@@ -41,7 +41,7 @@
             label="Current amount"
             label-for="currentamount"
           >
-            <b-input-group append="MTRG">
+            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="currentamount"
                 v-model="formData.currentAmount"
@@ -135,6 +135,7 @@ export default {
     ...mapState('candidate', ['candidates']),
     ...mapState('bucket', ['delegateLoading']),
     ...mapState('wallet', ['account', 'chainId']),
+    ...mapState('token', ['currentNetwork']),
     computedDelegateLoading() {
       const hash = this.delegateLoading[this.bucketParams.data.candidateName]
       if (hash) {

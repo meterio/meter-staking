@@ -3,10 +3,12 @@
     <b-container>
       <div class="amount-content mt-4">
         <b-row>
-          <b-col md="6">
-            <div class="amount font-weight-bold">{{ computedBalance }}</div>
+          <b-col md="8">
+            <div class="amount font-weight-bold">
+              <span v-for="(item, index) in computedBalance" :key="index">{{ item.balance}} <span class="token-symbol">{{ item.symbol }}</span></span>
+            </div>
           </b-col>
-          <b-col md="6" class="d-flex align-items-center">
+          <b-col md="4" class="d-flex align-items-center">
             <div class="w-100 d-flex justify-content-md-end justify-content-between mb-2">
               <b-button :class="{'btn-color': status === 'candidate'}" class="font-normal-size btn-md-49-percent" variant="mylight" size="lg" @click="candidate">
                 <b-icon icon="people-fill"></b-icon>
@@ -30,28 +32,23 @@ import { BigNumber } from 'bignumber.js'
 export default {
   name: "WalletTop",
   computed: {
-    ...mapState('token', ['MTRGBalance']),
-    ...mapState('wallet', ['balance']),
+    ...mapState('token', ['balances', 'currentNetwork']),
     ...mapState('modal', ['status']),
-    computedMTRBalance() {
-      let v = new BigNumber(0)
-      if (this.balance) {
-        v = new BigNumber(this.balance).div(1e18)
-      }
-
-      return v.toFormat(2) + 'MTR'
-    },
-    computedMTRGBalance() {
-      let v = new BigNumber(0)
-      console.log('mtrg balance', this.MTRGBalance)
-      if (this.MTRGBalance) {
-        v = new BigNumber(this.MTRGBalance)
-      }
-
-      return v.toFormat(2) + 'MTRG'
-    },
     computedBalance() {
-      return this.computedMTRBalance + '/' + this.computedMTRGBalance
+      return [
+        {
+          balance: new BigNumber(this.balances.native).toFormat(2),
+          symbol: this.currentNetwork.nativeTokenSymbol || ''
+        },
+        {
+          balance: new BigNumber(this.balances.energy).toFormat(2),
+          symbol: this.currentNetwork.governanceTokenSymbol || ''
+        },
+        {
+          balance: new BigNumber(this.balances.bound).toFormat(2),
+          symbol: 'Locked ' + this.currentNetwork.governanceTokenSymbol || ''
+        }
+      ]
     }
   },
   methods: {
@@ -76,8 +73,13 @@ export default {
     }
     .amount-content {
       .amount {
-        font-size: 40px;
+        font-size: 30px;
         color: #fff;
+        .token-symbol {
+          color: lightgray;
+          font-size: 20px;
+          font-weight: normal;
+        }
       }
       ::v-deep .btn {
         width: 120px;

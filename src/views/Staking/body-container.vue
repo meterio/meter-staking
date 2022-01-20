@@ -105,7 +105,7 @@ export default {
             b.candidateName = this.candidateNameMap[b.candidate] || '-'
             b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
             b.state = b.unbounded ? 'unbounded' : 'created'
-            b.type = b.autobid >= 100 ? 'autobid' : 'userbid'
+            b.type = b.autobid >= 100 ? 'on' : 'off'
             return b
           })
       } else {
@@ -116,7 +116,7 @@ export default {
             b.candidateName = this.candidateNameMap[b.candidate] || '-'
             b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
             b.state = b.unbounded ? 'unbounded' : 'valid'
-            b.type = b.autobid >= 100 ? 'autobid' : 'userbid'
+            b.type = b.autobid >= 100 ? 'on' : 'off'
             return b
           })
       }
@@ -126,7 +126,8 @@ export default {
         } else {
           return (
             bucket.candidate.toLowerCase().indexOf(this.searchAim) !== -1 ||
-            bucket.candidateName.toLowerCase().indexOf(this.searchAim) !== -1
+            bucket.candidateName.toLowerCase().indexOf(this.searchAim) !== -1 ||
+            bucket.id.toLowerCase().indexOf(this.searchAim) !== -1
           )
         }
       })

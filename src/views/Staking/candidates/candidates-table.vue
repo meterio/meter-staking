@@ -25,17 +25,17 @@
           <td>{{ item._address }}</td>
           <td>{{ item.ipAddr }}</td>
           <td>{{ item._commission }}</td>
-          <td>{{ item.totalVotes }}</td>
+          <td>{{ item._totalVotes }}</td>
           <td>{{ item.bucketsLen }}</td>
           <td>
-            <div class="token-operation text-myprimary-color font-weight-bold">
-              <b-button :id="'actions' + i" variant="primary" class="font-weight-bold py-0 px-2" size="small"
+            <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
+              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="vote(item)">VOTE</a>
+              <b-button v-if="item.owned" :id="'actions' + i" variant="light" class="font-weight-bold ml-1 py-0 px-2" size="small"
                 >···</b-button
               >
               <b-popover :target="'actions' + i" triggers="hover">
-                <a class="opt-btn d-block font-weight-bold" @click="vote(item)">VOTE</a>
-                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="update(item)">UPDATE</a>
-                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="uncandidate(item)">UNCANDIDATE</a>
+                <a class="opt-btn d-block font-weight-bold" @click="update(item)">UPDATE</a>
+                <a class="opt-btn d-block font-weight-bold" @click="uncandidate(item)">UNCANDIDATE</a>
               </b-popover>
             </div>
           </td>
@@ -99,13 +99,14 @@ export default {
   computed: {
     ...mapState('candidate', ['getCandidatesloading']),
     ...mapState('wallet', ['account']),
+    ...mapState('token', ['currentNetwork']),
     computedData() {
       return this.data.map((c) => {
         return {
           ...c,
           _address: c.address.substr(0, 11) + '...',
           bucketsLen: c.buckets.length,
-          totalVotes: new BigNumber(c.totalVotes).div(1e18).toFormat(2) + 'MTRG',
+          _totalVotes: new BigNumber(c.totalVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || '',
           _commission: c.commission / 1e7 + '%',
 
           owned: String(c.address).toLowerCase() === this.account,

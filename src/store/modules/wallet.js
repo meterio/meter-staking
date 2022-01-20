@@ -45,20 +45,10 @@ const mutations = {
 }
 
 const actions = {
-  async actionWalletInfo({ rootState, state, commit, dispatch }, { wallet, account, chainId, balance }) {
-    const preStatus = state.provider && state.account !== '0x' && state.chainId !== 0
-
-    if (preStatus && state.account === account && state.chainId === chainId) {
-      console.log('do update token and candidate and bucket')
-      dispatch('candidate/getCandidates', null, { root: true })
-      dispatch('bucket/getBuckets', null, { root: true })
-      return dispatch('token/updateToken', null, { root: true })
-    } else {
-      commit('setAccount', String(account).toLowerCase())
-      commit('setChainId', Number(chainId))
-      console.log('native balance', balance)
-      commit('setBalance', balance)
-    }
+  async actionWalletInfo({ commit, dispatch }, { wallet, account, chainId, balance }) {
+    commit('setAccount', String(account).toLowerCase())
+    commit('setChainId', Number(chainId))
+    commit('setBalance', balance)
 
     const { provider, icons } = wallet
     if (provider) {

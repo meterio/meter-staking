@@ -1,40 +1,40 @@
 <template>
   <CustomizedModal v-model="infoParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">bucket infomation</span>
+      <span class="d-block text-capitalize">bucket infomation</span>
     </template>
     <template #modal-body>
       <Divider />
       <div class="candidate-info-modal-body">
         <div class="info-section mt-1">
           <div class="name">ID</div>
-          <div class="font-weight-bold content text-break">{{ infoParams.data.id }}</div>
+          <div class="content text-break">{{ infoParams.data.id }}</div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Owner</div>
-          <div class="font-weight-bold content text-break">{{ infoParams.data.owner }}</div>
+          <div class="content text-break">{{ infoParams.data.owner }}</div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Candidate</div>
-          <div class="font-weight-bold content">
+          <div class="content">
             <AddressLable :address="infoParams.data.candidate" />
           </div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Votes</div>
-          <div class="font-weight-bold content">{{ infoParams.data.votes }}</div>
+          <div class="content">{{ infoParams.data.votes }}</div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Bonus Votes</div>
-          <div class="font-weight-bold content">{{ infoParams.data.bonusVotes }}</div>
+          <div class="content">{{ infoParams.data.bonusVotes }}</div>
         </div>
         <div class="info-section mt-1">
-          <div class="name">Type</div>
-          <div class="font-weight-bold content text-break">{{ infoParams.data.type }}</div>
+          <div class="name">Autobid</div>
+          <div class="content text-break">{{ infoParams.data.type }}</div>
         </div>
         <div class="info-section mt-1">
           <div class="name">State</div>
-          <div class="font-weight-bold content text-break">{{ infoParams.data.unbounded ? "Mature " + infoParams.data.matureFromNow : infoParams.data.state }}</div>
+          <div class="content text-break">{{ infoParams.data.unbounded ? "Mature " + infoParams.data.matureFromNow : infoParams.data.state }}</div>
         </div>
       </div>
     </template>
@@ -79,5 +79,8 @@ export default {
   .candidate-info-modal-footer {
     padding: 0 32px;
     overflow-y: auto;
+  }
+  .content {
+    color: gray;
   }
 </style>

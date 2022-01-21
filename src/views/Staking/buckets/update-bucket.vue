@@ -14,7 +14,7 @@
         <b-form @submit.prevent="onSubmit">
           <!-- bucket id -->
           <b-form-group
-            label="Bucket ID:"
+            label="Vote ID:"
             label-for="bucketid"
           >
             <b-form-input
@@ -26,7 +26,7 @@
           </b-form-group>
           <!-- bucket owner -->
           <b-form-group
-            label="Bucket owner:"
+            label="Vote owner:"
             label-for="bucketowner"
           >
             <b-form-input

@@ -9,11 +9,11 @@
               <span class="text-capitalize font-weight-bold">{{ status }}</span>
               <div class="token-list-top-left-switch d-flex flex-column flex-sm-row">
                 <div v-if="status === 'candidate'">
-                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary">LIST ME AS CANDIDATE</button>
+                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary font-weight-bold">CANDIDATE</button>
                 </div>
-                <div v-if="status === 'bucket'" class="d-flex justify-content-between">
+                <div v-if="status === 'vote'" class="d-flex justify-content-between">
                   <b-form-select v-model="bucketFilterSelection" :options="bucketFilterSelections"></b-form-select>
-                  <button @click="createVote" type="button" class="btn btn-primary text-nowrap ml-1">
+                  <button @click="createVote" type="button" class="btn btn-primary text-nowrap ml-1 font-weight-bold">
                     CREATE VOTE
                   </button>
                 </div>
@@ -34,7 +34,7 @@
       <div v-if="status === 'candidate'" class="px-1">
         <CandidatesTable :data="currentData" />
       </div>
-      <div v-if="status === 'bucket'" class="px-1">
+      <div v-if="status === 'vote'" class="px-1">
         <BucketsTable :data="currentData" />
       </div>
       <div class="pagination">
@@ -172,8 +172,8 @@ export default {
 
       bucketFilterSelection: 1,
       bucketFilterSelections: [
-        { text: 'buckets owned by me', value: 1 },
-        { text: 'buckets voted to me', value: 2 },
+        { text: 'my votes', value: 1 },
+        { text: 'votes to me', value: 2 },
       ],
     }
   },

@@ -41,6 +41,10 @@ const actions = {
     commit('setCandidates', candidates)
     commit('setGetCandidatesLoading', false)
   },
+  async getCandidatesNoLoading({ rootState, commit }) {
+    const candidates = await getCandidates(rootState.wallet.chainId)
+    commit('setCandidates', candidates)
+  },
   async getCandidate({ rootState }, { address }) {
     return await getCandidate(rootState.wallet.chainId, address)
   },

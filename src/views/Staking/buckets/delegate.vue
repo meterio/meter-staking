@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="bucketParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">delegate bucket</span>
+      <span class="d-block font-weight-bold text-capitalize">delegate vote</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -14,7 +14,7 @@
         <b-form @submit.prevent="onSubmit">
           <!-- bucket id -->
           <b-form-group
-            label="Bucket ID:"
+            label="Vote ID:"
             label-for="bucketid"
           >
             <b-form-input
@@ -26,7 +26,7 @@
           </b-form-group>
           <!-- bucket owner -->
           <b-form-group
-            label="Bucket owner:"
+            label="Vote owner:"
             label-for="bucketowner"
           >
             <b-form-input

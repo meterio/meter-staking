@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="infoParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block text-capitalize">bucket infomation</span>
+      <span class="d-block text-capitalize">vote infomation</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -26,7 +26,7 @@
         </div>
         <div class="info-section mt-1">
           <div class="name">Bonus Votes</div>
-          <div class="content">{{ infoParams.data.bonusVotes }}</div>
+          <div class="content">{{ infoParams.data.bonus }}</div>
         </div>
         <div class="info-section mt-1">
           <div class="name">Autobid</div>

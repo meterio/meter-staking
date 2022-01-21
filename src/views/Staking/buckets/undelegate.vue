@@ -13,17 +13,17 @@
       <div v-else class="modal-body">
         <b-form @submit.prevent="onSubmit">
           <div class="info-section">
-            <div class="name">Bucket ID</div>
+            <div class="name">Vote ID</div>
             <div class="content text-break">{{ undelegateParams.data.id }}</div>
           </div>
           <div class="info-section mt-1">
-            <div class="name">Bucket Owner</div>
+            <div class="name">Vote Owner</div>
             <div class="content">
               <AddressLable :address="undelegateParams.data.owner" />
             </div>
           </div>
           <div class="info-section mt-1">
-            <div class="name">Bucket Amount</div>
+            <div class="name">Vote Amount</div>
             <div class="content">{{ undelegateParams.data.votes }}</div>
           </div>
           <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>

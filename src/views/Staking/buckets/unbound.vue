@@ -13,20 +13,20 @@
       <div v-else class="modal-body">
         <b-form @submit.prevent="onSubmit">
           <div class="alert alert-info my-1" role="alert">
-            This action will mark this bucket as unbounded, and you could only withdraw funds after a lock down period of 7 days (known as mature time)
+            This action will mark this vote as unbounded, and you could only withdraw funds after a lock down period of 7 days (known as mature time)
           </div>
           <div class="info-section">
-            <div class="name">Bucket ID</div>
+            <div class="name">Vote ID</div>
             <div class="content text-break">{{ unboundParams.data.id }}</div>
           </div>
           <div class="info-section mt-1">
-            <div class="name">Bucket Owner</div>
+            <div class="name">Vote Owner</div>
             <div class="content">
               <AddressLable :address="unboundParams.data.owner" />
             </div>
           </div>
           <div class="info-section mt-1">
-            <div class="name">Bucket Amount</div>
+            <div class="name">Vote Amount</div>
             <div class="content">{{ unboundParams.data.votes }}</div>
           </div>
           <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>

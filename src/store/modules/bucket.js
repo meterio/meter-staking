@@ -35,11 +35,15 @@ const mutations = {
 }
 
 const actions = {
-  async getBuckets({ rootState, state, commit }) {
+  async getBuckets({ rootState, commit }) {
     commit('setLoading', true)
     const buckets = await getBuckets(rootState.wallet.chainId)
     commit('setBuckets', buckets)
     commit('setLoading', false)
+  },
+  async getBucketsNoLoading({ rootState, commit }) {
+    const buckets = await getBuckets(rootState.wallet.chainId)
+    commit('setBuckets', buckets)
   },
   async updateBucket({ rootState, commit, dispatch }, { name, data }) {
     try {

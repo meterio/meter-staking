@@ -8,7 +8,7 @@
     <table v-else-if="data.length" class="table table-hover table-responsive-sm table-font-size">
       <thead>
         <tr>
-          <th scope="col">Bucket ID</th>
+          <th scope="col">Vote ID</th>
           <th scope="col">Owner Address</th>
           <th scope="col">Candidate Address</th>
           <th scope="col">Name</th>
@@ -31,7 +31,7 @@
           <td>{{ item.unbounded ? 'Mature ' + item.matureFromNow : item.state }}</td>
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
-              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="addmore(item)">ADD MORE</a>
+              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="addmore(item)">VOTE MORE</a>
               <b-button :id="'actions' + i" variant="light" class="font-weight-bold ml-1 py-0 px-2" size="small"
                 >···</b-button
               >

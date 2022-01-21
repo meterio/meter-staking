@@ -12,12 +12,12 @@
             <div class="w-100 d-flex justify-content-md-end justify-content-between mb-2">
               <b-button :class="{'btn-color': status === 'candidate'}" class="font-normal-size btn-md-49-percent" variant="mylight" size="lg" @click="candidate">
                 <b-icon icon="people-fill"></b-icon>
-                <span class="ml-1">Candidates</span>
+                <span class="ml-1 font-weight-bold">Candidates</span>
               </b-button>
               <div class="mx-md-3"></div>
-              <b-button :class="{'btn-color': status === 'bucket'}" class="font-normal-size btn-md-49-percent" variant="mylight" size="lg" @click="bucket">
+              <b-button :class="{'btn-color': status === 'vote'}" class="font-normal-size btn-md-49-percent" variant="mylight" size="lg" @click="bucket">
                 <b-icon icon="lock-fill"></b-icon>
-                <span class="ml-1">Staking</span>
+                <span class="ml-1 font-weight-bold">Staking</span>
               </b-button>
             </div>
           </b-col>
@@ -59,7 +59,7 @@ export default {
       this.setStatus('candidate')
     },
     bucket() {
-      this.setStatus('bucket')
+      this.setStatus('vote')
     }
   }
 }

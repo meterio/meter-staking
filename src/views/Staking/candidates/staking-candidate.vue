@@ -23,7 +23,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                Your amount must be gt 0 and lte {{ balances.energy }}.
+                {{ amountValidationMsg }}.
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
@@ -56,12 +56,18 @@
             label="IP:"
             label-for="ip"
           >
-            <b-form-input
-              id="ip"
-              v-model="formData.ip"
-              placeholder="Enter ip"
-              required
-            ></b-form-input>
+            <b-input-group>
+              <b-form-input
+                id="ip"
+                v-model="formData.ip"
+                placeholder="Enter ip"
+                required
+                :state="ipValidation"
+              ></b-form-input>
+              <b-form-invalid-feedback :state="ipValidation" tooltip>
+                {{ ipValidationMsg }}
+              </b-form-invalid-feedback>
+            </b-input-group>
           </b-form-group>
           <!-- port -->
           <b-form-group
@@ -122,6 +128,7 @@ import axios from 'axios'
 import { ScriptEngine } from '@meterio/devkit'
 
 import { getMeterScanUrl } from '@/api'
+import { regExpList } from '@/constants'
 
 export default {
   name: "StakingCandidateModal",
@@ -138,6 +145,8 @@ export default {
   },
   data() {
     return {
+      ipValidationMsg: '',
+      amountValidationMsg: '',
       formData: {
         amount: '',
         name: '',
@@ -176,7 +185,28 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      return amount.gt(0) && amount.lte(this.balances.energy)
+      if (amount.lt(100)) {
+        this.amountValidationMsg = "Must great than or equeal 100."
+        return false
+      }
+      if (amount.gt(this.balances.energy)) {
+        this.amountValidationMsg = "Your balance is insufficient."
+        return false
+      }
+      return true
+    },
+    ipValidation() {
+      if (this.formData.ip == '') {
+        return
+      }
+      console.log(this.formData.ip)
+      console.log(regExpList.ip)
+      console.log(new RegExp(regExpList.ip).test(this.formData.ip))
+      if (!new RegExp(regExpList.ip).test(this.formData.ip)) {
+        this.ipValidationMsg = 'Invalid IP.'
+        return false
+      }
+      return true
     }
   },
   methods: {

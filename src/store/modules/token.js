@@ -1,9 +1,5 @@
-import { ethers } from 'ethers'
 import { BigNumber } from 'bignumber.js'
-
-import erc20 from '@/constants/erc20.json'
 import { getCurrentNetwork, getSupportNetworkListByMode, getBalance } from '@/api'
-import { tokens } from '@/constants'
 
 const namespaced = true
 const state = {
@@ -79,8 +75,7 @@ const actions = {
   async getTokenBalance({ rootState, commit }) {
     console.log('get tokens balance')
     const account = rootState.wallet.account
-    const chainId = rootState.wallet.chainId
-    const data = await getBalance(chainId, account)
+    const data = await getBalance(state.currentNetwork.infoUrl, account)
 
     if (!data) {
       return

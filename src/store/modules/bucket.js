@@ -1,4 +1,4 @@
-import { getBuckets, getTxAddress } from '@/api'
+import { getBuckets } from '@/api'
 
 const namespaced = true
 
@@ -37,19 +37,19 @@ const mutations = {
 const actions = {
   async getBuckets({ rootState, commit }) {
     commit('setLoading', true)
-    const buckets = await getBuckets(rootState.wallet.chainId)
+    const buckets = await getBuckets(rootState.token.currentNetwork.infoUrl)
     commit('setBuckets', buckets)
     commit('setLoading', false)
   },
   async getBucketsNoLoading({ rootState, commit }) {
-    const buckets = await getBuckets(rootState.wallet.chainId)
+    const buckets = await getBuckets(rootState.token.currentNetwork.infoUrl)
     commit('setBuckets', buckets)
   },
   async updateBucket({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setUpdateBucketLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -72,7 +72,7 @@ const actions = {
     try {
       commit('setDelegateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -86,6 +86,8 @@ const actions = {
       commit('setDelegateLoading', { name, hash: 'end' })
 
       dispatch('getBuckets')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setDelegateLoading', { name, hash: 'end' })
@@ -95,7 +97,7 @@ const actions = {
     try {
       commit('setUnboundLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -109,6 +111,8 @@ const actions = {
       commit('setUnboundLoading', { name, hash: 'end' })
 
       dispatch('getBuckets')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setUnboundLoading', { name, hash: 'end' })
@@ -118,7 +122,7 @@ const actions = {
     try {
       commit('setUndelegateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -132,6 +136,8 @@ const actions = {
       commit('setUndelegateLoading', { name, hash: 'end' })
 
       dispatch('getBuckets')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setUndelegateLoading', { name, hash: 'end' })

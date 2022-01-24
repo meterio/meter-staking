@@ -1,4 +1,4 @@
-import { getCandidates, getCandidate, getTxAddress } from '@/api'
+import { getCandidates, getCandidate } from '@/api'
 
 const namespaced = true
 
@@ -37,22 +37,22 @@ const mutations = {
 const actions = {
   async getCandidates({ rootState, commit }) {
     commit('setGetCandidatesLoading', true)
-    const candidates = await getCandidates(rootState.wallet.chainId)
+    const candidates = await getCandidates(rootState.token.currentNetwork.infoUrl)
     commit('setCandidates', candidates)
     commit('setGetCandidatesLoading', false)
   },
   async getCandidatesNoLoading({ rootState, commit }) {
-    const candidates = await getCandidates(rootState.wallet.chainId)
+    const candidates = await getCandidates(rootState.token.currentNetwork.infoUrl)
     commit('setCandidates', candidates)
   },
   async getCandidate({ rootState }, { address }) {
-    return await getCandidate(rootState.wallet.chainId, address)
+    return await getCandidate(rootState.token.currentNetwork.infoUrl, address)
   },
   async stakingVote({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setStakingVoteLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -67,6 +67,8 @@ const actions = {
 
       dispatch('getCandidates')
       dispatch('bucket/getBuckets', null, { root: true })
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setStakingVoteLoading', { name, hash: 'end' })
@@ -76,7 +78,7 @@ const actions = {
     try {
       commit('setStakingCandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -90,6 +92,8 @@ const actions = {
       commit('setStakingCandidateLoading', { name, hash: 'end' })
 
       dispatch('getCandidates')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setStakingCandidateLoading', { name, hash: 'end' })
@@ -99,7 +103,7 @@ const actions = {
     try {
       commit('setUpdateCandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -122,7 +126,7 @@ const actions = {
     try {
       commit('setUncandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
-      const contractAddress = getTxAddress(rootState.wallet.chainId)
+      const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
         value: 0,
@@ -136,6 +140,8 @@ const actions = {
       commit('setUncandidateLoading', { name, hash: 'end' })
 
       dispatch('getCandidates')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setUncandidateLoading', { name, hash: 'end' })

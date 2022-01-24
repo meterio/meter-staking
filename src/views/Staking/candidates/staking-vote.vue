@@ -51,7 +51,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                Your amount must be gt 0 and lte {{ balances.energy }}.
+                {{ amountValidationMsg }}
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
@@ -102,6 +102,7 @@ export default {
   },
   data() {
     return {
+      amountValidationMsg: '',
       formData: {
         lockPeriod: 1,
         source: 'bound',
@@ -197,8 +198,16 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      return amount.gt(0) && amount.lte(this.balances.energy)
-    }
+      if (amount.lt(100)) {
+        this.amountValidationMsg = "Must great than or equeal 100."
+        return false
+      }
+      if (amount.gt(this.balances.energy)) {
+        this.amountValidationMsg = "Your balance is insufficient."
+        return false
+      }
+      return true
+    },
   },
   methods: {
     ...mapActions({

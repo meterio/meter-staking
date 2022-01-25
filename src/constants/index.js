@@ -40,7 +40,7 @@ export const supportNetworkList = [
     governanceTokenDecimals: 18,
     rpcUrl: 'https://test-gearrpc.stp.network',
     blockExplorer: 'https://testnet-explorer.stp.network',
-    infoUrl: 'http://13.251.129.32:8669',
+    infoUrl: 'https://test-rpc0.stp.network',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
     mode: 'testnet',
   },

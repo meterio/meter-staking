@@ -6,15 +6,18 @@
         <b-row>
           <b-col cols="12" md="9" class="d-flex align-items-center">
             <div class="token-list-top-left w-100 d-flex justify-content-between align-items-center p-2 p-md-3">
-              <span class="text-capitalize font-weight-bold">{{ status }}</span>
+              <span class="text-capitalize font-weight-bold">{{ name }}</span>
               <div class="token-list-top-left-switch d-flex flex-column flex-sm-row">
                 <div v-if="status === 'candidate'">
-                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary font-weight-bold">CANDIDATE</button>
+                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary font-weight-bold">
+                    <b-icon icon="plus" />
+                    New Candidate
+                  </button>
                 </div>
                 <div v-if="status === 'vote'" class="d-flex justify-content-between">
                   <b-form-select v-model="bucketFilterSelection" :options="bucketFilterSelections"></b-form-select>
                   <button @click="createVote" type="button" class="btn btn-primary text-nowrap ml-1 font-weight-bold">
-                    CREATE VOTE
+                    <b-icon icon="plus" />New Vote
                   </button>
                 </div>
               </div>
@@ -81,6 +84,9 @@ export default {
     ...mapState('wallet', ['account']),
     totalRows() {
       return this.filterData.length
+    },
+    name() {
+      return this.status === 'candidate' ? 'Candidates' : 'Votes'
     },
     filterData() {
       if (this.status === 'candidate') {

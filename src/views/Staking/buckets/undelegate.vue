@@ -10,19 +10,23 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div v-else class="modal-body">
+      <div v-else class="modal-body pt-3">
+        <b-alert show
+          >This action will reset the current vote, but it won't withdraw the amount. If you do want to withdraw, use
+          Unbound instead</b-alert
+        >
         <b-form @submit.prevent="onSubmit">
-          <div class="info-section">
+          <div class="section">
             <div class="name">Vote ID</div>
             <div class="content text-break">{{ undelegateParams.data.id }}</div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Vote Owner</div>
             <div class="content">
               <AddressLable :address="undelegateParams.data.owner" />
             </div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Vote Amount</div>
             <div class="content">{{ undelegateParams.data.votes }}</div>
           </div>
@@ -32,7 +36,9 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="undelegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="undelegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -46,17 +52,17 @@ import BigNumber from 'bignumber.js'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "UndelegateModal",
+  name: 'UndelegateModal',
   props: {
     undelegateParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {}
@@ -83,39 +89,32 @@ export default {
   },
   methods: {
     ...mapActions({
-      undelegateAction: 'bucket/undelegate'
+      undelegateAction: 'bucket/undelegate',
     }),
     closeModal() {
       this.$emit('close')
     },
     onSubmit() {
-      const value = new BigNumber(this.undelegateParams.data.value).toFixed();
-      let holderAddr = this.account;
-      const dataBuffer = ScriptEngine.getUndelegateData(
-        holderAddr,
-        this.undelegateParams.data.id,
-        value
-      );
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.undelegateAction({ name: this.undelegateParams.data.candidateName, data: scriptData });
+      const value = new BigNumber(this.undelegateParams.data.value).toFixed()
+      let holderAddr = this.account
+      const dataBuffer = ScriptEngine.getUndelegateData(holderAddr, this.undelegateParams.data.id, value)
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.undelegateAction({ name: this.undelegateParams.data.candidateName, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.undelegateHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .modal-body {
-    padding: 0 32px;
-  }
-  .modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
-  .content {
-    color: gray;
-  }
+.modal-body {
+  padding: 0 32px;
+}
+.modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

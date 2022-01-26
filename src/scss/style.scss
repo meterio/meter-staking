@@ -1,11 +1,27 @@
-@import "color";
+@import 'color';
 
-@import "reset";
+@import 'reset';
 
-@import "font";
+@import 'font';
 
-@import "button";
+@import 'button';
 
-@import "position";
+@import 'position';
 
-@import "global";
+@import 'global';
+.section {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  .name {
+    color: #b3b3b3;
+    font-size: 14px;
+  }
+  .content {
+    color: #414141;
+    font-size: 16px;
+    word-break: break-all;
+  }
+}
+label {
+  font-size: 14px;
+}

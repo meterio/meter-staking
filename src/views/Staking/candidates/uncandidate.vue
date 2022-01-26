@@ -10,32 +10,33 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div v-else class="modal-body">
+      <div v-else class="modal-body pt-3">
         <b-form @submit.prevent="onSubmit">
           <div class="alert alert-warning my-1" role="alert">
-            This action will remove this node from candidate list, and all related buckets will be undelegated. You could only withdraw your fund after a lockd down period of 7-days.
+            This action will remove this node from candidate list, and all related buckets will be undelegated. You
+            could only withdraw your fund after a lockd down period of 7-days.
           </div>
-          <div class="info-section">
+          <div class="section">
             <div class="name">Name</div>
             <div class="content">{{ uncandidateParams.data.name }}</div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Description</div>
             <div class="content">{{ uncandidateParams.data.description }}</div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Candidate Address</div>
             <div class="content">
               <AddressLable :address="uncandidateParams.data.address" />
             </div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Candidate IP</div>
             <div class="content">{{ uncandidateParams.data.ipAddr }}</div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Total Votes</div>
-            <div class="content">{{ computedTotalVotes }} <span>{{ currentNetwork.governanceTokenSymbol || '' }}</span></div>
+            <div class="content">{{ computedTotalVotes + ' ' + currentNetwork.governanceTokenSymbol || '' }}</div>
           </div>
           <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
         </b-form>
@@ -43,7 +44,9 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="uncandidateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="uncandidateHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -57,17 +60,17 @@ import { getMeterScanUrl } from '@/api'
 import BigNumber from 'bignumber.js'
 
 export default {
-  name: "UncandidateModal",
+  name: 'UncandidateModal',
   props: {
     uncandidateParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {}
@@ -94,11 +97,11 @@ export default {
     },
     computedTotalVotes() {
       return new BigNumber(this.uncandidateParams.data.totalVotes).div(1e18).toFormat(2)
-    }
+    },
   },
   methods: {
     ...mapActions({
-      uncandidateAction: 'candidate/uncandidate'
+      uncandidateAction: 'candidate/uncandidate',
     }),
     closeModal() {
       this.$emit('close')
@@ -106,26 +109,23 @@ export default {
     onSubmit() {
       const fromAddr = this.account
       const dataBuffer = ScriptEngine.getUncandidateData(fromAddr)
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.uncandidateAction({ name: this.uncandidateParams.data.name, data: scriptData });
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.uncandidateAction({ name: this.uncandidateParams.data.name, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.uncandidateHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .modal-body {
-    padding: 0 32px;
-  }
-  .modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
-  .content {
-    color: gray;
-  }
+.modal-body {
+  padding: 0 32px;
+}
+.modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

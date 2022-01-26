@@ -12,30 +12,33 @@
       </div>
       <div v-else class="modal-body">
         <b-form @submit.prevent="onSubmit">
-          <div class="alert alert-info my-1" role="alert">
-            This action will mark this vote as unbounded, and you could only withdraw funds after a lock down period of 7 days (known as mature time)
+          <div class="alert alert-info my-3" role="alert">
+            This action will mark this vote as unbounded, and you could only withdraw funds after a lock down period of
+            7 days (known as mature time)
           </div>
-          <div class="info-section">
+          <div class="section">
             <div class="name">Vote ID</div>
             <div class="content text-break">{{ unboundParams.data.id }}</div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Vote Owner</div>
             <div class="content">
               <AddressLable :address="unboundParams.data.owner" />
             </div>
           </div>
-          <div class="info-section mt-1">
+          <div class="section">
             <div class="name">Vote Amount</div>
             <div class="content">{{ unboundParams.data.votes }}</div>
           </div>
-          <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
+          <b-button class="w-100 my-3" type="submit" variant="primary">Comfirm</b-button>
         </b-form>
       </div>
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="unboundHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="unboundHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -49,17 +52,17 @@ import BigNumber from 'bignumber.js'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "UnboundModal",
+  name: 'UnboundModal',
   props: {
     unboundParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {}
@@ -86,39 +89,32 @@ export default {
   },
   methods: {
     ...mapActions({
-      unboundAction: 'bucket/unbound'
+      unboundAction: 'bucket/unbound',
     }),
     closeModal() {
       this.$emit('close')
     },
     onSubmit() {
-      const value = new BigNumber(this.unboundParams.data.value).toFixed();
-      let holderAddr = this.account;
-      const dataBuffer = ScriptEngine.getUnboundData(
-        holderAddr,
-        this.unboundParams.data.id,
-        value
-      );
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData });
+      const value = new BigNumber(this.unboundParams.data.value).toFixed()
+      let holderAddr = this.account
+      const dataBuffer = ScriptEngine.getUnboundData(holderAddr, this.unboundParams.data.id, value)
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.unboundHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .modal-body {
-    padding: 0 32px;
-  }
-  .modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
-  .content {
-    color: gray;
-  }
+.modal-body {
+  padding: 0 32px;
+}
+.modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

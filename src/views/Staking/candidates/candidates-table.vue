@@ -9,7 +9,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th scope="col">Wallet Address</th>
+          <th scope="col">Address</th>
           <th scope="col">IP</th>
           <th scope="col">Commission</th>
           <th scope="col">Total Votes</th>
@@ -30,7 +30,12 @@
           <td>
             <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
               <a class="opt-btn font-weight-bold d-flex align-items-center" @click="vote(item)">VOTE</a>
-              <b-button v-if="item.owned" :id="'actions' + i" variant="light" class="font-weight-bold ml-1 py-0 px-2" size="small"
+              <b-button
+                v-if="item.owned"
+                :id="'actions' + i"
+                variant="light"
+                class="font-weight-bold ml-1 py-0 px-2"
+                size="small"
                 >···</b-button
               >
               <b-popover :target="'actions' + i" triggers="hover">
@@ -106,7 +111,8 @@ export default {
           ...c,
           _address: c.address.substr(0, 11) + '...',
           bucketsLen: c.buckets.length,
-          _totalVotes: new BigNumber(c.totalVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || '',
+          _totalVotes:
+            new BigNumber(c.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || '',
           _commission: c.commission / 1e7 + '%',
 
           owned: String(c.address).toLowerCase() === this.account,

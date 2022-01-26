@@ -8,8 +8,9 @@ button {
   justify-content: center;
 }
 .btn-mylight {
-  color: $black-color;
-  background-color: $white-color;
+  background-color: #003cb2;
+  color: white;
+
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   border: 1px solid $white-color;
 }

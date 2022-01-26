@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="stakingCandidateParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">List this account as staking candidate</span>
+      <span class="d-block font-weight-bold text-capitalize">Become a candidate</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -11,6 +11,7 @@
         </div>
       </div>
       <div v-else class="candidate-modal-body">
+        <b-alert show class="mt-3">List {{ account }} as candidate</b-alert>
         <b-form @submit.prevent="onSubmit">
           <!-- amount -->
           <b-form-group label="Amount:" label-for="amount">
@@ -28,22 +29,11 @@
             </b-input-group>
           </b-form-group>
           <!-- name -->
-          <b-form-group
-            label="Name:"
-            label-for="name"
-          >
-            <b-form-input
-              id="name"
-              v-model="formData.name"
-              placeholder="Enter name"
-              required
-            ></b-form-input>
+          <b-form-group label="Name:" label-for="name">
+            <b-form-input id="name" v-model="formData.name" placeholder="Enter name" required></b-form-input>
           </b-form-group>
           <!-- description -->
-          <b-form-group
-            label="Description:"
-            label-for="description"
-          >
+          <b-form-group label="Description:" label-for="description">
             <b-form-input
               id="description"
               v-model="formData.description"
@@ -52,10 +42,7 @@
             ></b-form-input>
           </b-form-group>
           <!-- IP -->
-          <b-form-group
-            label="IP:"
-            label-for="ip"
-          >
+          <b-form-group label="IP:" label-for="ip">
             <b-input-group>
               <b-form-input
                 id="ip"
@@ -70,17 +57,8 @@
             </b-input-group>
           </b-form-group>
           <!-- port -->
-          <b-form-group
-            label="Port:"
-            label-for="port"
-          >
-            <b-form-input
-              id="port"
-              v-model="formData.port"
-              placeholder="Enter port"
-              required
-              disabled
-            ></b-form-input>
+          <b-form-group label="Port:" label-for="port">
+            <b-form-input id="port" v-model="formData.port" placeholder="Enter port" required disabled></b-form-input>
           </b-form-group>
           <!-- commission rate -->
           <b-form-group label="Commission Rate:" label-for="commisstionRate">
@@ -94,10 +72,7 @@
             </b-input-group>
           </b-form-group>
           <!-- public key -->
-          <b-form-group
-            label="Public Key:"
-            label-for="publicKey"
-          >
+          <b-form-group label="Public Key:" label-for="publicKey">
             <b-form-textarea
               id="publicKey"
               v-model="formData.publicKey"
@@ -115,7 +90,9 @@
     </template>
     <template #modal-footer>
       <div class="candidate-modal-footer w-100 py-4">
-        <b-button v-if="stakingCandidateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="stakingCandidateHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -131,17 +108,17 @@ import { getMeterScanUrl } from '@/api'
 import { regExpList } from '@/constants'
 
 export default {
-  name: "StakingCandidateModal",
+  name: 'StakingCandidateModal',
   props: {
     stakingCandidateParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -156,8 +133,8 @@ export default {
         commisstionRate: '10',
         textarea: '',
         publicKey: '',
-        autoBid: true
-      }
+        autoBid: true,
+      },
     }
   },
   computed: {
@@ -186,11 +163,11 @@ export default {
       }
       const amount = new BigNumber(this.formData.amount)
       if (amount.lt(100)) {
-        this.amountValidationMsg = "Must great than or equeal 100."
+        this.amountValidationMsg = 'Must great than or equeal 100.'
         return false
       }
       if (amount.gt(this.balances.energy)) {
-        this.amountValidationMsg = "Your balance is insufficient."
+        this.amountValidationMsg = 'Your balance is insufficient.'
         return false
       }
       return true
@@ -207,52 +184,45 @@ export default {
         return false
       }
       return true
-    }
+    },
   },
   methods: {
     ...mapActions({
-      stakingCandidate: 'candidate/stakingCandidate'
+      stakingCandidate: 'candidate/stakingCandidate',
     }),
     closeModal() {
       this.$emit('close')
     },
     async checkWithProbe() {
-      const url = `http://${this.formData.ip}:${this.formData.port}/probe`;
-      let data = { pubkey: "" };
+      const url = `http://${this.formData.ip}:${this.formData.port}/probe`
+      let data = { pubkey: '' }
       try {
-        const res = await axios.get(url, { timeout: 2500 });
-        data = res.data;
+        const res = await axios.get(url, { timeout: 2500 })
+        data = res.data
       } catch (e) {
-        throw new Error(`port ${this.formData.port} is not open`);
+        throw new Error(`port ${this.formData.port} is not open`)
       }
-      if (
-        !data.hasOwnProperty("bestQC") ||
-        !data.hasOwnProperty("bestBlock") ||
-        !data.hasOwnProperty("pubkey")
-      ) {
-        throw `meter is not correctly running on node ${this.formData.ip}`;
+      if (!data.hasOwnProperty('bestQC') || !data.hasOwnProperty('bestBlock') || !data.hasOwnProperty('pubkey')) {
+        throw `meter is not correctly running on node ${this.formData.ip}`
       }
       if (data.pubkey != this.formData.publicKey) {
         throw new Error(
-          `pubkey mismatch with node config, please compare your pubkey with http://${this.formData.ip}:${this.formData.port}/probe`
-        );
+          `pubkey mismatch with node config, please compare your pubkey with http://${this.formData.ip}:${this.formData.port}/probe`,
+        )
       }
-      return true;
+      return true
     },
     async onSubmit() {
       try {
-        await this.checkWithProbe();
+        await this.checkWithProbe()
       } catch (e) {
         // this.errMsg = e.message;
         console.log(e.message)
-        return;
+        return
       }
 
-      const value = new BigNumber("1" + "0".repeat(18))
-        .times(this.formData.amount)
-        .integerValue()
-        .toString(10);
-      let fromAddr = this.account;
+      const value = new BigNumber('1' + '0'.repeat(18)).times(this.formData.amount).integerValue().toString(10)
+      let fromAddr = this.account
       let dataBuffer = ScriptEngine.getCandidateData(
         fromAddr,
         this.formData.name,
@@ -264,25 +234,25 @@ export default {
         Math.floor(this.formData.commisstionRate * 100),
         undefined,
         undefined,
-        this.formData.autoBid ? 100 : 0
-      );
+        this.formData.autoBid ? 100 : 0,
+      )
 
-      this.stakingCandidate({ name: this.formData.name, data: "0x" + dataBuffer.toString("hex")})
+      this.stakingCandidate({ name: this.formData.name, data: '0x' + dataBuffer.toString('hex') })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.stakingCandidateHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .candidate-modal-body {
-    padding: 0 32px;
-  }
-  .candidate-modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
+.candidate-modal-body {
+  padding: 0 32px;
+}
+.candidate-modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

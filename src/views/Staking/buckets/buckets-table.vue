@@ -9,9 +9,8 @@
       <thead>
         <tr>
           <th scope="col">Vote ID</th>
-          <th scope="col">Owner Address</th>
-          <th scope="col">Candidate Address</th>
-          <th scope="col">Name</th>
+          <th scope="col">From</th>
+          <th scope="col">To</th>
           <th scope="col">Total Votes</th>
           <th scope="col">Autobid</th>
           <th scope="col">State</th>
@@ -24,8 +23,9 @@
             <a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a>
           </td>
           <td>{{ item._owner }}</td>
-          <td>{{ item._candidate }}</td>
-          <td><a class="text-myprimary-color opt-btn" @click="candidateInfo(item)">{{ item.candidateName }}</a></td>
+          <td>
+            <a class="text-myprimary-color opt-btn" @click="candidateInfo(item)">{{ item.candidateName }}</a>
+          </td>
           <td>{{ item.totalVotes }}</td>
           <td>{{ item.type }}</td>
           <td>{{ item.unbounded ? 'Mature ' + item.matureFromNow : item.state }}</td>
@@ -37,7 +37,12 @@
               >
               <b-popover :target="'actions' + i" triggers="hover">
                 <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="unbound(item)">UNBOUND</a>
-                <a v-if="item.candidate === '0x0000000000000000000000000000000000000000'" class="opt-btn d-block font-weight-bold" @click="delegate(item)">DELEGATE</a>
+                <a
+                  v-if="item.candidate === '0x0000000000000000000000000000000000000000'"
+                  class="opt-btn d-block font-weight-bold"
+                  @click="delegate(item)"
+                  >DELEGATE</a
+                >
                 <a v-else class="opt-btn d-block font-weight-bold" @click="undelegate(item)">UNDELEGATE</a>
               </b-popover>
             </div>
@@ -77,7 +82,7 @@ export default {
     DelegateModal,
     UnboundModal,
     UndelegateModal,
-    CandidateInformationModal
+    CandidateInformationModal,
   },
   props: {
     data: {
@@ -105,7 +110,7 @@ export default {
       },
       undelegateParams: {
         show: false,
-        data: {}
+        data: {},
       },
       candidateInfoParams: {
         show: false,
@@ -133,7 +138,8 @@ export default {
           t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
         }
         if (b.totalVotes) {
-          t.totalVotes = new BigNumber(b.totalVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
+          t.totalVotes =
+            new BigNumber(b.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || ''
         }
         return t
       })
@@ -141,7 +147,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getCandidate: 'candidate/getCandidate'
+      getCandidate: 'candidate/getCandidate',
     }),
     addmore(bucket) {
       this.bucketParams.show = true

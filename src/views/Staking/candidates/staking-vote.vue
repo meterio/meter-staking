@@ -10,26 +10,16 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div v-else class="passport-modal-body">
+      <div v-else class="passport-modal-body mt-3">
         <b-form @submit.prevent="onSubmit">
           <!-- lock period -->
-          <b-form-group label="Lock period:" label-for="lock-period">
-            <b-form-select
-              disabled
-              id="lock-period"
-              v-model="formData.lockPeriod"
-              :options="lockPeriodOptions"
-              required
-            ></b-form-select>
-          </b-form-group>
+          <div class="section">
+            <div class="name">Lock Period</div>
+            <div class="content">One week</div>
+          </div>
           <!-- source -->
           <b-form-group label="Source:" label-for="source">
-            <b-form-select
-              id="source"
-              v-model="formData.source"
-              :options="sourceOptions"
-              required
-            ></b-form-select>
+            <b-form-select id="source" v-model="formData.source" :options="sourceOptions" required></b-form-select>
           </b-form-group>
           <!-- candidate -->
           <b-form-group label="Candidate:" label-for="candidate">
@@ -57,12 +47,7 @@
           </b-form-group>
           <!-- bucket -->
           <b-form-group v-if="formData.source === 'delegate'" label="Bucket:" label-for="bucket">
-            <b-form-select
-              id="bucket"
-              v-model="formData.bucketID"
-              :options="bucketOptions"
-              required
-            ></b-form-select>
+            <b-form-select id="bucket" v-model="formData.bucketID" :options="bucketOptions" required></b-form-select>
           </b-form-group>
           <!-- enable auto bid -->
           <b-form-group>
@@ -74,7 +59,9 @@
     </template>
     <template #modal-footer>
       <div class="passport-modal-footer w-100 py-4">
-        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -88,17 +75,17 @@ import { ScriptEngine } from '@meterio/devkit'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "StakingVoteModal",
+  name: 'StakingVoteModal',
   props: {
     voteParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -109,24 +96,24 @@ export default {
         candidate: '',
         amount: '',
         autoBid: true,
-        bucketID: ''
+        bucketID: '',
       },
       lockPeriodOptions: [
-        { text: "Lock for one week", value: 1 },
-        { text: "Lock for two weeks", value: 2 },
-        { text: "Lock for three weekds", value: 3 },
-        { text: "Lock for four weeks", value: 4 },
+        { text: 'Lock for one week', value: 1 },
+        { text: 'Lock for two weeks', value: 2 },
+        { text: 'Lock for three weekds', value: 3 },
+        { text: 'Lock for four weeks', value: 4 },
       ],
       sourceOptions: [
-        { text: "Governance balance", value: "bound" },
-        { text: "Existing bucket", value: "delegate" },
-      ]
+        { text: 'Governance balance', value: 'bound' },
+        { text: 'Existing bucket', value: 'delegate' },
+      ],
     }
   },
   watch: {
-    "voteParams.data"() {
+    'voteParams.data'() {
       this.formData.candidate = this.voteParams.data.address
-    }
+    },
   },
   computed: {
     ...mapState('candidate', ['candidates', 'stakingVoteLoading']),
@@ -153,45 +140,40 @@ export default {
       const formatCandidate = this.candidates
         .map((c) => {
           return {
-            text:
-              c.name +
-              "   (" +
-              c.address.substr(0, 8) +
-              "..." +
-              c.address.substr(c.address.length - 6) +
-              ")",
+            text: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
             value: c.address,
-          };
+          }
         })
         .sort((a, b) => {
-          return Math.random() > 0.5 ? 1 : -1;
-        });
+          return Math.random() > 0.5 ? 1 : -1
+        })
 
       return [
         {
-          text: 'Choose new candidate', 
-          value: ''
+          text: 'Choose new candidate',
+          value: '',
         },
-        ...formatCandidate
+        ...formatCandidate,
       ]
     },
     bucketOptions() {
       return this.buckets
         .filter((b) => {
-          return String(b.owner) == this.account;
+          return String(b.owner) == this.account
         })
         .map((b) => {
           return {
             text:
               b.id.substr(0, 8) +
-              "..." +
-              b.id.substr(b.id.length - 6) +
-              " (" +
-              new BigNumber(b.votes).dividedBy(1e18).toFixed() +
-              " " + this.currentNetwork.governanceTokenSymbol || '' + ")",
+                '...' +
+                b.id.substr(b.id.length - 6) +
+                ' (' +
+                new BigNumber(b.votes).dividedBy(1e18).toFixed() +
+                ' ' +
+                this.currentNetwork.governanceTokenSymbol || '' + ')',
             value: b.id,
-          };
-        });
+          }
+        })
     },
     amountValidation() {
       if (this.formData.amount == '') {
@@ -199,11 +181,11 @@ export default {
       }
       const amount = new BigNumber(this.formData.amount)
       if (amount.lt(100)) {
-        this.amountValidationMsg = "Must great than or equeal 100."
+        this.amountValidationMsg = 'Must great than or equeal 100.'
         return false
       }
       if (amount.gt(this.balances.energy)) {
-        this.amountValidationMsg = "Your balance is insufficient."
+        this.amountValidationMsg = 'Your balance is insufficient.'
         return false
       }
       return true
@@ -211,7 +193,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      'stakingVote': 'candidate/stakingVote'
+      stakingVote: 'candidate/stakingVote',
     }),
     closeModal() {
       this.$emit('close')
@@ -219,11 +201,8 @@ export default {
     async onSubmit() {
       const holderAddr = this.account
       let dataBuffer = ''
-      if (this.formData.source === "bound") {
-        const value = new BigNumber("1" + "0".repeat(18))
-          .times(this.formData.amount)
-          .integerValue()
-          .toString(10);
+      if (this.formData.source === 'bound') {
+        const value = new BigNumber('1' + '0'.repeat(18)).times(this.formData.amount).integerValue().toString(10)
         dataBuffer = ScriptEngine.getBoundData(
           this.formData.lockPeriod,
           holderAddr,
@@ -231,19 +210,19 @@ export default {
           value,
           undefined,
           undefined,
-          this.formData.autoBid ? 100 : 0
-        );
-      } else if (this.formData.source === "delegate") {
-        let bucket;
+          this.formData.autoBid ? 100 : 0,
+        )
+      } else if (this.formData.source === 'delegate') {
+        let bucket
         for (var i in this.buckets) {
-          const b = this.buckets[i];
+          const b = this.buckets[i]
           if (b.id == this.formData.bucketID) {
-            bucket = b;
+            bucket = b
           }
         }
         if (!bucket) {
-          this.errMsg = "could not find bucket with the given ID";
-          return;
+          this.errMsg = 'could not find bucket with the given ID'
+          return
         }
 
         dataBuffer = ScriptEngine.getDelegateData(
@@ -253,26 +232,26 @@ export default {
           bucket.votes,
           undefined,
           undefined,
-          this.formData.autoBid ? 100 : 0
-        );
+          this.formData.autoBid ? 100 : 0,
+        )
       }
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.stakingVote({ name: this.voteParams.data.name, data: scriptData });
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.stakingVote({ name: this.voteParams.data.name, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.stakingVoteHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .passport-modal-body {
-    padding: 0 32px;
-  }
-  .passport-modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
+.passport-modal-body {
+  padding: 0 32px;
+}
+.passport-modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

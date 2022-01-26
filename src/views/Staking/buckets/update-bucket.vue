@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="bucketParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">update bucket</span>
+      <span class="d-block font-weight-bold text-capitalize">Add more vote</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -10,56 +10,28 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div v-else class="modal-body">
+      <div v-else class="modal-body pt-2">
+        <div class="section">
+          <div class="name">Vote ID</div>
+          <div class="content">{{ formData.id }}</div>
+        </div>
+        <div class="section">
+          <div class="name">From</div>
+          <div class="content">{{ formData.owner }}</div>
+        </div>
+        <div class="section">
+          <div class="name">Vote Amount</div>
+          <div class="content">{{ formData.currentAmount }} {{ currentNetwork.governanceTokenSymbol }}</div>
+        </div>
         <b-form @submit.prevent="onSubmit">
-          <!-- bucket id -->
-          <b-form-group
-            label="Vote ID:"
-            label-for="bucketid"
-          >
-            <b-form-input
-              id="bucketid"
-              v-model="formData.id"
-              placeholder="Enter id"
-              disabled
-            ></b-form-input>
-          </b-form-group>
-          <!-- bucket owner -->
-          <b-form-group
-            label="Vote owner:"
-            label-for="bucketowner"
-          >
-            <b-form-input
-              id="bucketowner"
-              v-model="formData.owner"
-              placeholder="Enter owner"
-              disabled
-            ></b-form-input>
-          </b-form-group>
-          <!-- current amount -->
-          <b-form-group
-            label="Current amount"
-            label-for="currentamount"
-          >
-            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
-              <b-form-input
-                id="currentamount"
-                v-model="formData.currentAmount"
-                placeholder="Enter amount"
-                disabled
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
           <!-- extra amount -->
-          <b-form-group
-            label="Extra amount"
-            label-for="extraamount"
-          >
+          <b-form-group label="Extra amount" label-for="extraamount" class="mt-3">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="extraamount"
                 v-model="formData.extraAmount"
                 placeholder="Enter amount"
+                autofocus="true"
                 required
                 :state="amountValidation"
               ></b-form-input>
@@ -74,7 +46,9 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="updateBucketHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="updateBucketHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -88,17 +62,17 @@ import { ScriptEngine } from '@meterio/devkit'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "UpdateBucketModal",
+  name: 'UpdateBucketModal',
   props: {
     bucketParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -106,8 +80,8 @@ export default {
         id: '',
         owner: '',
         currentAmount: '',
-        extraAmount: ''
-      }
+        extraAmount: '',
+      },
     }
   },
   watch: {
@@ -119,7 +93,7 @@ export default {
         this.formData.owner = owner
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()
       }
-    }
+    },
   },
   computed: {
     ...mapState('bucket', ['updateBucketLoading']),
@@ -147,11 +121,11 @@ export default {
       }
       const amount = new BigNumber(this.formData.extraAmount)
       return amount.gt(0) && amount.lte(this.balances.energy)
-    }
+    },
   },
   methods: {
     ...mapActions({
-      'updateBucket': 'bucket/updateBucket'
+      updateBucket: 'bucket/updateBucket',
     }),
     closeModal() {
       this.$emit('close')
@@ -161,25 +135,25 @@ export default {
       let dataBuffer = ScriptEngine.getBucketUpdateData(
         fromAddr,
         this.formData.id,
-        new BigNumber(this.formData.extraAmount).times(1e18).toFixed()
-      );
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData });
+        new BigNumber(this.formData.extraAmount).times(1e18).toFixed(),
+      )
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.updateBucketHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .modal-body {
-    padding: 0 32px;
-  }
-  .modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
+.modal-body {
+  padding: 0 32px;
+}
+.modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

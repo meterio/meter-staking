@@ -10,64 +10,28 @@
           <span class="sr-only">Loading...</span>
         </div>
       </div>
-      <div v-else class="modal-body">
-        <b-form @submit.prevent="onSubmit">
-          <!-- bucket id -->
-          <b-form-group
-            label="Vote ID:"
-            label-for="bucketid"
-          >
-            <b-form-input
-              id="bucketid"
-              v-model="formData.id"
-              placeholder="Enter id"
-              disabled
-            ></b-form-input>
-          </b-form-group>
-          <!-- bucket owner -->
-          <b-form-group
-            label="Vote owner:"
-            label-for="bucketowner"
-          >
-            <b-form-input
-              id="bucketowner"
-              v-model="formData.owner"
-              placeholder="Enter owner"
-              disabled
-            ></b-form-input>
-          </b-form-group>
-          <!-- current amount -->
-          <b-form-group
-            label="Current amount"
-            label-for="currentamount"
-          >
-            <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
-              <b-form-input
-                id="currentamount"
-                v-model="formData.currentAmount"
-                placeholder="Enter amount"
-                disabled
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-          <!-- current candidate -->
-          <b-form-group
-            label="Current Candidate:"
-            label-for="currentcandidate"
-          >
-            <b-form-input
-              id="currentcandidate"
-              v-model="formData.candidate"
-              placeholder="Enter candidate"
-              disabled
-            ></b-form-input>
-          </b-form-group>
+      <div v-else class="modal-body pt-3">
+        <b-alert show>This action uses an existing bucket to vote</b-alert>
+        <div class="section">
+          <div class="name">Vote ID</div>
+          <div class="content">{{ formData.id }}</div>
+        </div>
+       
+        <div class="section">
+          <div class="name">From</div>
+          <div class="content">{{ formData.owner }}</div>
+        </div>
+        <div class="section">
+          <div class="name">Votes</div>
+          <div class="content">{{ formData.currentAmount }} {{ currentNetwork.governanceTokenSymbol }}</div>
+        </div>
           <!-- new candidate -->
           <b-form-group label="New Candidate:" label-for="newcandidate">
             <b-form-select
               id="newcandidate"
               v-model="formData.newCandidate"
               :options="candidateOptions"
+              autofocus="true"
               required
             ></b-form-select>
           </b-form-group>
@@ -81,7 +45,9 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="delegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan</b-button>
+        <b-button v-if="delegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan</b-button
+        >
       </div>
     </template>
   </CustomizedModal>
@@ -95,17 +61,17 @@ import { ScriptEngine } from '@meterio/devkit'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: "DelegateModal",
+  name: 'DelegateModal',
   props: {
     bucketParams: {
       type: Object,
       default() {
         return {
           show: false,
-          data: {}
+          data: {},
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -115,8 +81,8 @@ export default {
         candidate: '',
         newCandidate: '',
         currentAmount: '',
-        autoBid: true
-      }
+        autoBid: true,
+      },
     }
   },
   watch: {
@@ -129,7 +95,7 @@ export default {
         this.formData.candidate = candidate
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()
       }
-    }
+    },
   },
   computed: {
     ...mapState('candidate', ['candidates']),
@@ -156,38 +122,32 @@ export default {
       const formatCandidate = this.candidates
         .map((c) => {
           return {
-            text:
-              c.name +
-              "   (" +
-              c.address.substr(0, 8) +
-              "..." +
-              c.address.substr(c.address.length - 6) +
-              ")",
+            text: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
             value: c.address,
-          };
+          }
         })
         .sort((a, b) => {
-          return Math.random() > 0.5 ? 1 : -1;
-        });
+          return Math.random() > 0.5 ? 1 : -1
+        })
       return [
         {
           text: 'Choose new candidate',
-          value: ''
+          value: '',
         },
-        ...formatCandidate
+        ...formatCandidate,
       ]
     },
   },
   methods: {
     ...mapActions({
-      'delegate': 'bucket/delegate'
+      delegate: 'bucket/delegate',
     }),
     closeModal() {
       this.$emit('close')
     },
     async onSubmit() {
-      const value = new BigNumber(this.bucketParams.data.value).toFixed();
-      let holderAddr = this.account;
+      const value = new BigNumber(this.bucketParams.data.value).toFixed()
+      let holderAddr = this.account
       const dataBuffer = ScriptEngine.getDelegateData(
         holderAddr,
         this.formData.newCandidate,
@@ -195,25 +155,25 @@ export default {
         value,
         undefined,
         undefined,
-        this.formData.autoBid ? 100 : 0
-      );
-      const scriptData = '0x' + dataBuffer.toString('hex');
-      this.delegate({ name: this.bucketParams.data.candidateName, data: scriptData });
+        this.formData.autoBid ? 100 : 0,
+      )
+      const scriptData = '0x' + dataBuffer.toString('hex')
+      this.delegate({ name: this.bucketParams.data.candidateName, data: scriptData })
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)
       window.open(`${url}/tx/${this.delegateHash}`, '_blank')
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  .modal-body {
-    padding: 0 32px;
-  }
-  .modal-footer {
-    padding: 0 32px;
-    overflow-y: auto;
-  }
+.modal-body {
+  padding: 0 32px;
+}
+.modal-footer {
+  padding: 0 32px;
+  overflow-y: auto;
+}
 </style>

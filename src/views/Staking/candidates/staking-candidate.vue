@@ -163,7 +163,7 @@ export default {
       }
       const amount = new BigNumber(this.formData.amount)
       if (amount.lt(100)) {
-        this.amountValidationMsg = 'Must great than or equeal 100.'
+        this.amountValidationMsg = 'Amount should >= 100.'
         return false
       }
       if (amount.gt(this.balances.energy)) {

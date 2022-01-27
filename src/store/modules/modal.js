@@ -8,6 +8,8 @@ const state = {
   // show candidate or bucket
   // candidate:  default
   // bucket: vote
+  // bailout: bailout
+  // auction: auction
   status: 'candidate',
 }
 
@@ -30,9 +32,7 @@ const mutations = {
   },
 
   setStatus(state, status) {
-    if (status === 'candidate' || status === 'vote') {
-      state.status = status
-    }
+    state.status = status
   },
 }
 

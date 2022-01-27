@@ -3,31 +3,51 @@
     <b-container>
       <div class="amount-content mt-4">
         <b-row>
-          <b-col md="6" class="d-flex justify-content-between">
+          <b-col md="6" class="d-flex flex-wrap justify-content-between">
             <div v-for="(item, index) in computedBalance" :key="index">
               <div class="symbol-label text-right">{{ item.symbol }}</div>
               <div class="balance-label">{{ item.balance }}</div>
             </div>
           </b-col>
-          <b-col md="6" class="d-flex justify-content-md-end justify-content-between my-3">
+          <b-col md="6" class="d-flex flex-wrap justify-content-md-end my-3">
             <b-button
               :class="{ 'btn-color': status === 'candidate' }"
-              class="font-normal-size btn-md-49-percent"
+              class="font-normal-size"
               variant="mylight"
               @click="candidate"
             >
               <b-icon icon="people-fill"></b-icon>
               <span class="ml-1 font-weight-bold">Candidates</span>
             </b-button>
-            <div class="mx-md-3"></div>
+            <div class="mx-md-2"></div>
             <b-button
               :class="{ 'btn-color': status === 'vote' }"
-              class="font-normal-size btn-md-49-percent"
+              class="font-normal-size"
               variant="mylight"
               @click="bucket"
             >
               <b-icon icon="lock-fill"></b-icon>
               <span class="ml-1 font-weight-bold">Votes</span>
+            </b-button>
+            <div class="mx-md-2"></div>
+            <b-button
+              :class="{ 'btn-color': status === 'bailout' }"
+              class="font-normal-size"
+              variant="mylight"
+              @click="bailOut"
+            >
+              <b-icon icon="lock-fill"></b-icon>
+              <span class="ml-1 font-weight-bold">Bail Out</span>
+            </b-button>
+            <div class="mx-md-2"></div>
+            <b-button
+              :class="{ 'btn-color': status === 'auction' }"
+              class="font-normal-size"
+              variant="mylight"
+              @click="auction"
+            >
+              <b-icon icon="hourglass-split"></b-icon>
+              <span class="ml-1 font-weight-bold">Auction</span>
             </b-button>
           </b-col>
         </b-row>
@@ -70,6 +90,12 @@ export default {
     bucket() {
       this.setStatus('vote')
     },
+    bailOut() {
+      this.setStatus('bailout')
+    },
+    auction() {
+      this.setStatus('auction')
+    }
   },
 }
 </script>

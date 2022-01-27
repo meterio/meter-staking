@@ -34,11 +34,19 @@
       <Divider class="mt-3 mt-md-0" />
 
       <!-- data table -->
-      <div v-if="status === 'candidate'" class="px-1">
-        <CandidatesTable :data="currentData" />
-      </div>
-      <div v-if="status === 'vote'" class="px-1">
-        <BucketsTable :data="currentData" />
+      <div class="px-1">
+        <div v-if="status === 'candidate'">
+          <CandidatesTable :data="currentData" />
+        </div>
+        <div v-if="status === 'vote'">
+          <BucketsTable :data="currentData" />
+        </div>
+        <div v-if="status === 'bailout'">
+          <BailOutTable />
+        </div>
+        <div v-if="status === 'auction'">
+          <AuctionTable />
+        </div>
       </div>
       <div class="pagination">
         <Pagination
@@ -60,6 +68,8 @@
 import Divider from '@/components/Divider'
 import CandidatesTable from './candidates/candidates-table.vue'
 import BucketsTable from './buckets/buckets-table.vue'
+import BailOutTable from './bailout/bailout-table.vue'
+import AuctionTable from './auction/auction-table.vue'
 import Pagination from '@/components/Pagination'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import moment from 'moment'
@@ -73,6 +83,8 @@ export default {
     Divider,
     CandidatesTable,
     BucketsTable,
+    BailOutTable,
+    AuctionTable,
     Pagination,
     StakingCandidateModal,
     StakingVoteModal,
@@ -86,7 +98,18 @@ export default {
       return this.filterData.length
     },
     name() {
-      return this.status === 'candidate' ? 'Candidates' : 'Votes'
+      switch (this.status) {
+        case 'candidate':
+          return 'Candidates'
+        case 'vote':
+          return 'Votes'
+        case 'bailout':
+          return 'Bail Out'
+        case 'auction':
+          return 'Present Auction'
+        default:
+          return ''
+      }
     },
     filterData() {
       if (this.status === 'candidate') {
@@ -102,41 +125,45 @@ export default {
         })
       }
 
-      let filteredBuckets = []
-      if (this.bucketFilterSelection === 1) {
-        filteredBuckets = this.buckets
-          .filter((b) => String(b.owner).toLowerCase() === this.account)
-          .map((b) => {
-            b.owned = true
-            b.candidateName = this.candidateNameMap[b.candidate] || '-'
-            b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
-            b.state = b.unbounded ? 'unbounded' : 'created'
-            b.type = b.autobid >= 100 ? 'on' : 'off'
-            return b
-          })
-      } else {
-        filteredBuckets = this.buckets
-          .filter((b) => String(b.candidate).toLowerCase() === this.account)
-          .map((b) => {
-            b.owned = false
-            b.candidateName = this.candidateNameMap[b.candidate] || '-'
-            b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
-            b.state = b.unbounded ? 'unbounded' : 'valid'
-            b.type = b.autobid >= 100 ? 'on' : 'off'
-            return b
-          })
-      }
-      return filteredBuckets.filter((bucket) => {
-        if (this.searchAim.trim() === '') {
-          return true
+      if (this.status === 'vote') {
+        let filteredBuckets = []
+        if (this.bucketFilterSelection === 1) {
+          filteredBuckets = this.buckets
+            .filter((b) => String(b.owner).toLowerCase() === this.account)
+            .map((b) => {
+              b.owned = true
+              b.candidateName = this.candidateNameMap[b.candidate] || '-'
+              b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
+              b.state = b.unbounded ? 'unbounded' : 'created'
+              b.type = b.autobid >= 100 ? 'on' : 'off'
+              return b
+            })
         } else {
-          return (
-            bucket.candidate.toLowerCase().indexOf(this.searchAim) !== -1 ||
-            bucket.candidateName.toLowerCase().indexOf(this.searchAim) !== -1 ||
-            bucket.id.toLowerCase().indexOf(this.searchAim) !== -1
-          )
+          filteredBuckets = this.buckets
+            .filter((b) => String(b.candidate).toLowerCase() === this.account)
+            .map((b) => {
+              b.owned = false
+              b.candidateName = this.candidateNameMap[b.candidate] || '-'
+              b.matureFromNow = b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : ''
+              b.state = b.unbounded ? 'unbounded' : 'valid'
+              b.type = b.autobid >= 100 ? 'on' : 'off'
+              return b
+            })
         }
-      })
+        return filteredBuckets.filter((bucket) => {
+          if (this.searchAim.trim() === '') {
+            return true
+          } else {
+            return (
+              bucket.candidate.toLowerCase().indexOf(this.searchAim) !== -1 ||
+              bucket.candidateName.toLowerCase().indexOf(this.searchAim) !== -1 ||
+              bucket.id.toLowerCase().indexOf(this.searchAim) !== -1
+            )
+          }
+        })
+      }
+
+      return []
     },
     candidateNameMap() {
       let map = {}
@@ -152,7 +179,11 @@ export default {
       if (this.status === 'candidate') {
         return this.filterData.slice(start, end)
       }
-      return this.filterData.slice(start, end)
+      if (this.status === 'vote') {
+        return this.filterData.slice(start, end)
+      }
+
+      return []
     },
   },
   watch: {

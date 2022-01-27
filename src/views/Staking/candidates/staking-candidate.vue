@@ -24,7 +24,7 @@
                 :state="amountValidation"
               ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
-                {{ amountValidationMsg }}.
+                {{ amountValidationMsg }}
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>

@@ -9,6 +9,8 @@ import { token } from '@/store/modules/token'
 import { candidate } from './modules/candidate'
 import { bucket } from './modules/bucket'
 import { modal } from './modules/modal'
+import { bailout } from './modules/bailout'
+import { auction } from './modules/auction'
 
 export default new Vuex.Store({
   state: {},
@@ -21,5 +23,7 @@ export default new Vuex.Store({
     candidate,
     bucket,
     modal,
+    bailout,
+    auction,
   },
 })

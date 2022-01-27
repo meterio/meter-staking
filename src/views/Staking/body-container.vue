@@ -1,45 +1,14 @@
 <template>
   <div class="token-list-content container position-relative">
     <!-- top -->
-    <div class="token-list w-100">
-      <div class="token-list-top">
-        <b-row>
-          <b-col cols="12" md="9" class="d-flex align-items-center">
-            <div class="token-list-top-left w-100 d-flex justify-content-between align-items-center p-2 p-md-3">
-              <span class="text-capitalize font-weight-bold">{{ name }}</span>
-              <div class="token-list-top-left-switch d-flex flex-column flex-sm-row">
-                <div v-if="status === 'candidate'">
-                  <button @click="listMeAsCandidate" type="button" class="btn btn-primary font-weight-bold">
-                    <b-icon icon="plus" />
-                    New Candidate
-                  </button>
-                </div>
-                <div v-if="status === 'vote'" class="d-flex justify-content-between">
-                  <b-form-select v-model="bucketFilterSelection" :options="bucketFilterSelections"></b-form-select>
-                  <button @click="createVote" type="button" class="btn btn-primary text-nowrap ml-1 font-weight-bold">
-                    <b-icon icon="plus" />New Vote
-                  </button>
-                </div>
-              </div>
-            </div>
-          </b-col>
-          <b-col cols="12" md="3">
-            <div class="token-list-top-right px-2 p-md-3">
-              <b-input v-model="searchAim" placeholder="Seach here"></b-input>
-            </div>
-          </b-col>
-        </b-row>
-      </div>
-
-      <Divider class="mt-3 mt-md-0" />
-
+    <div class="token-list pt-2">
       <!-- data table -->
       <div class="px-1">
         <div v-if="status === 'candidate'">
-          <CandidatesTable :data="currentData" />
+          <CandidatesTable />
         </div>
         <div v-if="status === 'vote'">
-          <BucketsTable :data="currentData" />
+          <BucketsTable />
         </div>
         <div v-if="status === 'bailout'">
           <BailOutTable />
@@ -48,20 +17,7 @@
           <AuctionTable />
         </div>
       </div>
-      <div class="pagination">
-        <Pagination
-          v-if="currentData.length"
-          :totalRows="totalRows"
-          :currentPage="currentPage"
-          :perPage="perPage"
-          @pageChange="pageChange"
-        />
-      </div>
     </div>
-
-    <StakingCandidateModal :stakingCandidateParams="stakingCandidateParams" @close="closeStakingCandidateModal" />
-    <!-- vote modal -->
-    <StakingVoteModal :voteParams="voteParams" @close="closeStakingVoteModal" />
   </div>
 </template>
 <script>
@@ -74,9 +30,6 @@ import Pagination from '@/components/Pagination'
 import { mapActions, mapMutations, mapState } from 'vuex'
 import moment from 'moment'
 
-import StakingCandidateModal from './candidates/staking-candidate.vue'
-import StakingVoteModal from './candidates/staking-vote.vue'
-
 export default {
   name: 'StakingBodyContainer',
   components: {
@@ -86,8 +39,6 @@ export default {
     BailOutTable,
     AuctionTable,
     Pagination,
-    StakingCandidateModal,
-    StakingVoteModal,
   },
   computed: {
     ...mapState('candidate', ['candidates']),
@@ -230,18 +181,6 @@ export default {
     pageChange(page) {
       console.log('current page: ', page)
       this.currentPage = page
-    },
-    listMeAsCandidate() {
-      this.stakingCandidateParams.show = true
-    },
-    closeStakingCandidateModal() {
-      this.stakingCandidateParams.show = false
-    },
-    createVote() {
-      this.voteParams.show = true
-    },
-    closeStakingVoteModal() {
-      this.voteParams.show = false
     },
   },
 }

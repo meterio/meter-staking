@@ -7,12 +7,16 @@ button {
   align-items: center;
   justify-content: center;
 }
-.btn-mylight {
-  background-color: #003cb2;
+.btn.btn-mylight {
+  background-color: $myprimary-color;
   color: white;
 
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
-  border: 1px solid $white-color;
+  border: 1px solid $white-color !important;
+}
+.btn.btn-mylight:hover {
+  color: darken(white, 20%);
+  background-color: lighten($myprimary-color, 10%);
 }
 .btn-myprimary {
   color: $white-color;

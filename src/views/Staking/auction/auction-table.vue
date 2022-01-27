@@ -1,43 +1,71 @@
 <template>
   <div class="data-table-content">
+    <b-row class="p-3">
+      <b-col>
+        <div class="d-flex justify-space-between">
+          <b-button variant="primary" @click="auctionBid" type="button" class="ml-2"
+            ><b-icon icon="plus" />New Bid</b-button
+          >
+        </div></b-col
+      >
+    </b-row>
     <div v-if="getAuctionsloading" class="d-flex justify-content-center py-5">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <section v-else-if="computedData" class="d-flex justify-content-center">
-      <b-card :style="{width: '500px'}" class="m-3">
-        <b-card-text>
-          <div class="section">
-            <div class="name">MTRG on Auction</div>
-            <div class="content">{{ computedData._releasedMTRG }}</div>
-          </div>
-          <div class="section">
-            <div class="name">Received bids</div>
-            <div class="content">{{ computedData._receivedMTR }}</div>
-          </div>
-          <div class="section">
-            <div class="name">Estimate Price</div>
-            <div class="content">{{ estimatePrice }}</div>
-          </div>
-          <div class="section">
-            <div class="name">Epoch Range</div>
-            <div class="content">{{ computedData.endEpoch }} - {{ computedData.endEpoch + 24 }}</div>
-          </div>
-          <div class="section">
-            <div class="name">Current Epoch</div>
-            <div class="content">{{ best.epoch }}</div>
-          </div>
-          <div class="section">
-            <div class="name">Est. End Time</div>
-            <div class="content">{{ leftoverEpoch }} hour{{ leftoverEpoch > 1 ? "s" : "" }}</div>
-          </div>
-        </b-card-text>
+    <b-row v-else class="p-2 px-4">
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">My Total Bids (MTR)</div>
+          <div class="value primary">{{ myBidsTotal }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">My Est. Gain (MTRG)</div>
+          <div class="value primary">{{ myEstMTRGTotal }}</div>
+        </div></b-col
+      >
 
-        <b-button class="w-100" variant="primary" @click="auctionBid">auction bid</b-button>
-      </b-card>
-    </section>
-    <span class="d-flex justify-content-center font-weight-bold py-5" v-else>No jailed information found associated with this wallet</span>
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">Est. Price</div>
+          <div class="value">{{ estimatePrice }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">Ends In</div>
+          <div class="value">{{ leftoverEpoch }} hour{{ leftoverEpoch > 1 ? 's' : '' }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">MTRG on Auction</div>
+          <div class="value">{{ computedData._releasedMTRG }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">Received Bids (MTR)</div>
+          <div class="value">{{ computedData._receivedMTR }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">Auction Epoch Range</div>
+          <div class="value">{{ computedData.endEpoch }} - {{ computedData.endEpoch + 24 }}</div>
+        </div></b-col
+      >
+      <b-col md="3" class="p-3"
+        ><div class="fact-card">
+          <div class="name">Current Epoch</div>
+          <div class="value">{{ best.epoch }}</div>
+        </div></b-col
+      >
+    </b-row>
+
     <AuctionBidModal :auctionBidParams="auctionBidParams" @close="closeAuctionBidModal" />
   </div>
 </template>
@@ -52,14 +80,14 @@ import AuctionBidModal from './auction-bid.vue'
 export default {
   name: 'AuctionTable',
   components: {
-    AuctionBidModal
+    AuctionBidModal,
   },
   data() {
     return {
       auctionBidParams: {
         data: {},
-        show: false
-      }
+        show: false,
+      },
     }
   },
   computed: {
@@ -76,20 +104,34 @@ export default {
         endEpoch: this.auctions.endEpoch,
         sequence: this.auctions.sequence,
         releasedMTRG: this.auctions.releasedMTRG,
-        _releasedMTRG: new BigNumber(this.auctions.releasedMTRG).div(1e18).toFormat() + ' MTRG',
+        _releasedMTRG: new BigNumber(this.auctions.releasedMTRG).div(1e18).toFormat(2),
         reservedMTRG: this.auctions.reservedMTRG,
         reservedPrice: this.auctions.reservedPrice,
         createTime: this.auctions.createTime,
         receivedMTR: this.auctions.receivedMTR,
-        _receivedMTR: new BigNumber(this.auctions.receivedMTR).div(1e18).toFormat() + ' MTR',
+        _receivedMTR: new BigNumber(this.auctions.receivedMTR).div(1e18).toFormat(2),
       }
     },
     estimatePrice() {
-      return new BigNumber(this.computedData.receivedMTR).div(this.computedData.releasedMTRG).toFormat() + ' MTR'
+      return new BigNumber(this.computedData.receivedMTR).div(this.computedData.releasedMTRG).toFormat(2)
     },
     leftoverEpoch() {
-      return this.computedData.endEpoch + 24 - this.best.epoch;
-    }
+      return this.computedData.endEpoch + 24 - this.best.epoch
+    },
+    myBidsTotal() {
+      return this.auctions.auctionTxs
+        .filter((tx) => {
+          return tx.address === this.account.toLowerCase()
+        })
+        .reduce((sum, v) => {
+          return new BigNumber(v.amount).plus(sum)
+        }, new BigNumber(0))
+        .div(1e18)
+        .toFormat(2, 1)
+    },
+    myEstMTRGTotal() {
+      return new BigNumber(this.myBidsTotal).div(this.estimatePrice).toFormat(2, 1)
+    },
   },
   created() {
     this.getAuctions()
@@ -98,7 +140,7 @@ export default {
   methods: {
     ...mapActions({
       getAuctions: 'auction/getAuctions',
-      getBest: 'auction/getBest'
+      getBest: 'auction/getBest',
     }),
     auctionBid() {
       this.auctionBidParams.show = true
@@ -106,7 +148,7 @@ export default {
     },
     closeAuctionBidModal() {
       this.auctionBidParams.show = false
-    }
+    },
   },
 }
 </script>

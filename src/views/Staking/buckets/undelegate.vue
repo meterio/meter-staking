@@ -30,7 +30,7 @@
             <div class="name">Vote Amount</div>
             <div class="content">{{ undelegateParams.data.votes }}</div>
           </div>
-          <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
+          <b-button class="w-100 mt-1" type="submit" variant="primary">Confirm</b-button>
         </b-form>
       </div>
     </template>

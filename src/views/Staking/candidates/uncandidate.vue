@@ -38,7 +38,7 @@
             <div class="name">Total Votes</div>
             <div class="content">{{ computedTotalVotes + ' ' + currentNetwork.governanceTokenSymbol || '' }}</div>
           </div>
-          <b-button class="w-100 mt-1" type="submit" variant="primary">Comfirm</b-button>
+          <b-button class="w-100 mt-1" type="submit" variant="primary">Confirm</b-button>
         </b-form>
       </div>
     </template>

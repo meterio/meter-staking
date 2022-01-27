@@ -1,56 +1,88 @@
 <template>
   <div class="data-table-content">
+    <b-row class="p-3">
+      <b-col>
+        <div class="d-flex justify-space-between">
+          <b-form-group label-size="sm" class="mb-0">
+            <b-form-select v-model="bucketFilterSelection" :options="bucketFilterOptions"></b-form-select>
+          </b-form-group>
+
+          <b-button variant="primary" @click="createVote" type="button" class="ml-2"
+            ><b-icon icon="plus" />New Vote</b-button
+          >
+        </div></b-col
+      >
+      <b-col cols="12" md="auto"></b-col>
+      <b-col col lg="3"
+        ><b-form-group label-size="sm" class="mb-0">
+          <b-input-group>
+            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Search here"></b-form-input>
+          </b-input-group> </b-form-group
+      ></b-col>
+    </b-row>
+
+    <Divider />
+
+    <b-row class="p-3">
+      <b-col cols="12">
+        <b-table
+          v-if="totalRows > 0"
+          :busy="loading"
+          :items="computedData"
+          :fields="fields"
+          :current-page="currentPage"
+          :per-page="perPage"
+          :filter="filter"
+        >
+          <template #table-busy>
+            <div class="text-center my-2">
+              <b-spinner class="align-middle mr-3"></b-spinner>
+              <strong>Loading...</strong>
+            </div>
+          </template>
+          <template #cell(id)="data">
+            <b-link @click="info(data.item)">{{ data.item.id | abbr }}</b-link>
+          </template>
+          <template #cell(candidateName)="data">
+            <b-link @click="candidateInfo(data.item)">{{ data.item.candidateName }}</b-link>
+          </template>
+          <template #cell(action)="data">
+            <div v-if="data.item.owned" class="token-operation">
+              <b-link @click="addmore(data.item)">Vote More</b-link>
+              <b-button :id="'action' + data.index" variant="light" class="ml-1 py-0 px-2" size="small">···</b-button>
+              <b-popover :target="'action' + data.index" triggers="hover">
+                <b-link v-if="!data.item.unbounded" @click="unbound(data.item)">Unbound</b-link>
+
+                <b-link
+                  v-if="data.item.candidate === '0x0000000000000000000000000000000000000000'"
+                  class="opt-btn d-block"
+                  @click="delegate(data.item)"
+                  >Delegate</b-link
+                >
+                <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
+              </b-popover>
+            </div>
+          </template>
+        </b-table>
+        <div v-else>NO DATA</div>
+        <b-col v-if="totalRows > 0" sm="12" class="my-1">
+          <b-pagination
+            pills
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="perPage"
+            align="center"
+            size="sm"
+            class="my-0"
+          ></b-pagination>
+        </b-col>
+      </b-col>
+    </b-row>
     <div v-if="loading" class="d-flex justify-content-center py-5">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <table v-else-if="data.length" class="table table-hover table-responsive-sm table-font-size">
-      <thead>
-        <tr>
-          <th scope="col">Vote ID</th>
-          <th scope="col">From</th>
-          <th scope="col">To</th>
-          <th scope="col">Total Votes</th>
-          <th scope="col">Autobid</th>
-          <th scope="col">State</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, i) in computedData" :key="item.address">
-          <td>
-            <a class="text-myprimary-color opt-btn" @click="info(item)">{{ item._id }}</a>
-          </td>
-          <td>{{ item._owner }}</td>
-          <td>
-            <a class="text-myprimary-color opt-btn" @click="candidateInfo(item)">{{ item.candidateName }}</a>
-          </td>
-          <td>{{ item.totalVotes }}</td>
-          <td>{{ item.type }}</td>
-          <td>{{ item.unbounded ? 'Mature ' + item.matureFromNow : item.state }}</td>
-          <td>
-            <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
-              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="addmore(item)">VOTE MORE</a>
-              <b-button :id="'actions' + i" variant="light" class="font-weight-bold ml-1 py-0 px-2" size="small"
-                >···</b-button
-              >
-              <b-popover :target="'actions' + i" triggers="hover">
-                <a v-if="item.owned" class="opt-btn d-block font-weight-bold" @click="unbound(item)">UNBOUND</a>
-                <a
-                  v-if="item.candidate === '0x0000000000000000000000000000000000000000'"
-                  class="opt-btn d-block font-weight-bold"
-                  @click="delegate(item)"
-                  >DELEGATE</a
-                >
-                <a v-else class="opt-btn d-block font-weight-bold" @click="undelegate(item)">UNDELEGATE</a>
-              </b-popover>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <span class="d-flex justify-content-center font-weight-bold py-5" v-else>NO DATA</span>
 
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
@@ -60,6 +92,8 @@
 
     <!-- candidate information modal -->
     <CandidateInformationModal :infoParams="candidateInfoParams" @close="closeCandidateInfoModal" />
+
+    <StakingVoteModal :voteParams="voteParams" @close="closeStakingVoteModal" />
   </div>
 </template>
 <script>
@@ -73,6 +107,9 @@ import UnboundModal from './unbound.vue'
 import UndelegateModal from './undelegate.vue'
 
 import CandidateInformationModal from '../candidates/candidate-info.vue'
+import Divider from '../../../components/Divider'
+import moment from 'moment'
+import StakingVoteModal from '../candidates/staking-vote.vue'
 
 export default {
   name: 'BucketsTable',
@@ -83,15 +120,53 @@ export default {
     UnboundModal,
     UndelegateModal,
     CandidateInformationModal,
+    Divider,
+    StakingVoteModal,
   },
-  props: {
-    data: {
-      type: Array,
-      required: true,
-    },
-  },
+
+  props: {},
   data() {
     return {
+      bucketFilterSelection: 1,
+      bucketFilterOptions: [
+        { text: 'my votes', value: 1 },
+        { text: 'votes to me', value: 2 },
+      ],
+      perPage: 5,
+      currentPage: 1,
+      filter: '',
+      fields: [
+        { key: 'id', sortable: true, label: 'Vote ID' },
+        {
+          key: 'owner',
+          sortable: true,
+          label: 'From',
+          sortByFormatted: true,
+          formatter: (value, key, item) => {
+            return item.owner.substr(0, 11) + '...'
+          },
+        },
+        { key: 'candidateName', sortable: true, label: 'To' },
+        {
+          key: 'totalVotes',
+          sortable: true,
+          sortByFormatted: true,
+          formatter: (val, key, item) => {
+            return new BigNumber(item.value).div(1e18).toFormat(2)
+          },
+        },
+        { key: 'type', sortable: true, label: 'Autobid' },
+        {
+          key: 'state',
+          sortable: true,
+          label: 'State',
+          sortByFormatted: true,
+          formatter: (val, key, item) => {
+            return item.unbounded ? 'Mature ' + item.matureFromNow : item.state
+          },
+        },
+        { key: 'action', sortable: false },
+      ],
       infoParams: {
         show: false,
         data: {},
@@ -116,36 +191,71 @@ export default {
         show: false,
         data: {},
       },
+      voteParams: {
+        show: false,
+        data: {},
+      },
     }
   },
   computed: {
+    ...mapState('bucket', ['buckets', 'loading']),
+    ...mapState('candidate', ['candidates']),
     ...mapState('token', ['currentNetwork']),
-    ...mapState('bucket', ['loading']),
     ...mapState('wallet', ['account']),
+    candidateNameMap() {
+      let map = {}
+      for (var i in this.candidates) {
+        const c = this.candidates[i]
+        map[c.address] = c.name
+      }
+      return map
+    },
     computedData() {
-      return this.data.map((b) => {
-        const t = {
-          ...b,
-          _id: b.id.substr(0, 11) + '...',
-          _owner: b.owner.substr(0, 11) + '...',
-          _candidate: b.candidate.substr(0, 11) + '...',
-          votes: new BigNumber(b.value).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || '',
-          totalVotes: '0',
-          bonus: '0',
-        }
+      return this.buckets
+        .filter((b) => {
+          if (this.bucketFilterSelection === 1) {
+            return b.owner.toLowerCase() === this.account.toLowerCase()
+          } else if (this.bucketFilterSelection === 2) {
+            return b.candidate.toLowerCase() === this.account.toLowerCase()
+          } else {
+            return false
+          }
+        })
+        .map((b) => {
+          const t = {
+            ...b,
+            votes: new BigNumber(b.value).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || '',
+            totalVotes: '0',
+            bonus: '0',
+            candidateName: this.candidateNameMap[b.candidate] || '-',
+            matureFromNow: b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : '',
+            state: b.unbounded ? 'unbounded' : 'created',
+            type: b.autobid >= 100 ? 'on' : 'off',
+          }
+          console.log(t)
 
-        if (b.bonusVotes) {
-          t.bonus = new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
-        }
-        if (b.totalVotes) {
-          t.totalVotes =
-            new BigNumber(b.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || ''
-        }
-        return t
-      })
+          if (b.bonusVotes) {
+            t.bonus =
+              new BigNumber(b.bonusVotes).div(1e18).toFormat(2) + this.currentNetwork.governanceTokenSymbol || ''
+          }
+          if (b.totalVotes) {
+            t.totalVotes =
+              new BigNumber(b.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || ''
+          }
+          return t
+        })
+    },
+    totalRows() {
+      return this.computedData.length
     },
   },
   methods: {
+    createVote() {
+      this.voteParams.show = true
+    },
+    closeStakingVoteModal() {
+      this.voteParams.show = false
+    },
     ...mapActions({
       getCandidate: 'candidate/getCandidate',
     }),

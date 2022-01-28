@@ -46,7 +46,7 @@
             </b-input-group>
           </b-form-group>
           <!-- bucket -->
-          <b-form-group v-if="formData.source === 'delegate'" label="Bucket:" label-for="bucket">
+          <b-form-group v-if="formData.source === 'delegate'" label="Existing Vote:" label-for="bucket">
             <b-form-select id="bucket" v-model="formData.bucketID" :options="bucketOptions" required></b-form-select>
           </b-form-group>
           <!-- enable auto bid -->
@@ -106,7 +106,7 @@ export default {
       ],
       sourceOptions: [
         { text: 'Governance balance', value: 'bound' },
-        { text: 'Existing bucket', value: 'delegate' },
+        { text: 'Existing vote', value: 'delegate' },
       ],
     }
   },
@@ -168,8 +168,8 @@ export default {
                 '...' +
                 b.id.substr(b.id.length - 6) +
                 ' (' +
-                new BigNumber(b.votes).dividedBy(1e18).toFixed() +
-                ' ' +
+                new BigNumber(b.totalVotes).minus(b.bonusVotes).dividedBy(1e18).toFixed(2, 1) +
+                ') ' +
                 this.currentNetwork.governanceTokenSymbol || '' + ')',
             value: b.id,
           }

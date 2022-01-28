@@ -38,8 +38,8 @@
             <b-link @click="info(data.item)">{{ data.item.name }}</b-link>
           </template>
           <template #cell(action)="data">
-            <div class="token-operation text-myprimary-color font-weight-bold d-flex justify-content-start">
-              <a class="opt-btn font-weight-bold d-flex align-items-center" @click="vote(data.item)">Vote</a>
+            <div class="token-operation d-flex justify-content-start">
+              <a class="opt-btn d-flex align-items-center" @click="vote(data.item)">Vote</a>
               <b-button
                 v-if="data.item.owned"
                 variant="light"
@@ -49,8 +49,8 @@
                 >···</b-button
               >
               <b-popover triggers="hover" :target="'action' + data.index">
-                <a class="opt-btn d-block font-weight-bold" @click="update(data.item)">Update</a>
-                <a class="opt-btn d-block font-weight-bold" @click="uncandidate(data.item)">Uncandidate</a>
+                <b-link @click="update(data.item)">Update</b-link>
+                <b-link @click="uncandidate(data.item)">Uncandidate</b-link>
               </b-popover>
             </div>
           </template>

@@ -24,6 +24,10 @@ Vue.component(CustomizedModal.name, CustomizedModal)
 Vue.component(CryptoIcon.name, CryptoIcon)
 Vue.component(AddressLable.name, AddressLable)
 
+import vSelect from 'vue-select'
+
+Vue.component('v-select', vSelect)
+
 Vue.filter('abbr', function (value) {
   if (!value) return ''
   value = value.toString()

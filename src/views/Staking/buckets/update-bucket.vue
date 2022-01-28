@@ -94,6 +94,11 @@ export default {
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()
       }
     },
+    updateBucketHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
   },
   computed: {
     ...mapState('bucket', ['updateBucketLoading']),

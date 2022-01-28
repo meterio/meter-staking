@@ -33,6 +33,8 @@
           :current-page="currentPage"
           :per-page="perPage"
           :filter="filter"
+          stacked="md"
+          responsive
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -78,11 +80,11 @@
         </b-col>
       </b-col>
     </b-row>
-    <div v-if="loading" class="d-flex justify-content-center py-5">
+    <!-- <div v-if="loading" class="d-flex justify-content-center py-5">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
-    </div>
+    </div> -->
 
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
@@ -250,7 +252,13 @@ export default {
       return this.computedData.length
     },
   },
+  created() {
+    this.getBuckets()
+  },
   methods: {
+    ...mapActions({
+      getBuckets: 'bucket/getBuckets'
+    }),
     createVote() {
       this.voteParams.show = true
     },

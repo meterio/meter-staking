@@ -99,6 +99,13 @@ export default {
       return ''
     },
   },
+  watch: {
+    unboundHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
+  },
   methods: {
     ...mapActions({
       unboundAction: 'bucket/unbound',

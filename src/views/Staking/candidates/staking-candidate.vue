@@ -137,6 +137,13 @@ export default {
       },
     }
   },
+  watch: {
+    stakingCandidateHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
+  },
   computed: {
     ...mapState('candidate', ['stakingCandidateLoading']),
     ...mapState('token', ['balances', 'currentNetwork']),

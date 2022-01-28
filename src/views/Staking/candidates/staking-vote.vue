@@ -23,12 +23,16 @@
           </b-form-group>
           <!-- candidate -->
           <b-form-group label="Candidate:" label-for="candidate">
-            <b-form-select
+            <!-- <b-form-select
               id="candidate"
               v-model="formData.candidate"
               :options="candidateOptions"
               required
-            ></b-form-select>
+            ></b-form-select> -->
+            <div class="v-select-container">
+              <v-select :class="{selectError: selectValid}" v-model="formData.candidate" :options="candidateOptions" :reduce="c => c.value"></v-select>
+              <span v-if="selectValid" class="selectStatus">{{ selectValidMsg }}</span>
+            </div>
           </b-form-group>
           <!-- amount -->
           <b-form-group v-if="formData.source === 'bound'" label="Amount:" label-for="amount">
@@ -90,6 +94,7 @@ export default {
   data() {
     return {
       amountValidationMsg: '',
+      selectValidMsg: '',
       formData: {
         lockPeriod: 1,
         source: 'bound',
@@ -114,6 +119,11 @@ export default {
     'voteParams.data'() {
       this.formData.candidate = this.voteParams.data.address
     },
+    stakingVoteHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
   },
   computed: {
     ...mapState('candidate', ['candidates', 'stakingVoteLoading']),
@@ -140,7 +150,7 @@ export default {
       const formatCandidate = this.candidates
         .map((c) => {
           return {
-            text: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
+            label: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
             value: c.address,
           }
         })
@@ -150,7 +160,7 @@ export default {
 
       return [
         {
-          text: 'Choose new candidate',
+          label: 'Choose new candidate',
           value: '',
         },
         ...formatCandidate,
@@ -190,6 +200,12 @@ export default {
       }
       return true
     },
+    selectValid() {
+      if (!this.formData.candidate) {
+        this.selectValidMsg = "Choose candidate please."
+        return true
+      }
+    }
   },
   methods: {
     ...mapActions({

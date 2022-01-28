@@ -164,6 +164,11 @@ export default {
         this.formData.commisstionRate = commission/1e7
         this.formData.publicKey = pubKey
       }
+    },
+    updateCandidateHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
     }
   },
   computed: {

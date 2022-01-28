@@ -93,6 +93,13 @@ export default {
       }
     }
   },
+  watch: {
+    auctionBidHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
+  },
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
     ...mapState('auction', ['bidLoading']),

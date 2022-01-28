@@ -11,29 +11,34 @@
         </div>
       </div>
       <div v-else class="modal-body pt-3">
-        <b-alert show>This action uses an existing bucket to vote</b-alert>
-        <div class="section">
-          <div class="name">Vote ID</div>
-          <div class="content">{{ formData.id }}</div>
-        </div>
-       
-        <div class="section">
-          <div class="name">From</div>
-          <div class="content">{{ formData.owner }}</div>
-        </div>
-        <div class="section">
-          <div class="name">Votes</div>
-          <div class="content">{{ formData.currentAmount }} {{ currentNetwork.governanceTokenSymbol }}</div>
-        </div>
+        <b-form @submit.prevent="onSubmit">
+          <b-alert show>This action uses an existing bucket to vote</b-alert>
+          <div class="section">
+            <div class="name">Vote ID</div>
+            <div class="content">{{ formData.id }}</div>
+          </div>
+        
+          <div class="section">
+            <div class="name">From</div>
+            <div class="content">{{ formData.owner }}</div>
+          </div>
+          <div class="section">
+            <div class="name">Votes</div>
+            <div class="content">{{ formData.currentAmount }} {{ currentNetwork.governanceTokenSymbol }}</div>
+          </div>
           <!-- new candidate -->
           <b-form-group label="New Candidate:" label-for="newcandidate">
-            <b-form-select
+            <!-- <b-form-select
               id="newcandidate"
               v-model="formData.newCandidate"
               :options="candidateOptions"
               autofocus="true"
               required
-            ></b-form-select>
+            ></b-form-select> -->
+            <div class="v-select-container">
+              <v-select :class="{selectError: selectValid}" v-model="formData.newCandidate" :options="candidateOptions" :reduce="c => c.value"></v-select>
+              <span v-if="selectValid" class="selectStatus">{{ selectValidMsg }}</span>
+            </div>
           </b-form-group>
           <!-- enable auto bid -->
           <b-form-group>
@@ -75,6 +80,7 @@ export default {
   },
   data() {
     return {
+      selectValidMsg: '',
       formData: {
         id: '',
         owner: '',
@@ -96,6 +102,11 @@ export default {
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()
       }
     },
+    delegateHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
   },
   computed: {
     ...mapState('candidate', ['candidates']),
@@ -122,7 +133,7 @@ export default {
       const formatCandidate = this.candidates
         .map((c) => {
           return {
-            text: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
+            label: c.name + '   (' + c.address.substr(0, 8) + '...' + c.address.substr(c.address.length - 6) + ')',
             value: c.address,
           }
         })
@@ -131,12 +142,18 @@ export default {
         })
       return [
         {
-          text: 'Choose new candidate',
+          label: 'Choose new candidate',
           value: '',
         },
         ...formatCandidate,
       ]
     },
+    selectValid() {
+      if (!this.formData.newCandidate) {
+        this.selectValidMsg = "Choose candidate please."
+        return true
+      }
+    }
   },
   methods: {
     ...mapActions({

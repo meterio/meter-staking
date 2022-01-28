@@ -27,6 +27,8 @@
           :current-page="currentPage"
           :per-page="perPage"
           :filter="filter"
+          stacked="md"
+          responsive
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -50,7 +52,8 @@
               >
               <b-popover triggers="hover" :target="'action' + data.index">
                 <b-link @click="update(data.item)">Update</b-link>
-                <b-link @click="uncandidate(data.item)">Uncandidate</b-link>
+                <b-link class="d-block" @click="uncandidate(data.item)">Uncandidate</b-link>
+                <b-link class="d-block" v-if="data.item.jailed" @click="bailOut(data.item)">Bailout</b-link>
               </b-popover>
             </div>
           </template>
@@ -79,10 +82,12 @@
     <!-- uncandidate -->
     <UncandidateModal :uncandidateParams="uncandidateParams" @close="closeUncandidateModal" />
     <StakingCandidateModal :stakingCandidateParams="stakingCandidateParams" @close="closeStakingCandidateModal" />
+    <!-- bail out modal -->
+    <BailOutModal :bailOutParams="bailOutParams" @close="closeBailOutmodal" />
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import StakingVoteModal from './staking-vote.vue'
 import CandidateInformationModal from './candidate-info.vue'
@@ -90,6 +95,9 @@ import CandidateUpdateModal from './candidate-update.vue'
 import UncandidateModal from './uncandidate.vue'
 import StakingCandidateModal from './staking-candidate.vue'
 import Divider from '../../../components/Divider'
+import BailOutModal from './bailout.vue'
+
+import moment from 'moment'
 
 export default {
   name: 'CadidatesTable',
@@ -99,6 +107,7 @@ export default {
     CandidateUpdateModal,
     UncandidateModal,
     StakingCandidateModal,
+    BailOutModal,
     Divider,
   },
   props: {},
@@ -150,14 +159,20 @@ export default {
         show: false,
         data: {},
       },
+      bailOutParams: {
+        show: false,
+        data: {}
+      }
     }
   },
   computed: {
     ...mapState('candidate', ['candidates', 'getCandidatesloading']),
     ...mapState('wallet', ['account']),
     ...mapState('token', ['currentNetwork']),
+    ...mapState('bailout', ['jaileds']),
     computedData() {
       return this.candidates.map((c) => {
+        const jailed = this.jaileds.find(j => j.address === c.address)
         return {
           ...c,
           _address: c.address.substr(0, 11) + '...',
@@ -167,6 +182,7 @@ export default {
           _commission: c.commission / 1e7 + '%',
 
           owned: String(c.address).toLowerCase() === this.account,
+          jailed: !!jailed
         }
       })
     },
@@ -174,7 +190,13 @@ export default {
       return this.computedData.length
     },
   },
+  created() {
+    // this.getJaileds()
+  },
   methods: {
+    ...mapActions({
+      getJaileds: 'bailout/getJaileds'
+    }),
     listMeAsCandidate() {
       this.stakingCandidateParams.show = true
     },
@@ -210,6 +232,20 @@ export default {
     closeUncandidateModal() {
       this.uncandidateParams.show = false
     },
+    bailOut(candidate) {
+      const jailed = this.jaileds.find(j => j.address === candidate.address)
+      console.log('jailed', jailed)
+      this.bailOutParams.show = true
+      this.bailOutParams.data = {
+        ...jailed,
+        _bailAmount: new BigNumber(jailed.bailAmount).div(1e18).toFormat(),
+        _jailedTime: moment.utc(1000 * Number(jailed.jailedTime)).fromNow() + '(' + new Date(jailed.jailedTime * 10e2).toLocaleString() + ')'
+      }
+    },
+    closeBailOutmodal() {
+      this.bailOutParams.show = false
+      this.getJaileds()
+    }
   },
 }
 </script>

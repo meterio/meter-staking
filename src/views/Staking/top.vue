@@ -20,11 +20,6 @@
               <span class="ml-1 font-weight-bold">Votes</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button :class="{ 'btn-color': status === 'bailout' }" variant="mylight" @click="bailOut">
-              <b-icon icon="lock-fill"></b-icon>
-              <span class="ml-1 font-weight-bold">Bail Out</span>
-            </b-button>
-            <div class="mx-md-2"></div>
             <b-button :class="{ 'btn-color': status === 'auction' }" variant="mylight" @click="auction">
               <b-icon icon="hourglass-split"></b-icon>
               <span class="ml-1 font-weight-bold">Auction</span>
@@ -69,9 +64,6 @@ export default {
     },
     bucket() {
       this.setStatus('vote')
-    },
-    bailOut() {
-      this.setStatus('bailout')
     },
     auction() {
       this.setStatus('auction')

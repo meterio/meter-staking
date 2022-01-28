@@ -98,6 +98,13 @@ export default {
       return ''
     },
   },
+  watch: {
+    undelegateHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
+  },
   methods: {
     ...mapActions({
       undelegateAction: 'bucket/undelegate',

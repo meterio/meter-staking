@@ -81,3 +81,25 @@ body {
     font-weight: bold;
   }
 }
+
+// v-select
+@import '~vue-select/dist/vue-select.css';
+
+.vs__dropdown-toggle {
+  height: 38px;
+}
+.vs__clear {
+  display: flex;
+  align-items: center;
+}
+.selectError > .vs__dropdown-toggle {
+  border-color: rgba(220, 53, 69, 0.9);
+}
+.selectStatus {
+  display: inline-block;
+  color: #fff;
+  background-color: rgba(220, 53, 69, 0.9);
+  border-radius: 4px;
+  margin-top: 1px;
+  padding: 4px 8px;
+}

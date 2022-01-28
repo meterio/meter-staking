@@ -75,6 +75,13 @@ export default {
   data() {
     return {}
   },
+  watch: {
+    uncandidateHash(newVal, oldVal) {
+      if (newVal === '' && oldVal.includes('0x')) {
+        this.closeModal()
+      }
+    }
+  },
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
     ...mapState('candidate', ['uncandidateLoading']),

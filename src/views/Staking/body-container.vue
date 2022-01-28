@@ -157,12 +157,6 @@ export default {
         show: false,
         data: {},
       },
-
-      bucketFilterSelection: 1,
-      bucketFilterSelections: [
-        { text: 'my votes', value: 1 },
-        { text: 'votes to me', value: 2 },
-      ],
     }
   },
   created() {

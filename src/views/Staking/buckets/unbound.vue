@@ -13,8 +13,20 @@
       <div v-else class="modal-body">
         <b-form @submit.prevent="onSubmit">
           <div class="alert alert-info my-3" role="alert">
-            This action will mark this vote as unbounded, and you could only withdraw funds after a lock down period of
-            7 days (known as mature time)
+            This action will allow user to withdraw MTRG locked in staking after a lockdown period of 7 days (maturity
+            time) <br />
+            <b>Caution:</b> <br />
+            <ul>
+              <li>
+                Once successfully <b>Unbound</b>, the <i>State</i> column on the bucket should start with a countdown –
+                <i>Maturing in 7 days</i>
+              </li>
+              <li>
+                After the end of 7-day countdown, the MTRG are locked in staking until the end of epoch (maximum of 1
+                hr.)
+              </li>
+              <li>Unbounding without undelegating will earn you staking rewards during the maturity time</li>
+            </ul>
           </div>
           <div class="section">
             <div class="name">Vote ID</div>

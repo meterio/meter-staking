@@ -12,9 +12,20 @@
       </div>
       <div v-else class="modal-body pt-3">
         <b-alert show
-          >This action will reset the current vote, but it won't withdraw the amount. If you do want to withdraw, use
-          Unbound instead</b-alert
-        >
+          >This action will allow user to change the <i>candidate</i> on the bucket without withdrawing the MTRG from
+          staking<br />
+          <b>Caution:</b><br />
+          <ul>
+            <li>
+              Once undelegated, the user will not receive staking rewards unless the bucket is redelegated to another
+              candidate
+            </li>
+            <li>
+              The bucket receives <i>bonus</i> votes for prolonged staking on a candidate which gives additional weight
+              in governance. Undelegating the bucket resets the bonus votes
+            </li>
+          </ul>
+        </b-alert>
         <b-form @submit.prevent="onSubmit">
           <div class="section">
             <div class="name">Vote ID</div>

@@ -129,8 +129,8 @@ export default {
     return {
       bucketFilterSelection: 1,
       bucketFilterOptions: [
-        { text: 'my votes', value: 1 },
-        { text: 'votes to me', value: 2 },
+        { text: 'Staking', value: 1 },
+        { text: 'Node operation', value: 2 },
       ],
       perPage: 5,
       currentPage: 1,
@@ -231,6 +231,7 @@ export default {
             matureFromNow: b.unbounded ? moment.utc(1000 * Number(b.matureTime)).fromNow() : '',
             state: b.unbounded ? 'unbounded' : 'created',
             type: b.autobid >= 100 ? 'on' : 'off',
+            owned: b.owner.toLowerCase() === this.account.toLowerCase(),
           }
           console.log(t)
 

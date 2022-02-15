@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="bucketParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">Add more vote</span>
+      <span class="d-block font-weight-bold text-capitalize">sub vote</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -24,14 +24,14 @@
           <div class="content">{{ formData.currentAmount }} {{ currentNetwork.governanceTokenSymbol }}</div>
         </div>
         <b-form @submit.prevent="onSubmit">
-          <!-- extra amount -->
-          <b-form-group label="Extra amount" label-for="extraamount" class="mt-3">
+          <!-- sub amount -->
+          <b-form-group label="Sub amount" label-for="subamount" class="mt-3">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
-                id="extraamount"
-                v-model="formData.extraAmount"
+                id="subamount"
+                v-model="formData.subamount"
                 placeholder="Enter amount"
-                autofocus="true"
+                :autofocus="true"
                 required
                 :state="amountValidation"
               ></b-form-input>
@@ -40,7 +40,7 @@
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
-          <b-button class="w-100" type="submit" variant="primary">Submit</b-button>
+          <b-button :disabled="!amountValidation" class="w-100" type="submit" variant="primary">Submit</b-button>
         </b-form>
       </div>
     </template>
@@ -62,7 +62,7 @@ import { ScriptEngine } from '@meterio/devkit'
 import { getMeterScanUrl } from '@/api'
 
 export default {
-  name: 'UpdateBucketModal',
+  name: 'AddBucketModal',
   props: {
     bucketParams: {
       type: Object,
@@ -81,7 +81,7 @@ export default {
         id: '',
         owner: '',
         currentAmount: '',
-        extraAmount: '',
+        subamount: '',
       },
     }
   },
@@ -122,16 +122,16 @@ export default {
       return ''
     },
     amountValidation() {
-      if (this.formData.extraAmount == '') {
+      if (this.formData.subamount == '') {
         return
       }
-      const amount = new BigNumber(this.formData.extraAmount)
-      if (amount.lt(100)) {
-        this.amountValidationMsg = 'Amount should >= 100.'
+      const amount = new BigNumber(this.formData.subamount)
+      if (amount.lt(0)) {
+        this.amountValidationMsg = 'Amount should > 0.'
         return false
       }
-      if (amount.gt(this.balances.energy)) {
-        this.amountValidationMsg = 'Your balance is insufficient.'
+      if (amount.gt(this.formData.currentAmount)) {
+        this.amountValidationMsg = 'Your locked balance is insufficient.'
         return false
       }
       return true
@@ -146,10 +146,10 @@ export default {
     },
     async onSubmit() {
       const fromAddr = this.account
-      let dataBuffer = ScriptEngine.getBucketUpdateData(
+      let dataBuffer = ScriptEngine.getBucketSubData(
         fromAddr,
         this.formData.id,
-        new BigNumber(this.formData.extraAmount).times(1e18).toFixed(),
+        new BigNumber(this.formData.subamount).times(1e18).toFixed(),
       )
       const scriptData = '0x' + dataBuffer.toString('hex')
       this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })

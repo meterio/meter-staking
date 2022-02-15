@@ -62,6 +62,7 @@
                   >Delegate</b-link
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
+                <b-link @click="subVote(data.item)">Sub Vote</b-link>
               </b-popover>
             </div>
           </template>
@@ -87,7 +88,8 @@
     </div> -->
 
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
-    <UpdateBucketModal :bucketParams="bucketParams" @close="closeUpdateModal" />
+    <AddBucketModal :bucketParams="addBucketParams" @close="closeAddBucketModal" />
+    <SubBucketModal :bucketParams="subBucketParams" @close="closeSubBucketModal" />
     <DelegateModal :bucketParams="delegateParams" @close="closeDelegateModal" />
     <UnboundModal :unboundParams="unboundParams" @close="closeUnboundModal" />
     <UndelegateModal :undelegateParams="undelegateParams" @close="closeUndelegateModal" />
@@ -103,7 +105,8 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 
 import BucketInformationModal from './bucket-info.vue'
-import UpdateBucketModal from './update-bucket.vue'
+import AddBucketModal from './add-bucket.vue'
+import SubBucketModal from './sub-bucket.vue'
 import DelegateModal from './delegate.vue'
 import UnboundModal from './unbound.vue'
 import UndelegateModal from './undelegate.vue'
@@ -117,7 +120,8 @@ export default {
   name: 'BucketsTable',
   components: {
     BucketInformationModal,
-    UpdateBucketModal,
+    AddBucketModal,
+    SubBucketModal,
     DelegateModal,
     UnboundModal,
     UndelegateModal,
@@ -173,7 +177,11 @@ export default {
         show: false,
         data: {},
       },
-      bucketParams: {
+      addBucketParams: {
+        show: false,
+        data: {},
+      },
+      subBucketParams: {
         show: false,
         data: {},
       },
@@ -269,8 +277,12 @@ export default {
       getCandidate: 'candidate/getCandidate',
     }),
     addmore(bucket) {
-      this.bucketParams.show = true
-      this.bucketParams.data = bucket
+      this.addBucketParams.show = true
+      this.addBucketParams.data = bucket
+    },
+    subVote(bucket) {
+      this.subBucketParams.show = true
+      this.subBucketParams.data = bucket
     },
     delegate(bucket) {
       this.delegateParams.show = true
@@ -299,8 +311,11 @@ export default {
     closeInfoModal() {
       this.infoParams.show = false
     },
-    closeUpdateModal() {
-      this.bucketParams.show = false
+    closeAddBucketModal() {
+      this.addBucketParams.show = false
+    },
+    closeSubBucketModal() {
+      this.subBucketParams.show = false
     },
     closeDelegateModal() {
       this.delegateParams.show = false

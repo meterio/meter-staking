@@ -20,7 +20,7 @@
               <span class="ml-1 font-weight-bold">Votes</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button :class="{ 'btn-color': status === 'auction' }" variant="mylight" @click="auction">
+            <b-button v-if="showAuction" :class="{ 'btn-color': status === 'auction' }" variant="mylight" @click="auction">
               <b-icon icon="hourglass-split"></b-icon>
               <span class="ml-1 font-weight-bold">Auction</span>
             </b-button>
@@ -54,6 +54,12 @@ export default {
         },
       ]
     },
+    showAuction() {
+      if ([72].includes(this.currentNetwork.networkId)) {
+        return false
+      }
+      return true
+    }
   },
   methods: {
     ...mapMutations({

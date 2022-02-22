@@ -63,6 +63,8 @@ const actions = {
       commit('setUpdateBucketLoading', { name, hash: 'end' })
 
       dispatch('getBuckets')
+
+      dispatch('token/getTokenBalance', null, { root: true })
     } catch (e) {
       console.log(e)
       commit('setUpdateBucketLoading', { name, hash: 'end' })

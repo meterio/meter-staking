@@ -142,7 +142,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   computed: {
     ...mapState('candidate', ['stakingCandidateLoading']),
@@ -201,11 +201,12 @@ export default {
       this.$emit('close')
     },
     async checkWithProbe() {
-      const url = `http://${this.formData.ip}:${this.formData.port}/probe`
+      // const url = `http://${this.formData.ip}:${this.formData.port}/probe`
+      const url = `https://api.meter.io:8000/probe/${this.formData.ip}`
       let data = { pubkey: '' }
       try {
         const res = await axios.get(url, { timeout: 2500 })
-        data = res.data
+        data = res.data.result
       } catch (e) {
         throw new Error(`port ${this.formData.port} is not open`)
       }
@@ -225,6 +226,7 @@ export default {
       } catch (e) {
         // this.errMsg = e.message;
         console.log(e.message)
+        alert(e.message)
         return
       }
 

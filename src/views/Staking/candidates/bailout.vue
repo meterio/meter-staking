@@ -73,7 +73,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
@@ -97,12 +97,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      bailOutAction: 'bailout/bailOut'
+      bailOutAction: 'bailout/bailOut',
     }),
-    bailOut() {
+    async bailOut() {
       const dataBuffer = ScriptEngine.getBailOutData(this.account)
       const scriptData = '0x' + dataBuffer.toString('hex')
-      this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
+      const errMsg = await this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
+
+      errMsg && alert(errMsg)
     },
     closeModal() {
       this.$emit('close')

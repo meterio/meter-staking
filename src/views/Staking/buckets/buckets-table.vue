@@ -265,7 +265,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getBuckets: 'bucket/getBuckets'
+      getBuckets: 'bucket/getBuckets',
     }),
     createVote() {
       this.voteParams.show = true

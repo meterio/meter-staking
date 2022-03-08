@@ -104,7 +104,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -113,12 +113,13 @@ export default {
     closeModal() {
       this.$emit('close')
     },
-    onSubmit() {
+    async onSubmit() {
       const value = new BigNumber(this.unboundParams.data.value).toFixed()
       let holderAddr = this.account
       const dataBuffer = ScriptEngine.getUnboundData(holderAddr, this.unboundParams.data.id, value)
       const scriptData = '0x' + dataBuffer.toString('hex')
-      this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData })
+      const errMsg = await this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData })
+      errMsg && alert(errMsg)
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

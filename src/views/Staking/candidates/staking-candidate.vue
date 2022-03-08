@@ -169,8 +169,8 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      if (amount.lt(100)) {
-        this.amountValidationMsg = 'Amount should >= 100.'
+      if (amount.lt(2000)) {
+        this.amountValidationMsg = 'Amount should >= 2000.'
         return false
       }
       if (amount.gt(this.balances.energy)) {
@@ -224,7 +224,6 @@ export default {
       try {
         await this.checkWithProbe()
       } catch (e) {
-        // this.errMsg = e.message;
         console.log(e.message)
         alert(e.message)
         return
@@ -246,7 +245,9 @@ export default {
         this.formData.autoBid ? 100 : 0,
       )
 
-      this.stakingCandidate({ name: this.formData.name, data: '0x' + dataBuffer.toString('hex') })
+      const errMsg = await this.stakingCandidate({ name: this.formData.name, data: '0x' + dataBuffer.toString('hex') })
+
+      errMsg && alert(errMsg)
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

@@ -30,7 +30,12 @@
               required
             ></b-form-select> -->
             <div class="v-select-container">
-              <v-select :class="{selectError: selectValid}" v-model="formData.candidate" :options="candidateOptions" :reduce="c => c.value"></v-select>
+              <v-select
+                :class="{ selectError: selectValid }"
+                v-model="formData.candidate"
+                :options="candidateOptions"
+                :reduce="(c) => c.value"
+              ></v-select>
               <span v-if="selectValid" class="selectStatus">{{ selectValidMsg }}</span>
             </div>
           </b-form-group>
@@ -123,7 +128,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   computed: {
     ...mapState('candidate', ['candidates', 'stakingVoteLoading']),
@@ -202,10 +207,10 @@ export default {
     },
     selectValid() {
       if (!this.formData.candidate) {
-        this.selectValidMsg = "Choose candidate please."
+        this.selectValidMsg = 'Choose candidate please.'
         return true
       }
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -252,7 +257,8 @@ export default {
         )
       }
       const scriptData = '0x' + dataBuffer.toString('hex')
-      this.stakingVote({ name: this.voteParams.data.name, data: scriptData })
+      const errMsg = await this.stakingVote({ name: this.voteParams.data.name, data: scriptData })
+      errMsg && alert(errMsg)
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

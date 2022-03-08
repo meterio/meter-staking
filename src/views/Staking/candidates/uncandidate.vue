@@ -80,7 +80,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   computed: {
     ...mapState('wallet', ['account', 'chainId']),
@@ -113,11 +113,12 @@ export default {
     closeModal() {
       this.$emit('close')
     },
-    onSubmit() {
+    async onSubmit() {
       const fromAddr = this.account
       const dataBuffer = ScriptEngine.getUncandidateData(fromAddr)
       const scriptData = '0x' + dataBuffer.toString('hex')
-      this.uncandidateAction({ name: this.uncandidateParams.data.name, data: scriptData })
+      const errMsg = await this.uncandidateAction({ name: this.uncandidateParams.data.name, data: scriptData })
+      errMsg && alert(errMsg)
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

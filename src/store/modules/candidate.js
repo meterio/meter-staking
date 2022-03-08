@@ -51,7 +51,7 @@ const actions = {
   async stakingVote({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setStakingVoteLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -72,12 +72,14 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setStakingVoteLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
   async stakingCandidate({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setStakingCandidateLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -97,12 +99,13 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setStakingCandidateLoading', { name, hash: 'end' })
+      return e.message
     }
   },
   async updateCandidate({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setUpdateCandidateLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -120,6 +123,8 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUpdateCandidateLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
   async uncandidate({ rootState, commit, dispatch }, { name, data }) {
@@ -145,6 +150,8 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUncandidateLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
 }

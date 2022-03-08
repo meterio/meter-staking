@@ -48,7 +48,7 @@ const actions = {
   async updateBucket({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setUpdateBucketLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -68,12 +68,14 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUpdateBucketLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
   async delegate({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setDelegateLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -93,12 +95,14 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setDelegateLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
   async unbound({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setUnboundLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -118,12 +122,14 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUnboundLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
   async undelegate({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setUndelegateLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -143,6 +149,8 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setUndelegateLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
 }

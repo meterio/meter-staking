@@ -99,7 +99,7 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
-    }
+    },
   },
   computed: {
     ...mapState('bucket', ['updateBucketLoading']),
@@ -152,7 +152,8 @@ export default {
         new BigNumber(this.formData.subamount).times(1e18).toFixed(),
       )
       const scriptData = '0x' + dataBuffer.toString('hex')
-      this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })
+      const errMsg = await this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })
+      errMsg && alert(errMsg)
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

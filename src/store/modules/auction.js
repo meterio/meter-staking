@@ -41,7 +41,7 @@ const actions = {
   async auctionBid({ rootState, commit, dispatch }, { name, data }) {
     try {
       commit('setBidLoading', { name, hash: 'start' })
-      console.log('scriptData', data)
+
       const contractAddress = rootState.token.currentNetwork.stakingAddress
       const tx = await rootState.wallet.signer.sendTransaction({
         to: contractAddress,
@@ -59,6 +59,8 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setBidLoading', { name, hash: 'end' })
+
+      return e.message
     }
   },
 }

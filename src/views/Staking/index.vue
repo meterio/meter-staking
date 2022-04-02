@@ -12,37 +12,38 @@ import TopContent from './top.vue'
 import BodyContainer from './body-container.vue'
 import { mapActions, mapState } from 'vuex'
 export default {
-  name: "Wallet",
+  name: 'Wallet',
   components: {
     TopContent,
-    BodyContainer
+    BodyContainer,
   },
   data() {
     return {
-      timer: null
+      timer: null,
     }
   },
   computed: {
-    ...mapState('token', ['isSupportNetwork'])
+    ...mapState('token', ['isSupportNetwork']),
   },
   created() {
     this.timer = setInterval(() => {
       this.getCandidatesNoLoading()
       this.getBucketsNoLoading()
-    }, 1000 * 30);
+      this.getTokenBalance()
+    }, 1000 * 30)
   },
   methods: {
     ...mapActions({
       getCandidatesNoLoading: 'candidate/getCandidatesNoLoading',
-      getBucketsNoLoading: 'bucket/getBucketsNoLoading'
-    })
+      getBucketsNoLoading: 'bucket/getBucketsNoLoading',
+      getTokenBalance: 'token/getTokenBalance',
+    }),
   },
   beforeDestroy() {
     clearInterval(this.timer)
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-  
 </style>

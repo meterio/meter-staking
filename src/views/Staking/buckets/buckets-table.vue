@@ -51,8 +51,10 @@
           <template #cell(action)="data">
             <div v-if="data.item.owned" class="token-operation">
               <b-link @click="addmore(data.item)">Vote More</b-link>
-              <b-button :id="'action' + data.index" variant="light" class="ml-1 py-0 px-2" size="small">···</b-button>
-              <b-popover :target="'action' + data.index" triggers="hover">
+              <b-button :id="`b-action-${data.index}`" variant="light" class="ml-1 py-0 px-2" size="small"
+                >···</b-button
+              >
+              <b-popover :target="`b-action-${data.index}`" triggers="hover">
                 <b-link v-if="!data.item.unbounded" @click="unbound(data.item)">Unbound</b-link>
 
                 <b-link
@@ -62,7 +64,7 @@
                   >Delegate</b-link
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
-                <b-link @click="subVote(data.item)">Sub Vote</b-link>
+                <!-- <b-link @click="subVote(data.item)">Sub Vote</b-link> -->
               </b-popover>
             </div>
           </template>

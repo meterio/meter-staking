@@ -42,19 +42,20 @@
           <template #cell(action)="data">
             <div class="token-operation d-flex justify-content-start">
               <a class="opt-btn d-flex align-items-center" @click="vote(data.item)">Vote</a>
-              <b-button
-                v-if="data.item.owned"
-                variant="light"
-                :id="'action' + data.index"
-                class="font-weight-bold ml-1 py-0 px-2"
-                size="small"
-                >···</b-button
-              >
-              <b-popover triggers="hover" :target="'action' + data.index">
-                <b-link @click="update(data.item)">Update</b-link>
-                <b-link class="d-block" @click="uncandidate(data.item)">Uncandidate</b-link>
-                <b-link class="d-block" v-if="data.item.jailed" @click="bailOut(data.item)">Bailout</b-link>
-              </b-popover>
+              <div v-if="data.item.owned">
+                <b-button
+                  variant="light"
+                  :id="`c-action-${data.index}`"
+                  class="font-weight-bold ml-1 py-0 px-2"
+                  size="small"
+                  >···</b-button
+                >
+                <b-popover triggers="hover" :target="`c-action-${data.index}`">
+                  <b-link @click="update(data.item)">Update</b-link>
+                  <b-link class="d-block" @click="uncandidate(data.item)">Uncandidate</b-link>
+                  <b-link class="d-block" v-if="data.item.jailed" @click="bailOut(data.item)">Bailout</b-link>
+                </b-popover>
+              </div>
             </div>
           </template>
         </b-table>
@@ -161,8 +162,8 @@ export default {
       },
       bailOutParams: {
         show: false,
-        data: {}
-      }
+        data: {},
+      },
     }
   },
   computed: {
@@ -172,7 +173,7 @@ export default {
     ...mapState('bailout', ['jaileds']),
     computedData() {
       return this.candidates.map((c) => {
-        const jailed = this.jaileds.find(j => j.address === c.address)
+        const jailed = this.jaileds.find((j) => j.address === c.address)
         return {
           ...c,
           _address: c.address.substr(0, 11) + '...',
@@ -182,7 +183,7 @@ export default {
           _commission: c.commission / 1e7 + '%',
 
           owned: String(c.address).toLowerCase() === this.account,
-          jailed: !!jailed
+          jailed: !!jailed,
         }
       })
     },
@@ -195,7 +196,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getJaileds: 'bailout/getJaileds'
+      getJaileds: 'bailout/getJaileds',
     }),
     listMeAsCandidate() {
       this.stakingCandidateParams.show = true
@@ -233,19 +234,23 @@ export default {
       this.uncandidateParams.show = false
     },
     bailOut(candidate) {
-      const jailed = this.jaileds.find(j => j.address === candidate.address)
+      const jailed = this.jaileds.find((j) => j.address === candidate.address)
       console.log('jailed', jailed)
       this.bailOutParams.show = true
       this.bailOutParams.data = {
         ...jailed,
         _bailAmount: new BigNumber(jailed.bailAmount).div(1e18).toFormat(),
-        _jailedTime: moment.utc(1000 * Number(jailed.jailedTime)).fromNow() + '(' + new Date(jailed.jailedTime * 10e2).toLocaleString() + ')'
+        _jailedTime:
+          moment.utc(1000 * Number(jailed.jailedTime)).fromNow() +
+          '(' +
+          new Date(jailed.jailedTime * 10e2).toLocaleString() +
+          ')',
       }
     },
     closeBailOutmodal() {
       this.bailOutParams.show = false
       this.getJaileds()
-    }
+    },
   },
 }
 </script>

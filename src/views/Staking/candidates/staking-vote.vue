@@ -62,7 +62,9 @@
           <b-form-group>
             <b-form-checkbox v-model="formData.autoBid">Enable auto-bid</b-form-checkbox>
           </b-form-group>
-          <b-button class="w-100" type="submit" variant="primary">Submit</b-button>
+          <b-button class="w-100" type="submit" variant="primary">
+            <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit</b-button
+          >
         </b-form>
       </div>
     </template>
@@ -81,7 +83,7 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import { ScriptEngine } from '@meterio/devkit'
 
-import { getMeterScanUrl } from '@/api'
+import { getMeterScanUrl, getBest, getProbe } from '@/api'
 
 export default {
   name: 'StakingVoteModal',
@@ -98,6 +100,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       amountValidationMsg: '',
       selectValidMsg: '',
       formData: {
@@ -174,7 +177,10 @@ export default {
     bucketOptions() {
       return this.buckets
         .filter((b) => {
-          return String(b.owner) == this.account
+          return (
+            String(b.owner).toLowerCase() === this.account &&
+            b.candidate == '0x0000000000000000000000000000000000000000'
+          )
         })
         .map((b) => {
           return {
@@ -220,6 +226,20 @@ export default {
       this.$emit('close')
     },
     async onSubmit() {
+      this.loading = true
+      const currentCandidate = this.candidates.find((item) => item.address === this.formData.candidate)
+      console.log(currentCandidate)
+      const best = await getBest(this.currentNetwork.infoUrl)
+      console.log('best block', best.number)
+      const probe = await getProbe(currentCandidate.ipAddr)
+      console.log('probe', probe.bestBlock.number)
+      const abs = Math.abs(best.number - probe.bestBlock.number)
+      console.log('abs', abs)
+      if (abs >= 10) {
+        this.loading = false
+        alert(`Error: your best block is delayed ${abs}.`)
+        return
+      }
       const holderAddr = this.account
       let dataBuffer = ''
       if (this.formData.source === 'bound') {
@@ -242,6 +262,7 @@ export default {
           }
         }
         if (!bucket) {
+          this.loading = false
           this.errMsg = 'could not find bucket with the given ID'
           return
         }
@@ -250,7 +271,7 @@ export default {
           holderAddr,
           this.formData.candidate,
           this.formData.bucketID,
-          bucket.votes,
+          bucket.value,
           undefined,
           undefined,
           this.formData.autoBid ? 100 : 0,
@@ -258,6 +279,9 @@ export default {
       }
       const scriptData = '0x' + dataBuffer.toString('hex')
       const errMsg = await this.stakingVote({ name: this.voteParams.data.name, data: scriptData })
+
+      this.loading = false
+
       errMsg && alert(errMsg)
     },
     goMeterScan() {

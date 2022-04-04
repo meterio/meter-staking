@@ -32,7 +32,9 @@
           <div class="content">{{ bailOutParams.data._jailedTime }}</div>
         </div>
 
-        <b-button class="w-100" variant="primary" @click="bailOut">Submit</b-button>
+        <b-button class="w-100" variant="primary" @click="bailOut">
+          <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit</b-button
+        >
       </div>
     </template>
     <template #modal-footer>
@@ -48,7 +50,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 
-import { getMeterScanUrl } from '@/api'
+import { getMeterScanUrl, getBest, getProbe } from '@/api'
 
 import { ScriptEngine } from '@meterio/devkit'
 
@@ -66,7 +68,9 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      loading: false,
+    }
   },
   watch: {
     bailOutHash(newVal, oldVal) {
@@ -76,8 +80,10 @@ export default {
     },
   },
   computed: {
+    ...mapState('candidate', ['candidates']),
     ...mapState('wallet', ['account', 'chainId']),
     ...mapState('bailout', ['bailOutLoading']),
+    ...mapState('token', ['currentNetwork']),
     computedBailOutLoading() {
       const hash = this.bailOutLoading[this.bailOutParams.data.name]
       if (hash) {
@@ -100,9 +106,26 @@ export default {
       bailOutAction: 'bailout/bailOut',
     }),
     async bailOut() {
+      this.loading = true
+      const currentCandidate = this.candidates.find((item) => item.address === this.bailOutParams.data.address)
+      console.log(currentCandidate)
+      const best = await getBest(this.currentNetwork.infoUrl)
+      console.log('best block', best.number)
+      const probe = await getProbe(currentCandidate.ipAddr)
+      console.log('probe', probe.bestBlock.number)
+      const abs = Math.abs(best.number - probe.bestBlock.number)
+      console.log('abs', abs)
+      if (abs >= 10) {
+        this.loading = false
+        alert(`Error: your best block is delayed ${abs}.`)
+        return
+      }
+
       const dataBuffer = ScriptEngine.getBailOutData(this.account)
       const scriptData = '0x' + dataBuffer.toString('hex')
       const errMsg = await this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
+
+      this.loading = false
 
       errMsg && alert(errMsg)
     },

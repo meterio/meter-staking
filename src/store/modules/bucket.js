@@ -69,7 +69,7 @@ const actions = {
       console.log(e)
       commit('setUpdateBucketLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async delegate({ rootState, commit, dispatch }, { name, data }) {
@@ -96,7 +96,7 @@ const actions = {
       console.log(e)
       commit('setDelegateLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async unbound({ rootState, commit, dispatch }, { name, data }) {
@@ -123,7 +123,7 @@ const actions = {
       console.log(e)
       commit('setUnboundLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async undelegate({ rootState, commit, dispatch }, { name, data }) {
@@ -150,7 +150,7 @@ const actions = {
       console.log(e)
       commit('setUndelegateLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
 }

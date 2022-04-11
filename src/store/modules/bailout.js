@@ -52,7 +52,7 @@ const actions = {
       console.log(e)
       commit('setBailOutLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
 }

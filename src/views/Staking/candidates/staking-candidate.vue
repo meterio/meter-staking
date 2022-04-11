@@ -224,7 +224,6 @@ export default {
       try {
         await this.checkWithProbe()
       } catch (e) {
-        console.log(e.message)
         alert(e.message)
         return
       }

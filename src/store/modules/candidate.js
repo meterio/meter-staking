@@ -73,7 +73,7 @@ const actions = {
       console.log(e)
       commit('setStakingVoteLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async stakingCandidate({ rootState, commit, dispatch }, { name, data }) {
@@ -99,7 +99,7 @@ const actions = {
     } catch (e) {
       console.log(e)
       commit('setStakingCandidateLoading', { name, hash: 'end' })
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async updateCandidate({ rootState, commit, dispatch }, { name, data }) {
@@ -124,7 +124,7 @@ const actions = {
       console.log(e)
       commit('setUpdateCandidateLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
   async uncandidate({ rootState, commit, dispatch }, { name, data }) {
@@ -151,7 +151,7 @@ const actions = {
       console.log(e)
       commit('setUncandidateLoading', { name, hash: 'end' })
 
-      return e.message
+      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
     }
   },
 }

@@ -134,6 +134,11 @@ export default {
         this.amountValidationMsg = 'Your locked balance is insufficient.'
         return false
       }
+      const remain = new BigNumber(this.formData.currentAmount).minus(amount)
+      if (remain.isLessThan(100) && remain.isGreaterThan(0)) {
+        this.amountValidationMsg = 'You must lock 100 at least.'
+        return false
+      }
       return true
     },
   },

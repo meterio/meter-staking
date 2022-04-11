@@ -103,6 +103,7 @@ export default {
       loading: false,
       amountValidationMsg: '',
       selectValidMsg: '',
+      availableVotes: 0,
       formData: {
         lockPeriod: 1,
         source: 'bound',
@@ -131,6 +132,24 @@ export default {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()
       }
+    },
+    'formData.candidate'(address) {
+      const candidate = this.candidates.find((c) => c.address === address)
+      console.log('totalVotes', candidate.totalVotes)
+      let selfVotes = new BigNumber(0)
+      for (const b of this.buckets) {
+        if (b.candidate === candidate.address && b.owner === b.candidate) {
+          if (!b.unbounded) {
+            selfVotes = selfVotes.plus(b.value)
+          }
+        }
+      }
+      console.log(selfVotes.toFixed())
+      const maxVotes = new BigNumber(selfVotes).times(100)
+      console.log('maxVotes', maxVotes.toFixed())
+      const availableVotes = maxVotes.minus(candidate.totalVotes).div(1e18).toFixed()
+      console.log('available', availableVotes)
+      this.availableVotes = availableVotes
     },
   },
   computed: {
@@ -205,8 +224,12 @@ export default {
         this.amountValidationMsg = 'Amount should >= 100.'
         return false
       }
-      if (amount.gt(this.balances.energy)) {
-        this.amountValidationMsg = 'Your balance is insufficient.'
+      // if (amount.gt(this.balances.energy)) {
+      //   this.amountValidationMsg = 'Your balance is insufficient.'
+      //   return false
+      // }
+      if (amount.isGreaterThan(this.availableVotes)) {
+        this.amountValidationMsg = `Amount should < ${new BigNumber(this.availableVotes).toFixed(2)}`
         return false
       }
       return true

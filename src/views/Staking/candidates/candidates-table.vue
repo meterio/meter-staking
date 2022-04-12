@@ -20,7 +20,6 @@
     <b-row class="p-3">
       <b-col cols="12">
         <b-table
-          v-if="totalRows > 0"
           :busy="getCandidatesloading"
           :items="computedData"
           :fields="fields"
@@ -29,6 +28,7 @@
           :filter="filter"
           stacked="md"
           responsive
+          show-empty
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -59,7 +59,6 @@
             </div>
           </template>
         </b-table>
-        <div v-else>NO DATA</div>
         <b-col v-if="totalRows > 0" sm="12" class="my-1">
           <b-pagination
             pills

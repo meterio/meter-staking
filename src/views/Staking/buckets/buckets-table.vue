@@ -26,7 +26,6 @@
     <b-row class="p-3">
       <b-col cols="12">
         <b-table
-          v-if="totalRows > 0"
           :busy="loading"
           :items="computedData"
           :fields="fields"
@@ -35,6 +34,7 @@
           :filter="filter"
           stacked="md"
           responsive
+          show-empty
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -69,7 +69,6 @@
             </div>
           </template>
         </b-table>
-        <div v-else>NO DATA</div>
         <b-col v-if="totalRows > 0" sm="12" class="my-1">
           <b-pagination
             pills
@@ -83,11 +82,6 @@
         </b-col>
       </b-col>
     </b-row>
-    <!-- <div v-if="loading" class="d-flex justify-content-center py-5">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div> -->
 
     <BucketInformationModal :infoParams="infoParams" @close="closeInfoModal" />
     <AddBucketModal :bucketParams="addBucketParams" @close="closeAddBucketModal" />
@@ -263,7 +257,7 @@ export default {
     },
   },
   created() {
-    this.getBuckets()
+    // this.getBuckets()
   },
   methods: {
     ...mapActions({

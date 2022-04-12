@@ -65,9 +65,12 @@ const actions = {
 
     await dispatch('token/initTokens', null, { root: true })
 
-    await dispatch('bucket/getBuckets', null, { root: true })
+    // if vote need totalVotes from buckets
+    await Promise.all([
+      dispatch('bucket/getBuckets', null, { root: true }),
+      dispatch('candidate/getCandidates', null, { root: true })
+    ])
 
-    dispatch('candidate/getCandidates', null, { root: true })
     dispatch('bailout/getJaileds', null, { root: true })
   },
 }

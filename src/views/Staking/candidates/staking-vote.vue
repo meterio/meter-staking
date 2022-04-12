@@ -140,7 +140,7 @@ export default {
       for (const b of this.buckets) {
         if (b.candidate === candidate.address && b.owner === b.candidate) {
           if (!b.unbounded) {
-            selfVotes = selfVotes.plus(b.value)
+            selfVotes = selfVotes.plus(b.totalVotes)
           }
         }
       }

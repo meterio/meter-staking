@@ -1,4 +1,5 @@
 import { getJaileds } from '@/api'
+import { estimateGas } from '../../utils'
 
 const namespaced = true
 
@@ -32,6 +33,8 @@ const actions = {
   },
   async bailOut({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setBailOutLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const contractAddress = rootState.token.currentNetwork.stakingAddress

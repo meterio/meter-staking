@@ -1,4 +1,5 @@
 import { getBuckets } from '@/api'
+import { estimateGas } from '../../utils'
 
 const namespaced = true
 
@@ -47,6 +48,8 @@ const actions = {
   },
   async updateBucket({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+      
       commit('setUpdateBucketLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -74,6 +77,8 @@ const actions = {
   },
   async delegate({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setDelegateLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -101,6 +106,8 @@ const actions = {
   },
   async unbound({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setUnboundLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -128,6 +135,8 @@ const actions = {
   },
   async undelegate({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setUndelegateLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress

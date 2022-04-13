@@ -1,4 +1,5 @@
 import { getAuctions, getBest } from '@/api'
+import { estimateGas } from '../../utils'
 
 const namespaced = true
 
@@ -40,6 +41,8 @@ const actions = {
   },
   async auctionBid({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setBidLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress

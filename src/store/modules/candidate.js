@@ -1,4 +1,5 @@
 import { getCandidates, getCandidate } from '@/api'
+import { estimateGas } from '../../utils'
 
 const namespaced = true
 
@@ -50,6 +51,8 @@ const actions = {
   },
   async stakingVote({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setStakingVoteLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -78,6 +81,8 @@ const actions = {
   },
   async stakingCandidate({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setStakingCandidateLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -104,6 +109,8 @@ const actions = {
   },
   async updateCandidate({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setUpdateCandidateLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -129,6 +136,8 @@ const actions = {
   },
   async uncandidate({ rootState, commit, dispatch }, { name, data }) {
     try {
+      await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
+
       commit('setUncandidateLoading', { name, hash: 'start' })
       console.log('scriptData', data)
       const contractAddress = rootState.token.currentNetwork.stakingAddress

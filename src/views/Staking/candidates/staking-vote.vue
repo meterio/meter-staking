@@ -208,7 +208,7 @@ export default {
                 '...' +
                 b.id.substr(b.id.length - 6) +
                 ' (' +
-                new BigNumber(b.totalVotes).minus(b.bonusVotes).dividedBy(1e18).toFixed(2, 1) +
+                new BigNumber(b.value).div(1e18).toFormat(2) +
                 ') ' +
                 this.currentNetwork.governanceTokenSymbol || '' + ')',
             value: b.id,

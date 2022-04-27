@@ -250,17 +250,23 @@ export default {
     },
     async onSubmit() {
       this.loading = true
-      const currentCandidate = this.candidates.find((item) => item.address === this.formData.candidate)
-      console.log(currentCandidate)
-      const best = await getBest(this.currentNetwork.infoUrl)
-      console.log('best block', best.number)
-      const probe = await getProbe(currentCandidate.ipAddr)
-      console.log('probe', probe.bestBlock.number)
-      const abs = Math.abs(best.number - probe.bestBlock.number)
-      console.log('abs', abs)
-      if (abs >= 10) {
+      try {
+        const currentCandidate = this.candidates.find((item) => item.address === this.formData.candidate)
+        console.log(currentCandidate)
+        const best = await getBest(this.currentNetwork.infoUrl)
+        console.log('best block', best.number)
+        const probe = await getProbe(currentCandidate.ipAddr)
+        console.log('probe', probe.bestBlock.number)
+        const abs = Math.abs(best.number - probe.bestBlock.number)
+        console.log('abs', abs)
+        if (abs >= 10) {
+          this.loading = false
+          alert(`Error: your best block is delayed ${abs}.`)
+          return
+        }
+      } catch(e) {
         this.loading = false
-        alert(`Error: your best block is delayed ${abs}.`)
+        alert(e.message)
         return
       }
       const holderAddr = this.account

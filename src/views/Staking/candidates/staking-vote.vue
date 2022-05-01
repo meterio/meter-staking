@@ -30,25 +30,16 @@
               required
             ></b-form-select> -->
             <div class="v-select-container">
-              <v-select
-                :class="{ selectError: selectValid }"
-                v-model="formData.candidate"
-                :options="candidateOptions"
-                :reduce="(c) => c.value"
-              ></v-select>
+              <v-select :class="{ selectError: selectValid }" v-model="formData.candidate" :options="candidateOptions"
+                :reduce="(c) => c.value"></v-select>
               <span v-if="selectValid" class="selectStatus">{{ selectValidMsg }}</span>
             </div>
           </b-form-group>
           <!-- amount -->
           <b-form-group v-if="formData.source === 'bound'" label="Amount:" label-for="amount">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
-              <b-form-input
-                id="amount"
-                v-model="formData.amount"
-                placeholder="Enter amount"
-                required
-                :state="amountValidation"
-              ></b-form-input>
+              <b-form-input id="amount" v-model="formData.amount" placeholder="Enter amount" required
+                :state="amountValidation"></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
                 {{ amountValidationMsg }}
               </b-form-invalid-feedback>
@@ -63,16 +54,15 @@
             <b-form-checkbox v-model="formData.autoBid">Enable auto-bid</b-form-checkbox>
           </b-form-group>
           <b-button class="w-100" type="submit" variant="primary">
-            <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit</b-button
-          >
+            <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit
+          </b-button>
         </b-form>
       </div>
     </template>
     <template #modal-footer>
       <div class="passport-modal-footer w-100 py-4">
-        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
-          >Meter Scan</b-button
-        >
+        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan
+        </b-button>
       </div>
     </template>
   </CustomizedModal>
@@ -205,12 +195,12 @@ export default {
           return {
             text:
               b.id.substr(0, 8) +
-                '...' +
-                b.id.substr(b.id.length - 6) +
-                ' (' +
-                new BigNumber(b.value).div(1e18).toFormat(2) +
-                ') ' +
-                this.currentNetwork.governanceTokenSymbol || '' + ')',
+              '...' +
+              b.id.substr(b.id.length - 6) +
+              ' (' +
+              new BigNumber(b.value).div(1e18).toFormat(2) +
+              ') ' +
+              this.currentNetwork.governanceTokenSymbol || '' + ')',
             value: b.id,
           }
         })
@@ -256,15 +246,15 @@ export default {
         const best = await getBest(this.currentNetwork.infoUrl)
         console.log('best block', best.number)
         const probe = await getProbe(currentCandidate.ipAddr)
-        console.log('probe', probe.bestBlock.number)
-        const abs = Math.abs(best.number - probe.bestBlock.number)
+        console.log('probe best block number', probe.chain.bestBlock.number)
+        const abs = Math.abs(best.number - probe.chain.bestBlock.number)
         console.log('abs', abs)
         if (abs >= 10) {
           this.loading = false
           alert(`Error: your best block is delayed ${abs}.`)
           return
         }
-      } catch(e) {
+      } catch (e) {
         this.loading = false
         alert(e.message)
         return
@@ -325,6 +315,7 @@ export default {
 .passport-modal-body {
   padding: 0 32px;
 }
+
 .passport-modal-footer {
   padding: 0 32px;
   overflow-y: auto;

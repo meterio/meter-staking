@@ -33,15 +33,14 @@
         </div>
 
         <b-button class="w-100" variant="primary" @click="bailOut">
-          <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit</b-button
-        >
+          <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit
+        </b-button>
       </div>
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="bailOutHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
-          >Meter Scan</b-button
-        >
+        <b-button v-if="bailOutHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan
+        </b-button>
       </div>
     </template>
   </CustomizedModal>
@@ -107,17 +106,23 @@ export default {
     }),
     async bailOut() {
       this.loading = true
-      const currentCandidate = this.candidates.find((item) => item.address === this.bailOutParams.data.address)
-      console.log(currentCandidate)
-      const best = await getBest(this.currentNetwork.infoUrl)
-      console.log('best block', best.number)
-      const probe = await getProbe(currentCandidate.ipAddr)
-      console.log('probe', probe.bestBlock.number)
-      const abs = Math.abs(best.number - probe.bestBlock.number)
-      console.log('abs', abs)
-      if (abs >= 10) {
+      try {
+        const currentCandidate = this.candidates.find((item) => item.address === this.bailOutParams.data.address)
+        console.log(currentCandidate)
+        const best = await getBest(this.currentNetwork.infoUrl)
+        console.log('best block', best.number)
+        const probe = await getProbe(currentCandidate.ipAddr)
+        console.log('probe best block number', probe.chain.bestBlock.number)
+        const abs = Math.abs(best.number - probe.chain.bestBlock.number)
+        console.log('abs', abs)
+        if (abs >= 10) {
+          this.loading = false
+          alert(`Error: your best block is delayed ${abs}.`)
+          return
+        }
+      } catch (e) {
         this.loading = false
-        alert(`Error: your best block is delayed ${abs}.`)
+        alert(e.message)
         return
       }
 
@@ -144,6 +149,7 @@ export default {
 .modal-body {
   padding: 0 32px;
 }
+
 .modal-footer {
   padding: 0 32px;
   overflow-y: auto;

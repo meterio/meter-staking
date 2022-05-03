@@ -112,8 +112,8 @@ export default {
         const best = await getBest(this.currentNetwork.infoUrl)
         console.log('best block', best.number)
         const probe = await getProbe(currentCandidate.ipAddr)
-        console.log('probe best block number', probe.chain.bestBlock.number)
-        const abs = Math.abs(best.number - probe.chain.bestBlock.number)
+        console.log('probe best block number', probe.bestBlock)
+        const abs = Math.abs(best.number - probe.bestBlock)
         console.log('abs', abs)
         if (abs >= 10) {
           this.loading = false

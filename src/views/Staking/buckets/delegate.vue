@@ -179,7 +179,7 @@ export default {
         undefined,
         this.formData.autoBid ? 100 : 0,
       )
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.delegate({ name: this.bucketParams.data.candidateName, data: scriptData })
       errMsg && alert(errMsg)
     },

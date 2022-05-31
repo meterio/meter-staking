@@ -11,8 +11,8 @@
         </div>
       </div>
       <div v-else class="modal-body pt-3">
-        <b-alert show
-          >This action will allow user to change the <i>candidate</i> on the bucket without withdrawing the MTRG from
+        <b-alert show>This action will allow user to change the <i>candidate</i> on the bucket without withdrawing the
+          MTRG from
           staking<br />
           <b>Caution:</b><br />
           <ul>
@@ -47,9 +47,8 @@
     </template>
     <template #modal-footer>
       <div class="modal-footer w-100 py-4">
-        <b-button v-if="undelegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
-          >Meter Scan</b-button
-        >
+        <b-button v-if="undelegateHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan
+        </b-button>
       </div>
     </template>
   </CustomizedModal>
@@ -116,7 +115,7 @@ export default {
       const value = new BigNumber(this.undelegateParams.data.value).toFixed()
       let holderAddr = this.account
       const dataBuffer = ScriptEngine.getUndelegateData(holderAddr, this.undelegateParams.data.id, value)
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.undelegateAction({ name: this.undelegateParams.data.candidateName, data: scriptData })
       errMsg && alert(errMsg)
     },
@@ -132,6 +131,7 @@ export default {
 .modal-body {
   padding: 0 32px;
 }
+
 .modal-footer {
   padding: 0 32px;
   overflow-y: auto;

@@ -160,7 +160,7 @@ export default {
       const fromAddr = this.account
       const value = new BigNumber("1" + "0".repeat(18)).times(this.formData.amount).toFixed();
       const dataBuffer = ScriptEngine.getBidData(fromAddr, value);
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       this.auctionBid({ name: this.auctionBidParams.data.name, data: scriptData })
     },
     goMeterScan() {

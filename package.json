@@ -22,7 +22,7 @@
     ]
   },
   "dependencies": {
-    "@meterio/devkit": "^1.4.10",
+    "@meterio/devkit": "^1.6.8",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "bnc-onboard": "^1.34.1",

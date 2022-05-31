@@ -126,10 +126,10 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.extraAmount)
-      if (amount.lt(100)) {
-        this.amountValidationMsg = 'Amount should >= 100.'
-        return false
-      }
+      // if (amount.lt(100)) {
+      //   this.amountValidationMsg = 'Amount should >= 100.'
+      //   return false
+      // }
       if (amount.gt(this.balances.energy)) {
         this.amountValidationMsg = 'Your balance is insufficient.'
         return false
@@ -151,7 +151,7 @@ export default {
         this.formData.id,
         new BigNumber(this.formData.extraAmount).times(1e18).toFixed(),
       )
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })
       errMsg && alert(errMsg)
     },

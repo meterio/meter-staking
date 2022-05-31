@@ -296,7 +296,7 @@ export default {
           this.formData.autoBid ? 100 : 0,
         )
       }
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.stakingVote({ name: this.voteParams.data.name, data: scriptData })
 
       this.loading = false

@@ -156,7 +156,7 @@ export default {
         this.formData.id,
         new BigNumber(this.formData.subamount).times(1e18).toFixed(),
       )
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.updateBucket({ name: this.bucketParams.data.candidateName, data: scriptData })
       errMsg && alert(errMsg)
     },

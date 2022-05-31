@@ -244,7 +244,7 @@ export default {
         this.formData.autoBid ? 100 : 0,
       )
 
-      const errMsg = await this.stakingCandidate({ name: this.formData.name, data: '0x' + dataBuffer.toString('hex') })
+      const errMsg = await this.stakingCandidate({ name: this.formData.name, data: dataBuffer.toString('hex') })
 
       errMsg && alert(errMsg)
     },

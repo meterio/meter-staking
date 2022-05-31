@@ -127,7 +127,7 @@ export default {
       }
 
       const dataBuffer = ScriptEngine.getBailOutData(this.account)
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
 
       this.loading = false

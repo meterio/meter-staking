@@ -116,7 +116,7 @@ export default {
     async onSubmit() {
       const fromAddr = this.account
       const dataBuffer = ScriptEngine.getUncandidateData(fromAddr)
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.uncandidateAction({ name: this.uncandidateParams.data.name, data: scriptData })
       errMsg && alert(errMsg)
     },

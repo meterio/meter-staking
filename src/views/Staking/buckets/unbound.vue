@@ -117,7 +117,7 @@ export default {
       const value = new BigNumber(this.unboundParams.data.value).toFixed()
       let holderAddr = this.account
       const dataBuffer = ScriptEngine.getUnboundData(holderAddr, this.unboundParams.data.id, value)
-      const scriptData = '0x' + dataBuffer.toString('hex')
+      const scriptData = dataBuffer.toString('hex')
       const errMsg = await this.unboundAction({ name: this.unboundParams.data.candidateName, data: scriptData })
       errMsg && alert(errMsg)
     },

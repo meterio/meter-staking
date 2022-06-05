@@ -32,7 +32,7 @@
           <div class="content">{{ bailOutParams.data._jailedTime }}</div>
         </div>
 
-        <b-button class="w-100" variant="primary" @click="bailOut">
+        <b-button class="w-100" variant="primary" @click="preBailOut">
           <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>Submit
         </b-button>
       </div>
@@ -104,35 +104,65 @@ export default {
     ...mapActions({
       bailOutAction: 'bailout/bailOut',
     }),
-    async bailOut() {
+    async preBailOut() {
       this.loading = true
       try {
         const currentCandidate = this.candidates.find((item) => item.address === this.bailOutParams.data.address)
         console.log(currentCandidate)
-        const best = await getBest(this.currentNetwork.infoUrl)
+
+        // get best block
+        let best = { number: 0 }
+        try {
+          best = await getBest(this.currentNetwork.infoUrl)
+        } catch (e) {
+          throw new Error(`Can not get best block ${e.message}`)
+        }
         console.log('best block', best.number)
-        const probe = await getProbe(currentCandidate.ipAddr)
+
+        // get probe best block
+        let probe = { bestBlock: 0 }
+        try {
+          probe = await getProbe(currentCandidate.ipAddr)
+        } catch (e) {
+          const conf = confirm(`Can not get your best block, still bail out?`)
+          if (conf) {
+            return await this.bailOut()
+          } else {
+            return this.loading = false
+          }
+        }
         console.log('probe best block number', probe.bestBlock)
         const abs = Math.abs(best.number - probe.bestBlock)
         console.log('abs', abs)
         if (abs >= 10) {
-          this.loading = false
-          alert(`Error: your best block is delayed ${abs}.`)
-          return
+          const conf = confirm(`Your best block is delayed ${abs},still bail out?`)
+          if (conf) {
+            return await this.bailOut()
+          } else {
+            return this.loading = false
+          }
         }
+
+        await this.bailOut()
       } catch (e) {
         this.loading = false
         alert(e.message)
         return
       }
+    },
+    async bailOut() {
+      try {
+        const dataBuffer = ScriptEngine.getBailOutData(this.account)
+        const scriptData = dataBuffer.toString('hex')
+        const errMsg = await this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
 
-      const dataBuffer = ScriptEngine.getBailOutData(this.account)
-      const scriptData = dataBuffer.toString('hex')
-      const errMsg = await this.bailOutAction({ name: this.bailOutParams.data.name, data: scriptData })
+        this.loading = false
 
-      this.loading = false
-
-      errMsg && alert(errMsg)
+        errMsg && alert(errMsg)
+      } catch (e) {
+        this.loading = false
+        alert(e.message)
+      }
     },
     closeModal() {
       this.$emit('close')

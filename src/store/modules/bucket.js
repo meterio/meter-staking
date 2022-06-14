@@ -49,7 +49,7 @@ const actions = {
   async updateBucket({ rootState, commit, dispatch }, { name, data }) {
     try {
       await estimateGas(rootState.wallet.web3Provider, rootState.wallet.account, data)
-      
+
       commit('setUpdateBucketLoading', { name, hash: 'start' })
 
       const contractAddress = rootState.token.currentNetwork.stakingAddress
@@ -72,7 +72,7 @@ const actions = {
       console.log(e)
       commit('setUpdateBucketLoading', { name, hash: 'end' })
 
-      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
+      return e.data ? (e.data.message ? e.data.message : e.message) : e.message
     }
   },
   async delegate({ rootState, commit, dispatch }, { name, data }) {
@@ -101,7 +101,7 @@ const actions = {
       console.log(e)
       commit('setDelegateLoading', { name, hash: 'end' })
 
-      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
+      return e.data ? (e.data.message ? e.data.message : e.message) : e.message
     }
   },
   async unbound({ rootState, commit, dispatch }, { name, data }) {
@@ -130,7 +130,7 @@ const actions = {
       console.log(e)
       commit('setUnboundLoading', { name, hash: 'end' })
 
-      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
+      return e.data ? (e.data.message ? e.data.message : e.message) : e.message
     }
   },
   async undelegate({ rootState, commit, dispatch }, { name, data }) {
@@ -159,7 +159,7 @@ const actions = {
       console.log(e)
       commit('setUndelegateLoading', { name, hash: 'end' })
 
-      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
+      return e.data ? (e.data.message ? e.data.message : e.message) : e.message
     }
   },
 }

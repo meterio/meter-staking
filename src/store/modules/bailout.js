@@ -55,7 +55,7 @@ const actions = {
       console.log(e)
       commit('setBailOutLoading', { name, hash: 'end' })
 
-      return `${e.message} ${e.data && e.data.error && e.data.error.message}`
+      return e.data ? (e.data.message ? e.data.message : e.message) : e.message
     }
   },
 }

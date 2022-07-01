@@ -239,6 +239,9 @@ export default {
       this.$emit('close')
     },
     async onSubmit() {
+      if (!this.amountValidation) {
+        return
+      }
       this.loading = true
       try {
         const currentCandidate = this.candidates.find((item) => item.address === this.formData.candidate)

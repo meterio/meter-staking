@@ -6,19 +6,18 @@
       <b-icon icon="circle-fill" animation="throb" font-scale="4"></b-icon>
     </div>
     <WalletBoard
-      :dappId="dappId"
-      :walletSelect="walletSelect"
-      :walletCheck="walletCheck"
-      @isSelecting="getIsSelecting"
-      @walletState="getWalletState"
+      :chains="computedChains"
+      @wallets="getWallets"
+      @disconnected="disconnected"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import Login from '@/views/Login'
 import WalletBoard from '@/WalletBoard'
+import { supportNetworkList } from '@/constants'
 export default {
   name: 'App',
   components: {
@@ -26,40 +25,42 @@ export default {
     WalletBoard,
   },
   data() {
-    const { VUE_APP_BLOCKNATIVE_DAPP_ID, VUE_APP_INFURA_KEY } = process.env
-    const dappId = VUE_APP_BLOCKNATIVE_DAPP_ID
-    const infuraKey = VUE_APP_INFURA_KEY
-    console.log(dappId, infuraKey)
     return {
-      dappId,
-      isSelecting: false,
-      walletSelect: {
-        description: 'Please select a wallet to connect to meter passport wallet',
-        wallets: [
-          { walletName: 'metamask', preferred: true },
-          { walletName: 'imToken', preferred: true, infuraKey },
-          { walletName: 'walletConnect', preferred: true, infuraKey },
-        ],
-      },
-      walletCheck: [{ checkName: 'accounts' }, { checkName: 'connect' }],
+      isSelecting: true,
     }
   },
   computed: {
     ...mapState('token', ['renderLoading']),
-    ...mapState('wallet', ['chainId']),
+    computedChains() {
+      return supportNetworkList.map(net => {
+        return {
+          id: `0x${Number(net.networkId).toString(16)}`,
+          token: net.nativeTokenSymbol,
+          label: net.name,
+          rpcUrl: net.rpcUrl,
+          publicRpcUrl: net.rpcUrl,
+          blockExplorerUrl: net.blockExplorer
+        }
+      })
+    }
   },
   methods: {
     ...mapActions({
-      actionWalletInfo: 'wallet/actionWalletInfo',
+      initWallet: 'wallet/actionWalletInfo',
     }),
-    getIsSelecting(isSelecting) {
-      this.isSelecting = isSelecting
+    ...mapMutations({
+      clearWalletInfo: 'wallet/clearWalletInfo'
+    }),
+    disconnected() {
+      this.isSelecting = true
+      this.clearWalletInfo()
     },
+    getWallets(wallets) {
+      const { accounts, chains, provider, icon, label } = wallets[0]
 
-    getWalletState(walletState) {
-      const { address, network, wallet, balance } = walletState
+      this.isSelecting = false
 
-      this.actionWalletInfo({ account: address, chainId: network, wallet: wallet, balance: balance })
+      this.initWallet({ account: accounts[0].address, chainId: Number(chains[0].id), provider, icon, label })
     },
   },
 }

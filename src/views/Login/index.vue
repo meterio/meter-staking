@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     resetWallet() {
-      WalletBoardBus.$emit('resetWallet', true)
+      WalletBoardBus.$emit('connect')
     }
   }
 }

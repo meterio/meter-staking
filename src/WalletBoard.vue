@@ -2,133 +2,118 @@
   <div></div>
 </template>
 <script>
-import Onboard from 'bnc-onboard'
+import Onboard from '@web3-onboard/core'
+import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
+import coinbaseWalletModule from '@web3-onboard/coinbase'
 import Vue from 'vue'
+
 export const WalletBoardBus = new Vue()
+
+const injected = injectedModule()
+const walletConnect = walletConnectModule()
+const coinbaseWalletSdk = coinbaseWalletModule()
+
 export default {
   name: 'WalletBoard',
   props: {
-    dappId: {
-      type: String,
-      default: ''
-    },
-    networkId: {
-      type: Number,
-      default: 1
-    },
-    walletSelect: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    walletCheck: {
+    chains: {
       type: Array,
-      default() {
-        return [
-          { checkName: 'accounts' },
-          { checkName: 'connect' },
-          { checkName: 'network' }
-        ]
-      }
+      required: true
     }
   },
   data() {
     return {
       onboard: null,
-      currentNetworkId: this.networkId
+      unsubscribe: null,
     }
   },
   created() {
-    this.onboard = this.initializeOnboard()
-    this.selectWallet()
+    this.initOnboard()
   },
   mounted() {
-    WalletBoardBus.$on('resetWallet', this.resetWallet)
-    WalletBoardBus.$on('selectWallet', this.selectWallet)
+    WalletBoardBus.$on('setChain', this.setChain)
+    WalletBoardBus.$on('connect', this.connect)
+    WalletBoardBus.$on('disconnect', this.disconnectWallet)
   },
   methods: {
-    initializeOnboard() {
-      try {
-        const onboard = Onboard({
-          dappId: this.dappId,
-          networkId: this.networkId,
-          walletSelect: this.walletSelect,
-          walletCheck: this.walletCheck,
-          subscriptions: {
-            wallet: (wallet) => {
-              console.log("wallet: ", wallet)
-              if (!wallet.provider) {
-                this.resetWallet()
-              }
-            },
-            network: (network) => {
-              const ethereum = window.ethereum;
-              ethereum.removeAllListeners(['networkChanged']);
-              console.log("network: ", network)
-              if (network) {
-                this.updateNetworkId(network)
-              }
-            },
-            address: (address) => {
-              console.log("address: ", address)
-            },
-            balance: (balance) => {
-              console.log("balance: ", balance)
-              this.emitWalletState()
-            }
+    async initOnboard() {
+      this.onboard = Onboard({
+        wallets: [injected, walletConnect, coinbaseWalletSdk],
+        chains: this.chains,
+        accountCenter: {
+          desktop: {
+            enabled: false,
           },
-        })
+          mobile: {
+            enabled: false,
+          }
+        },
+        appMetadata: {
+          name: 'Meter Wallet',
+          icon: '<svg></svg>',
+          description: 'Meter Wallet'
+        }
+      })
 
-        return onboard
-      } catch(e) {
-        console.log("init onboard error: ", e)
+      if (this.onboard) {
+
+        this.connect()
+
+        this.subscribe()
       }
     },
-    updateNetworkId(networkId) {
-      if (networkId !== this.currentNetworkId) {
-        this.onboard.config({ networkId })
-        this.currentNetworkId = networkId
+    async connect() {
+      if (this.onboard) {
+        await this.onboard.connectWallet()
       }
     },
-    emitIsSelecting(isSelecting) {
-      this.$emit('isSelecting', isSelecting)
-    },
-    emitWalletState() {
-      const state = this.onboard.getState()
-      const { address, network, wallet } = state
-
-      if (!!address && !!network && wallet.provider) {
-        this.emitIsSelecting(false)
-        sessionStorage.setItem('selectedWallet', wallet.name)
-        this.$emit('walletState', state)
-      }
-    },
-    async selectWallet(hardSelect) {
-      const savedWallet = sessionStorage.getItem('selectedWallet')
-
-      const wallet = hardSelect ? null : savedWallet
-
-      let selected;
-      if (wallet) {
-        selected = await this.onboard.walletSelect(savedWallet)
+    updateState(wallets) {
+      if (wallets.length) {
+        this.$emit('wallets', wallets)
       } else {
-        this.emitIsSelecting(true)
-        selected = await this.onboard.walletSelect()
+        this.$emit('disconnected')
+        this.connect()
       }
-      
-      selected && await this.onboard.walletCheck()
     },
-    async resetWallet(hardReset) {
-      const savedWallet = sessionStorage.getItem('selectedWallet')
-      if (savedWallet || hardReset) {
-        sessionStorage.removeItem('selectedWallet')
-        console.log("walletReset")
-        this.onboard.walletReset()
-        await this.selectWallet()
+    subscribe() {
+      const state = this.onboard.state.select()
+      const { unsubscribe } = state.subscribe(update => {
+        console.log('state update: ', update);
+        this.updateState(update.wallets)
+        
+        this.disconnectOtherWallet()
+      })
+      this.unsubscribe = unsubscribe
+    },
+    setChain(chainId) {
+      if (this.onboard) {
+        this.onboard.setChain({ chainId: `0x${Number(chainId).toString(16)}`})
+      }
+    },
+    disconnectWallet() {
+      if (this.onboard) {
+        const wallets = this.onboard.state.get().wallets
+        if (wallets.length) {
+          this.unsubscribe()
+          this.onboard.disconnectWallet({ label: wallets[0].label })
+        }
+      }
+    },
+    disconnectOtherWallet() {
+      if (this.onboard) {
+        const wallets = this.onboard.state.get().wallets
+        if (wallets.length > 1) {
+          this.onboard.disconnectWallet({ label: wallets[1].label })
+        }
       }
     }
   },
+  beforeDestroy() {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
+  }
 }
 </script>
 

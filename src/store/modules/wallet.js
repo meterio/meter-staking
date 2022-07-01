@@ -7,9 +7,8 @@ const state = {
   signer: null,
   account: '0x',
   chainId: 0,
-  balance: 0,
 
-  walletIcons: {},
+  walletIcon: '',
 }
 
 const getters = {}
@@ -39,18 +38,16 @@ const mutations = {
     state.chainId = 0
   },
 
-  setWalletIcons(state, icons) {
-    state.walletIcons = icons
+  setWalletIcon(state, icon) {
+    state.walletIcon = icon
   },
 }
 
 const actions = {
-  async actionWalletInfo({ commit, dispatch }, { wallet, account, chainId, balance }) {
+  async actionWalletInfo({ commit, dispatch }, { account, chainId, provider, icon }) {
     commit('setAccount', String(account).toLowerCase())
     commit('setChainId', Number(chainId))
-    commit('setBalance', balance)
 
-    const { provider, icons } = wallet
     if (provider) {
       const web3Provider = new ethers.providers.Web3Provider(provider)
       const signer = web3Provider.getSigner()
@@ -59,8 +56,8 @@ const actions = {
       commit('setWeb3Provider', web3Provider)
       commit('setSigner', signer)
     }
-    if (icons) {
-      commit('setWalletIcons', icons)
+    if (icon) {
+      commit('setWalletIcon', icon)
     }
 
     await dispatch('token/initTokens', null, { root: true })

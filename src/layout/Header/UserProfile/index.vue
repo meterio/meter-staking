@@ -25,15 +25,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('wallet', ['account', 'walletIcons']),
+    ...mapState('wallet', ['account', 'walletIcon']),
     computedIcon() {
-      if (this.walletIcons.svg) {
-        return this.walletIcons.svg
-      } else if (this.walletIcons.iconSrc) {
-        return `<img src="${this.walletIcons.iconSrc}" />`
-      } else {
-        return `<img src="${this.walletIcons.iconSrcSet}" />`
-      }
+      return this.walletIcon
     },
     computedAccount() {
       if (new RegExp(regExpList.address).test(this.account)) {

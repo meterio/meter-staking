@@ -39,8 +39,7 @@ export default {
       this.closeModal()
     },
     yes() {
-      this.clearWalletInfo()
-      WalletBoardBus.$emit('resetWallet')
+      WalletBoardBus.$emit('disconnect')
       this.cancel()
     }
   }

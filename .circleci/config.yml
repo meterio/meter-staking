@@ -1,0 +1,100 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.6.0
+  slack: circleci/slack@4.4.4
+jobs:
+  build_and_deploy_mainnet:
+    resource_class: large
+    docker:
+      - image: 'cimg/node:14.18.2'
+    steps:
+      - checkout
+      - run:
+          name: download & unzip awscli v2
+          command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
+      - run:
+          name: install awscli v2
+          command: sudo ./aws/install
+      - restore_cache:
+          key: meter-staking-deps-{{ checksum "package.json" }}
+      - run:
+          name: install npm dependencies
+          command: npm install
+      - save_cache:
+          key: meter-staking-deps-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: production build
+          command: npm run build
+      - run:
+          name: s3 sync
+          command: aws s3 sync ./dist/ s3://staking.meter.io/ --delete --acl public-read
+      - run:
+          name: invalidation
+          command: aws cloudfront create-invalidation --distribution-id E19XYLCM9RWWW9 --paths "/*"
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
+  build_and_deploy_staging:
+    resource_class: large
+    docker:
+      - image: 'cimg/node:16.7'
+    steps:
+      - checkout
+      - run:
+          name: download & unzip awscli v2
+          command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
+      - run:
+          name: install awscli v2
+          command: sudo ./aws/install
+      - restore_cache:
+          key: meter-staking-deps-{{ checksum "package.json" }}
+      - run:
+          name: install npm dependencies
+          command: npm install
+      - save_cache:
+          key: meter-staking-deps-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: testnet build
+          command: npm run build
+      - run:
+          name: s3 sync
+          command: aws s3 sync ./dist/ s3://staking-staging.meter.io/ --delete --acl public-read
+      - run:
+          name: invalidation
+          command: aws cloudfront create-invalidation --distribution-id EB88DCSQ3N362 --paths "/*"
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
+workflows:
+  fresh_deploy:
+    jobs:
+      - build_and_deploy_staging:
+          context:
+            - new-aws-s3
+            - slack-secrets
+          filters:
+            branches:
+              only:
+                - main
+      - build_and_deploy_mainnet:
+          context:
+            - new-aws-s3
+            - slack-secrets
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

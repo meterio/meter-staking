@@ -134,7 +134,7 @@ export default {
         { text: 'Staking', value: 1 },
         { text: 'Node operation', value: 2 },
       ],
-      perPage: 5,
+      perPage: 20,
       currentPage: 1,
       filter: '',
       fields: [

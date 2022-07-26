@@ -64,7 +64,7 @@
                   >Delegate</b-link
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
-                <b-link v-if="!data.item.unbounded" @click="subVote(data.item)">Sub Vote</b-link>
+                <!-- <b-link v-if="!data.item.unbounded" @click="subVote(data.item)">Sub Vote</b-link> -->
               </b-popover>
             </div>
           </template>

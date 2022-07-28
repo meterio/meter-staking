@@ -27,7 +27,7 @@ jobs:
             - node_modules
       - run:
           name: production build
-          command: npm run build
+          command: VUE_APP_STATUS=mainnet npm run build
       - run:
           name: s3 sync
           command: aws s3 sync ./dist/ s3://staking.meter/ --delete --acl public-read
@@ -64,7 +64,7 @@ jobs:
             - node_modules
       - run:
           name: testnet build
-          command: npm run build
+          command: VUE_APP_STATUS=staging npm run build
       - run:
           name: s3 sync
           command: aws s3 sync ./dist/ s3://staking-staging.meter/ --delete --acl public-read

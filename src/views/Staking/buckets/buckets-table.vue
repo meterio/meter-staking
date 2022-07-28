@@ -64,7 +64,7 @@
                   >Delegate</b-link
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
-                <b-link v-if="!data.item.unbounded" @click="subVote(data.item)">Sub Vote</b-link>
+                <b-link v-if="appStatus === 'mainnet' && !data.item.unbounded" @click="subVote(data.item)">Sub Vote</b-link>
               </b-popover>
             </div>
           </template>
@@ -128,7 +128,10 @@ export default {
 
   props: {},
   data() {
+    const { VUE_APP_STATUS } = process.env
+    console.log('VUE_APP_STATUS', VUE_APP_STATUS)
     return {
+      appStatus: VUE_APP_STATUS,
       bucketFilterSelection: 1,
       bucketFilterOptions: [
         { text: 'Staking', value: 1 },

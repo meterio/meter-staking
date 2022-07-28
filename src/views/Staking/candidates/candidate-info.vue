@@ -31,6 +31,15 @@
           </div>
         </div>
         <div class="section">
+          <div class="name">Buckets</div>
+          <div class="content buckets-content">
+            <div v-for="(item, index) in infoParams.data.buckets" :key="index">
+              <span>{{ index + 1 }}. </span>
+              <span>{{ item }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="section">
           <div class="name">Public Key</div>
           <div class="content text-break">{{ infoParams.data.pubKey }}</div>
         </div>
@@ -64,6 +73,9 @@ export default {
   data() {
     return {}
   },
+  created() {
+    console.log('infoParams', this.infoParams)
+  },
   computed: {
     ...mapState('token', ['currentNetwork']),
     computedTotalVotes() {
@@ -85,5 +97,13 @@ export default {
 .candidate-info-modal-footer {
   padding: 0 32px;
   overflow-y: auto;
+}
+
+.buckets-content {
+  max-height: 200px;
+  overflow: auto;
+  font-size: .8rem;
+  background-color: #f9f8f8;
+  border-radius: 6px;
 }
 </style>

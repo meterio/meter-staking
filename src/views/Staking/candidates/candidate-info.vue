@@ -35,7 +35,7 @@
           <div class="content buckets-content">
             <div v-for="(item, index) in infoParams.data.buckets" :key="index">
               <span>{{ index + 1 }}. </span>
-              <span>{{ item }}</span>
+              <b-link :href="'https://scan.meter.io/buckets/'+item" target="_blank">{{ item }}</b-link>
             </div>
           </div>
         </div>

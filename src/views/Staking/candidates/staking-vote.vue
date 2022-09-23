@@ -254,7 +254,7 @@ export default {
         console.log('abs', abs)
         if (abs >= 10) {
           this.loading = false
-          alert(`Error: your best block is delayed ${abs}.`)
+          alert(`Error: your best block is delayed ${abs}.best block:${best.number},yours:${probe.bestBlock}`)
           return
         }
       } catch (e) {

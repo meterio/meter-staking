@@ -64,8 +64,23 @@ export default {
       }
     },
     async connect() {
+      const previouslyConnectedWallets = JSON.parse(
+        window.localStorage.getItem('connectedWallets')
+      )
+      console.log('previouslyConnectedWallets', previouslyConnectedWallets)
+      
       if (this.onboard) {
-        await this.onboard.connectWallet()
+        if (previouslyConnectedWallets && previouslyConnectedWallets.length) {
+          // Connect the most recently connected wallet (first in the array)
+          // await onboard.connectWallet({ autoSelect: previouslyConnectedWallets[0] })
+
+          // You can also auto connect "silently" and disable all onboard modals to avoid them flashing on page load
+          await this.onboard.connectWallet({
+            autoSelect: { label: previouslyConnectedWallets[0], disableModals: true }
+          })
+        } else {
+          await this.onboard.connectWallet()
+        }
       }
     },
     updateState(wallets) {
@@ -81,6 +96,12 @@ export default {
       const { unsubscribe } = state.subscribe(update => {
         console.log('state update: ', update);
         this.updateState(update.wallets)
+
+        const connectedWallets = update.wallets.map(({ label }) => label)
+        window.localStorage.setItem(
+          'connectedWallets',
+          JSON.stringify(connectedWallets)
+        )
         
         this.disconnectOtherWallet()
       })
@@ -93,6 +114,7 @@ export default {
     },
     disconnectWallet() {
       if (this.onboard) {
+        window.localStorage.removeItem('connectedWallets')
         const wallets = this.onboard.state.get().wallets
         if (wallets.length) {
           this.unsubscribe()

@@ -210,7 +210,7 @@ export default {
       } catch (e) {
         throw new Error(`port ${this.formData.port} is not open`)
       }
-      if (!data.hasOwnProperty('bestQC') || !data.hasOwnProperty('bestBlock') || !data.hasOwnProperty('pubkey')) {
+      if (!data || (!data.hasOwnProperty('bestQC') || !data.hasOwnProperty('bestBlock') || !data.hasOwnProperty('pubkey'))) {
         throw `meter is not correctly running on node ${this.formData.ip}`
       }
       if (data.pubkey != this.formData.publicKey) {

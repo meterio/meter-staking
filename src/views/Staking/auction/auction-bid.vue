@@ -130,8 +130,8 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.amount)
-      if (amount.lte(0)) {
-        this.amountValidationMsg = 'Amount should >= 0.'
+      if (amount.lte(10)) {
+        this.amountValidationMsg = 'Amount should >= 10.'
         return false
       }
       if (amount.gt(this.balances.native)) {

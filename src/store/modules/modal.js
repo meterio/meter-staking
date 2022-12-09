@@ -11,6 +11,7 @@ const state = {
   // bailout: bailout
   // auction: auction
   status: 'candidate',
+  candidateAddr: '',
 }
 
 const getters = {}
@@ -34,6 +35,10 @@ const mutations = {
   setStatus(state, status) {
     state.status = status
   },
+  setCandidateAddr(state, addr) {
+    console.log('addr', addr)
+    state.candidateAddr = addr
+  }
 }
 
 const actions = {}

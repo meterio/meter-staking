@@ -61,9 +61,16 @@ export default {
       return true
     }
   },
+  mounted() {
+    const keys = Object.keys(this.$route.query)
+    if (keys.includes('candidate')) {
+      this.setCandidateAddr(this.$route.query['candidate'])
+    }
+  },
   methods: {
     ...mapMutations({
       setStatus: 'modal/setStatus',
+      setCandidateAddr: 'modal/setCandidateAddr',
     }),
     candidate() {
       this.setStatus('candidate')

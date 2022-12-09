@@ -73,9 +73,6 @@ export default {
   data() {
     return {}
   },
-  created() {
-    console.log('infoParams', this.infoParams)
-  },
   computed: {
     ...mapState('token', ['currentNetwork']),
     computedTotalVotes() {

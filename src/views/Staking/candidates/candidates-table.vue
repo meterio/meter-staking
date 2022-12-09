@@ -99,6 +99,8 @@ import BailOutModal from './bailout.vue'
 
 import moment from 'moment'
 
+import { regExpList } from '@/constants'
+
 export default {
   name: 'CadidatesTable',
   components: {
@@ -170,6 +172,7 @@ export default {
     ...mapState('wallet', ['account']),
     ...mapState('token', ['currentNetwork']),
     ...mapState('bailout', ['jaileds']),
+    ...mapState('modal', ['candidateAddr']),
     computedData() {
       return this.candidates.map((c) => {
         const jailed = this.jaileds.find((j) => j.address === c.address)
@@ -190,8 +193,14 @@ export default {
       return this.computedData.length
     },
   },
-  created() {
+  mounted() {
     // this.getJaileds()
+    if (new RegExp(regExpList.address).test(this.candidateAddr)) {
+      const candidate = this.computedData.find(item => item.address === this.candidateAddr.toLowerCase())
+      if (candidate) {
+        this.vote(candidate)
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -204,6 +213,13 @@ export default {
       this.stakingCandidateParams.show = false
     },
     vote(candidate) {
+      if (this.$route.query.candidate) {
+        if (this.$route.query.candidate.toLowerCase() !== candidate.address) {
+          this.$router.replace({ query: { candidate: candidate.address } })
+        }
+      } else {
+        this.$router.push({ path: '/', query: { candidate: candidate.address } })
+      }
       this.voteParams.show = true
       this.voteParams.data = candidate
     },

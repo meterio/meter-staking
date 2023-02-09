@@ -3,7 +3,7 @@
     <TopContent />
     <!-- token table -->
     <BodyContainer v-if="isSupportNetwork" />
-    <div v-else class="alert alert-danger mt-2 text-center font-weight-bold" role="alert">Unsupport network</div>
+    <div v-else class="alert alert-danger mt-2 text-center font-weight-bold" role="alert">Unsupported network</div>
   </div>
 </template>
 
@@ -11,6 +11,7 @@
 import TopContent from './top.vue'
 import BodyContainer from './body-container.vue'
 import { mapActions, mapState } from 'vuex'
+import { WalletBoardBus } from '@/WalletBoard'
 export default {
   name: 'Wallet',
   components: {
@@ -24,6 +25,16 @@ export default {
   },
   computed: {
     ...mapState('token', ['isSupportNetwork']),
+  },
+  watch: {
+    isSupportNetwork: {
+      handler(val) {
+        if (!val) {
+          WalletBoardBus.$emit('setChain', 82)
+        }
+      },
+      immediate: true
+    }
   },
   created() {
     this.timer = setInterval(() => {

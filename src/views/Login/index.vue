@@ -7,7 +7,7 @@
       <div class="d-flex justify-content-center">
       </div>
       <div class="active-wallet-btn position-absolute">
-        <b-button variant="myprimary" @click="resetWallet">ACTIVE WALLET</b-button>
+        <b-button variant="myprimary" @click="resetWallet">ACTIVATE WALLET</b-button>
       </div>
     </div>
     </div>

@@ -35,6 +35,8 @@
           stacked="md"
           responsive
           show-empty
+          sort-by="totalVotes"
+          sort-desc
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -156,7 +158,7 @@ export default {
         {
           key: 'totalVotes',
           sortable: true,
-          sortByFormatted: true,
+          // sortByFormatted: true,
           formatter: (val, key, item) => {
             return new BigNumber(item.value).div(1e18).toFormat(2)
           },
@@ -166,7 +168,7 @@ export default {
           key: 'state',
           sortable: true,
           label: 'State',
-          sortByFormatted: true,
+          // sortByFormatted: true,
           formatter: (val, key, item) => {
             return item.unbounded ? 'Mature ' + item.matureFromNow : item.state
           },
@@ -251,7 +253,8 @@ export default {
           }
           if (b.totalVotes) {
             t.totalVotes =
-              new BigNumber(b.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || ''
+              // new BigNumber(b.totalVotes).div(1e18).toFormat(2) + ' ' + this.currentNetwork.governanceTokenSymbol || ''
+              new BigNumber(b.totalVotes).div(1e18).toNumber()
           }
           return t
         })

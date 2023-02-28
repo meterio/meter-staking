@@ -29,6 +29,8 @@
           stacked="md"
           responsive
           show-empty
+          sort-by="totalVotes"
+          sort-desc
         >
           <template #table-busy>
             <div class="text-center my-2">
@@ -133,7 +135,7 @@ export default {
         {
           key: 'totalVotes',
           sortable: true,
-          sortByFormatted: true,
+          // sortByFormatted: true,
           formatter: (value, key, item) => {
             return new BigNumber(item.totalVotes).div(1e18).toFormat(2)
           },

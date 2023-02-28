@@ -1,7 +1,7 @@
 <template>
   <CustomizedModal v-model="bucketParams.show" @close="closeModal">
     <template #modal-title>
-      <span class="d-block font-weight-bold text-capitalize">sub vote</span>
+      <span class="d-block font-weight-bold text-capitalize">Partial Unbound</span>
     </template>
     <template #modal-body>
       <Divider />
@@ -25,12 +25,12 @@
         </div>
         <b-form @submit.prevent="onSubmit">
           <!-- sub amount -->
-          <b-form-group label="Sub amount" label-for="subamount" class="mt-3">
+          <b-form-group label="Unbound amount" label-for="subamount" class="mt-3">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input
                 id="subamount"
                 v-model="formData.subamount"
-                placeholder="Enter amount"
+                placeholder="Enter unbound amount"
                 :autofocus="true"
                 required
                 :state="amountValidation"
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
       amountValidationMsg: '',
+      votedAmount: 0,
       formData: {
         id: '',
         owner: '',
@@ -93,6 +94,7 @@ export default {
         this.formData.id = id
         this.formData.owner = owner
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()
+        this.votedAmount = new BigNumber(value).div(1e18).toNumber()
       }
     },
     updateBucketHash(newVal, oldVal) {
@@ -126,17 +128,17 @@ export default {
         return
       }
       const amount = new BigNumber(this.formData.subamount)
-      if (amount.lt(0)) {
+      if (amount.lte(0)) {
         this.amountValidationMsg = 'Amount should > 0.'
         return false
       }
-      if (amount.gt(this.formData.currentAmount)) {
+      if (amount.gt(this.votedAmount)) {
         this.amountValidationMsg = 'Your locked balance is insufficient.'
         return false
       }
-      const remain = new BigNumber(this.formData.currentAmount).minus(amount)
-      if (remain.isLessThan(100) && remain.isGreaterThan(0)) {
-        this.amountValidationMsg = 'You must lock 100 at least.'
+      const remain = new BigNumber(this.votedAmount).minus(amount)
+      if (remain.isLessThan(100)) {
+        this.amountValidationMsg = 'The remaining votes in the bucket has to be greater or equal to 100.'
         return false
       }
       return true

@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <Login v-if="isSelecting" />
-    <router-view v-else-if="!renderLoading" />
-    <div v-else class="renderLoading">
+    <router-view v-else />
+    <!-- <div v-else class="renderLoading">
       <b-icon icon="circle-fill" animation="throb" font-scale="4"></b-icon>
-    </div>
+    </div> -->
     <WalletBoard
       :chains="computedChains"
       @wallets="getWallets"

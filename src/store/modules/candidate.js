@@ -36,11 +36,15 @@ const mutations = {
 }
 
 const actions = {
-  async getCandidates({ rootState, commit }) {
-    commit('setGetCandidatesLoading', true)
-    const candidates = await getCandidates(rootState.token.currentNetwork.infoUrl)
-    commit('setCandidates', candidates)
-    commit('setGetCandidatesLoading', false)
+  async getCandidates({ rootState, state, commit, dispatch }) {
+    if (state.candidates.length) {
+      dispatch('getCandidatesNoLoading')
+    } else {
+      commit('setGetCandidatesLoading', true)
+      const candidates = await getCandidates(rootState.token.currentNetwork.infoUrl)
+      commit('setCandidates', candidates)
+      commit('setGetCandidatesLoading', false)
+    }
   },
   async getCandidatesNoLoading({ rootState, commit }) {
     const candidates = await getCandidates(rootState.token.currentNetwork.infoUrl)

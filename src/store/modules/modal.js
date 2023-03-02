@@ -10,6 +10,7 @@ const state = {
   // bucket: vote
   // bailout: bailout
   // auction: auction
+  // liquid staking: liquid
   status: 'candidate',
   candidateAddr: '',
 }

@@ -11,6 +11,7 @@ import { bucket } from './modules/bucket'
 import { modal } from './modules/modal'
 import { bailout } from './modules/bailout'
 import { auction } from './modules/auction'
+import { liquid } from './modules/liquid'
 
 export default new Vuex.Store({
   state: {},
@@ -25,5 +26,6 @@ export default new Vuex.Store({
     modal,
     bailout,
     auction,
+    liquid,
   },
 })

@@ -1,9 +1,9 @@
 <template>
   <div class="token-list-content container position-relative">
     <!-- top -->
-    <div class="token-list pt-2">
+    <div class="token-list">
       <!-- data table -->
-      <div class="px-1">
+      <div>
         <div v-if="status === 'candidate'">
           <CandidatesTable />
         </div>
@@ -13,6 +13,9 @@
         <div v-if="status === 'auction'">
           <AuctionTable />
         </div>
+        <div v-if="status === 'liquid'">
+          <LiquidStaking />
+        </div>
       </div>
     </div>
   </div>
@@ -21,6 +24,7 @@
 import CandidatesTable from './candidates/candidates-table.vue'
 import BucketsTable from './buckets/buckets-table.vue'
 import AuctionTable from './auction/auction-table.vue'
+import LiquidStaking from './liquid'
 import { mapState } from 'vuex'
 
 export default {
@@ -29,6 +33,7 @@ export default {
     CandidatesTable,
     BucketsTable,
     AuctionTable,
+    LiquidStaking
   },
   computed: {
     ...mapState('modal', ['status'])

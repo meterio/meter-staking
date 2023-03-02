@@ -12,6 +12,8 @@ export const supportNetworkList = [
     blockExplorer: 'https://scan.meter.io',
     infoUrl: 'https://mainnet.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
+    mtrgAddress: '',
+    liquidAddress: '',
     mode: 'mainnet',
   },
   {
@@ -27,6 +29,8 @@ export const supportNetworkList = [
     blockExplorer: 'https://scan-warringstakes.meter.io',
     infoUrl: 'https://warringstakes.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
+    liquidAddress: '0x00384632790bee8b81be3d421f994fc4e2a31ea2',
+    mtrgAddress: '0x8A419Ef4941355476cf04933E90Bf3bbF2F73814',
     mode: 'testnet',
   },
   // {

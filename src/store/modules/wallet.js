@@ -68,6 +68,8 @@ const actions = {
       dispatch('candidate/getCandidates', null, { root: true })
     ])
 
+    dispatch('liquid/getStakeBalance', null, { root: true })
+
     dispatch('bailout/getJaileds', null, { root: true })
   },
 }

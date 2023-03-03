@@ -6,7 +6,7 @@
     </section>
 
     <section class="d-flex justify-content-center my-5">
-      <b-form @submit.prevent="onSubmit" :style="{width: '30%'}">
+      <b-form @submit.prevent="onSubmit" class="col-md-4">
         <b-form-group label="Amount:" label-for="amount">
             <b-input-group :append="opt === 'Deposit' ? 'MTRG' : 'stMTRG'">
               <b-form-input id="amount" v-model="amount" placeholder="Enter amount" required

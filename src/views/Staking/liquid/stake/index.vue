@@ -6,7 +6,7 @@
     </section>
 
     <section class="d-flex justify-content-center my-5">
-      <b-form @submit.prevent="onSubmit">
+      <b-form @submit.prevent="onSubmit" :style="{width: '30%'}">
         <b-form-group label="Amount:" label-for="amount">
             <b-input-group :append="opt === 'Deposit' ? 'MTRG' : 'stMTRG'">
               <b-form-input id="amount" v-model="amount" placeholder="Enter amount" required
@@ -21,8 +21,8 @@
               <b-button size="sm" class="py-0" pill @click="setMax">max</b-button>
             </b-form-text>
           </b-form-group>
-          <b-button class="w-100 mt-4" type="submit" variant="info" :disabled="loading">
-            <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>{{ opt }}
+          <b-button class="w-100 mt-4 d-flex align-items-center" type="submit" variant="info" :disabled="loading">
+            <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>{{ computedOpt }}
           </b-button>
           <b-button v-if="hash" class="w-100 mt-2" variant="success" @click="viewOnScan">View on Meter Scan</b-button>
       </b-form>
@@ -46,7 +46,7 @@
     },
     computed: {
       ...mapState('token', ['balances']),
-      ...mapState('liquid', ['stBalance']),
+      ...mapState('liquid', ['stBalance', 'currentAction']),
       ...mapState('token', ['currentNetwork']),
       computedMaxValue() {
         if (this.opt === "Deposit") {
@@ -54,6 +54,12 @@
         } else {
           return new BigNumber(this.stBalance).toFormat(2, BigNumber.ROUND_DOWN)
         }
+      },
+      computedOpt() {
+        if (this.currentAction) {
+          return this.currentAction
+        }
+        return this.opt
       },
       amountValidation() {
         if (this.amount == '') {
@@ -99,6 +105,7 @@
         } else {
           await this.actionWithdraw()
         }
+        this.amount = ''
       },
       async actionDeposit() {
         this.loading = true
@@ -108,7 +115,7 @@
           this.hash = res.hash
         }
         if (res.error) {
-          alert(errMsg)
+          alert(res.error)
         }
       },
       async actionWithdraw() {
@@ -120,7 +127,7 @@
           alert("Success withdraw, you can check the mature time in Votes tab.")
         }
         if (res.error) {
-          alert(errMsg)
+          alert(res.error)
         }
       },
       setCurrentOpt(val) {
@@ -130,7 +137,7 @@
         if (this.opt === "Deposit") {
           this.amount = new BigNumber(this.balances.energy).toFixed(2, 1)
         } else {
-          this.amount = new BigNumber(this.stBalance).toFixed(2, 1)
+          this.amount = new BigNumber(this.stBalance).toFixed()
         }
       },
       viewOnScan() {

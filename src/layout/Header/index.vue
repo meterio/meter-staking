@@ -2,7 +2,7 @@
   <div class="header position-fixed fixed-top d-flex flex-column flex-lg-row justify-content-lg-between align-items-center px-lg-4 px-3">
     <div class="header-left w-100 d-flex justify-content-between">
       <div class="header-logo-content d-flex align-items-center">
-        <Logo :logo="logoParams" />
+        <Logo />
       </div>
       <div class="more-operation d-flex d-lg-none d-block">
         <button ref="moreBtn" class="more-operation-btn font-xlarge-size font-weight-bold">

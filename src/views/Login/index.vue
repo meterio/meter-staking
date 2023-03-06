@@ -10,7 +10,7 @@
         <b-button variant="myprimary" @click="resetWallet">ACTIVATE WALLET</b-button>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>

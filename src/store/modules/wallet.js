@@ -69,6 +69,7 @@ const actions = {
     ])
 
     dispatch('liquid/getStakeBalance', null, { root: true })
+    dispatch('liquid/getWStakeBalance', null, { root: true })
 
     dispatch('bailout/getJaileds', null, { root: true })
   },

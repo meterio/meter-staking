@@ -1,14 +1,14 @@
 <template>
   <div>
     <section class="d-flex justify-content-center">
-      <b-button pill :variant="opt === 'Deposit' ? 'info' : 'outline-info'" @click="setCurrentOpt('Deposit')">Deposit</b-button>
-      <b-button pill :variant="opt === 'Withdraw' ? 'info' : 'outline-info'" class="ml-2" @click="setCurrentOpt('Withdraw')">Withdraw</b-button>
+      <b-button pill :variant="opt === 'Wrap' ? 'info' : 'outline-info'" @click="setCurrentOpt('Wrap')">Wrap</b-button>
+      <b-button pill :variant="opt === 'Unwrap' ? 'info' : 'outline-info'" class="ml-2" @click="setCurrentOpt('Unwrap')">Unwrap</b-button>
     </section>
 
     <section class="d-flex justify-content-center my-5">
       <b-form @submit.prevent="onSubmit" class="col-md-4">
         <b-form-group label="Amount:" label-for="amount">
-            <b-input-group :append="opt === 'Deposit' ? 'MTRG' : 'stMTRG'">
+            <b-input-group :append="opt === 'Wrap' ? 'stMTRG' : 'wstMTRG'">
               <b-form-input id="amount" v-model="amount" placeholder="Enter amount" required
                 :state="amountValidation"></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
@@ -34,30 +34,29 @@
   import { BigNumber } from 'bignumber.js'
   import { mapActions, mapState } from 'vuex'
   export default {
-    name: "LiquidStake",
+    name: "StakeWrap",
     data() {
       return {
         loading: false,
         amountValidationMsg: '',
         amount: '',
-        opt: 'Deposit',
+        opt: 'Wrap',
         hash: '',
       }
     },
     computed: {
-      ...mapState('token', ['balances']),
-      ...mapState('liquid', ['stBalance', 'currentAction']),
+      ...mapState('liquid', ['stBalance', 'wstBalance', 'wCurrentAction']),
       ...mapState('token', ['currentNetwork']),
       computedMaxValue() {
-        if (this.opt === "Deposit") {
-          return new BigNumber(this.balances.energy).toFormat(2, 1)
+        if (this.opt === "Wrap") {
+          return new BigNumber(this.stBalance).toFormat(2, 1)
         } else {
-          return new BigNumber(this.stBalance).toFormat(2, BigNumber.ROUND_DOWN)
+          return new BigNumber(this.wstBalance).toFormat(2, BigNumber.ROUND_DOWN)
         }
       },
       computedOpt() {
-        if (this.currentAction) {
-          return this.currentAction
+        if (this.wCurrentAction) {
+          return this.wCurrentAction
         }
         return this.opt
       },
@@ -74,17 +73,17 @@
           this.amountValidationMsg = 'Amount should > 0.'
           return false
         }
-        if (this.opt === 'Deposit') {
+        if (this.opt === 'Wrap') {
           // if (amount.plus(this.stBalance).lt(100)) {
           //   this.amountValidationMsg = 'Amount should >= 100.'
           //   return false
           // }
-          if (amount.gt(this.balances.energy)) {
+          if (amount.gt(this.stBalance)) {
             this.amountValidationMsg = 'Insufficient balance.'
             return false
           }
         } else {
-          if (amount.gt(this.stBalance)) {
+          if (amount.gt(this.wstBalance)) {
             this.amountValidationMsg = 'Insufficient balance.'
             return false
           }
@@ -99,21 +98,21 @@
     },
     methods: {
       ...mapActions({
-        deposit: 'liquid/deposit',
-        withdraw: 'liquid/withdraw'
+        wrap: 'liquid/wrap',
+        unwrap: 'liquid/unwrap'
       }),
       async onSubmit() {
         if (!this.amountValidation) return
-        if (this.opt === 'Deposit') {
-          await this.actionDeposit()
+        if (this.opt === 'Wrap') {
+          await this.actionWrap()
         } else {
-          await this.actionWithdraw()
+          await this.actionUnwrap()
         }
         this.amount = ''
       },
-      async actionDeposit() {
+      async actionWrap() {
         this.loading = true
-        const res = await this.deposit({ amount: this.amount })
+        const res = await this.wrap({ amount: this.amount })
         this.loading = false
         if (res.hash) {
           this.hash = res.hash
@@ -122,13 +121,12 @@
           alert(res.error)
         }
       },
-      async actionWithdraw() {
+      async actionUnwrap() {
         this.loading = true
-        const res = await this.withdraw({ amount: this.amount })
+        const res = await this.unwrap({ amount: this.amount })
         this.loading = false
         if (res.hash) {
           this.hash = res.hash
-          alert("Success withdraw, you can check the mature time in Votes tab.")
         }
         if (res.error) {
           alert(res.error)
@@ -138,10 +136,10 @@
         this.opt = val
       },
       setMax() {
-        if (this.opt === "Deposit") {
-          this.amount = new BigNumber(this.balances.energy).toFixed(2, 1)
+        if (this.opt === "Wrap") {
+          this.amount = new BigNumber(this.stBalance).toFixed(2, 1)
         } else {
-          this.amount = new BigNumber(this.stBalance).toFixed()
+          this.amount = new BigNumber(this.wstBalance).toFixed()
         }
       },
       viewOnScan() {

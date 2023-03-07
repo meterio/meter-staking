@@ -7,28 +7,28 @@ button {
   align-items: center;
   justify-content: center;
 }
-.btn.btn-mylight {
+.btn.btn-myprimary {
   background-color: $myprimary-color;
   color: white;
 
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   border: 1px solid $white-color !important;
 }
-.btn.btn-mylight:hover {
-  color: darken(white, 20%);
+.btn.btn-myprimary:hover {
+  color: white; // darken(white, 20%);
   background-color: lighten($myprimary-color, 10%);
 }
-.btn-myprimary {
-  color: $white-color;
-  background-color: $myprimary-color;
-  border: none;
+
+.btn.btn-mylight {
+  background-color: white;
+  color: $myprimary-color;
+
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  border: 1px solid $myprimary-color !important;
 }
-.btn-mylight:hover {
-  color: $black-color;
-}
-.btn-myprimary:hover {
-  color: $white-color;
+.btn.btn-mylight:hover {
+  color: $myprimary-color; // darken($myprimary-color, 20%);
+  background-color: darken(white, 10%);
 }
 
 .btn-mytext {

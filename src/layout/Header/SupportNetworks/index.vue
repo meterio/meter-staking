@@ -1,5 +1,5 @@
 <template>
-  <div class="support-network mr-2" ref="supportNetBtn">
+  <div class="support-network mr-2 d-flex align-items-center" ref="supportNetBtn">
     <button class="btn support-network-btn rounded-pill p-2">
       <span v-if="currentNetwork.name" class="d-flex align-items-center">
         <img width="25" height="25" :src="`/img/header/supportnet/${currentNetwork.nativeTokenSymbol.toLowerCase()}.png`" alt="">
@@ -59,7 +59,7 @@ export default {
       border: 1px solid #e9ecef;
       border-radius: 3px;
       background-color: #fff;
-      top: 80px;
+      top: 53px;
       max-width: 480px;
       z-index: 1;
     }

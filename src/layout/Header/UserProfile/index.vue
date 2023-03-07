@@ -1,5 +1,5 @@
 <template>
-  <div class="user-profile" ref="userProfile">
+  <div class="user-profile d-flex align-items-center" ref="userProfile">
     <button class="user-profile-btn rounded-pill d-flex justify-content-between align-items-center p-2">
       <span class="user-profile-btn-img" v-html="computedIcon"></span>
       <span class="mx-1 font-small-size">{{ computedAccount }}</span>

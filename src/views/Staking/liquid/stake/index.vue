@@ -1,8 +1,8 @@
 <template>
   <div>
     <section class="d-flex justify-content-center">
-      <b-button pill :variant="opt === 'Deposit' ? 'info' : 'outline-info'" @click="setCurrentOpt('Deposit')">Deposit</b-button>
-      <b-button pill :variant="opt === 'Withdraw' ? 'info' : 'outline-info'" class="ml-2" @click="setCurrentOpt('Withdraw')">Withdraw</b-button>
+      <b-button :variant="opt === 'Deposit' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Deposit')">Deposit</b-button>
+      <b-button :variant="opt === 'Withdraw' ? 'myprimary' : 'mylight'" class="ml-2" @click="setCurrentOpt('Withdraw')">Withdraw</b-button>
     </section>
 
     <section class="d-flex justify-content-center my-5">
@@ -21,10 +21,15 @@
               <b-button size="sm" class="py-0" pill @click="setMax">max</b-button>
             </b-form-text>
           </b-form-group>
-          <b-button class="w-100 mt-4 d-flex align-items-center" type="submit" variant="info" :disabled="loading">
+          
+          <b-button class="w-100 mt-4 d-flex align-items-center" type="submit" variant="myprimary" :disabled="loading">
             <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>{{ computedOpt }}
           </b-button>
           <b-button v-if="hash" class="w-100 mt-2" variant="success" @click="viewOnScan">View on Meter Scan</b-button>
+          <div v-if="opt === 'Deposit'" class="d-flex justify-content-between">
+            <span class="text-muted font-small-size">Staked Balance</span>
+            <span>{{ computedMaxValue }}</span>
+          </div>
       </b-form>
     </section>
   </div>

@@ -1,8 +1,8 @@
 <template>
   <div>
     <section class="d-flex justify-content-center">
-      <b-button pill :variant="opt === 'Wrap' ? 'info' : 'outline-info'" @click="setCurrentOpt('Wrap')">Wrap</b-button>
-      <b-button pill :variant="opt === 'Unwrap' ? 'info' : 'outline-info'" class="ml-2" @click="setCurrentOpt('Unwrap')">Unwrap</b-button>
+      <b-button :variant="opt === 'Wrap' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Wrap')">Wrap</b-button>
+      <b-button :variant="opt === 'Unwrap' ? 'myprimary' : 'mylight'" class="ml-2" @click="setCurrentOpt('Unwrap')">Unwrap</b-button>
     </section>
 
     <section class="d-flex justify-content-center my-5">
@@ -21,7 +21,7 @@
               <b-button size="sm" class="py-0" pill @click="setMax">max</b-button>
             </b-form-text>
           </b-form-group>
-          <b-button class="w-100 mt-4 d-flex align-items-center" type="submit" variant="info" :disabled="loading">
+          <b-button class="w-100 mt-4 d-flex align-items-center" type="submit" variant="myprimary" :disabled="loading">
             <b-icon v-if="loading" icon="arrow-clockwise" animation="spin-pulse"></b-icon>{{ computedOpt }}
           </b-button>
           <b-button v-if="hash" class="w-100 mt-2" variant="success" @click="viewOnScan">View on Meter Scan</b-button>

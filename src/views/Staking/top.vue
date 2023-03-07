@@ -10,22 +10,22 @@
             </div>
           </b-col>
           <b-col md="6" class="d-flex flex-wrap justify-content-md-end my-3">
-            <b-button :class="{ 'btn-color': status === 'candidate' }" class="d-flex align-items-center" variant="mylight" @click="candidate">
+            <b-button class="d-flex align-items-center" :variant="status === 'candidate' ? 'mylight' : 'myprimary'" @click="candidate">
               <b-icon icon="people-fill" scale="0.7"></b-icon>
               <span class="font-weight-bold">Candidates</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button :class="{ 'btn-color': status === 'vote' }" class="d-flex align-items-center" variant="mylight" @click="bucket">
+            <b-button class="d-flex align-items-center" :variant="status === 'vote' ? 'mylight' : 'myprimary'" @click="bucket">
               <b-icon icon="lock-fill" scale="0.7"></b-icon>
               <span class="font-weight-bold">Votes</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button v-if="showAuction" :class="{ 'btn-color': status === 'auction' }" class="d-flex align-items-center" variant="mylight" @click="auction">
+            <b-button v-if="showAuction" class="d-flex align-items-center" :variant="status === 'auction' ? 'mylight' : 'myprimary'" @click="auction">
               <b-icon icon="hourglass-split" scale="0.7"></b-icon>
               <span class="font-weight-bold">Auction</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button :class="{ 'btn-color': status === 'liquid' }" class="d-flex align-items-center" variant="mylight" @click="liquid">
+            <b-button class="d-flex align-items-center" :variant="status === 'liquid' ? 'mylight' : 'myprimary'" @click="liquid">
               <b-icon icon="bounding-box" scale="0.7"></b-icon>
               <span class="font-weight-bold">Liquid</span>
             </b-button>
@@ -120,7 +120,6 @@ export default {
     }
     ::v-deep .btn {
       &.btn-color {
-        color: #003cb2;
         background-color: white;
       }
     }

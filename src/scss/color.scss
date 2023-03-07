@@ -1,7 +1,8 @@
 $white-color: #ffffff;
 $black-color: #000000;
+$bg-color: #FBFCFE;
 
-$myprimary-color: darken(#6171ff, 55%);
+$myprimary-color: #003cb2; //darken(#6171ff, 55%);
 .bg-myprimary-color {
   background-color: $myprimary-color;
 }

@@ -69,7 +69,7 @@ export default {
     border: 1px solid #e9ecef;
     border-radius: 3px;
     background-color: #fff;
-    top: 80px;
+    top: 53px;
     max-width: 480px;
     z-index: 1;
     .profile-panel-top {

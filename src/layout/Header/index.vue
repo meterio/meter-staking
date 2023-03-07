@@ -1,9 +1,7 @@
 <template>
-  <div class="header position-fixed fixed-top d-flex flex-column flex-lg-row justify-content-lg-between align-items-center px-lg-4 px-3">
+  <div class="header position-fixed fixed-top d-flex flex-column flex-lg-row justify-content-lg-between  px-lg-4 px-3">
     <div class="header-left w-100 d-flex justify-content-between">
-      <div class="header-logo-content d-flex align-items-center">
-        <Logo />
-      </div>
+      <Logo />
       <div class="more-operation d-flex d-lg-none d-block">
         <button ref="moreBtn" class="more-operation-btn font-xlarge-size font-weight-bold">
           <div class="icon-outer-box">
@@ -77,19 +75,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "@/scss/color.scss";
   .header {
-    min-height: 80px;
+    min-height: 53px;
     background-color: #fff;
     z-index: 1;
     .header-left {
-      height: 80px;
-      .header-logo-content {
-        .span-wallet-v2 {
-          white-space: nowrap;
-          font-size: 23px;
-          line-height: 80px;
-        }
-      }
+      height: 53px;
       .more-operation {
         .more-operation-btn {
           background-color: #fff;
@@ -98,6 +90,9 @@ export default {
           pointer-events: none;
         }
       }
+    }
+    .operation-list {
+      border-top: 1px solid $bg-color;
     }
   }
 </style>

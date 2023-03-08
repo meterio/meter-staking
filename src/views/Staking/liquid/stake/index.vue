@@ -18,7 +18,7 @@
             </b-input-group>
             <b-form-text class="d-flex justify-content-between">
               <span>{{ computedMaxValue }}</span>
-              <b-button size="sm" class="py-0" pill @click="setMax">max</b-button>
+              <b-button size="sm" class="py-0" pill variant="light" @click="setMax">max</b-button>
             </b-form-text>
           </b-form-group>
           
@@ -28,7 +28,7 @@
           <b-button v-if="hash" class="w-100 mt-2" variant="success" @click="viewOnScan">View on Meter Scan</b-button>
           <div v-if="opt === 'Deposit'" class="d-flex justify-content-between">
             <span class="text-muted font-small-size">Staked Balance</span>
-            <span>{{ computedMaxValue }}</span>
+            <span>{{ stBalance }}</span>
           </div>
       </b-form>
     </section>

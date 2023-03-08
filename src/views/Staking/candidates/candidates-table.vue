@@ -2,10 +2,10 @@
   <div class="data-table-content">
     <b-row class="p-3">
       <b-col
-        ><button @click="listMeAsCandidate" type="button" class="btn btn-primary">
+        ><b-button variant="myprimary" @click="listMeAsCandidate">
           <b-icon icon="plus" />
           New Candidate
-        </button></b-col
+        </b-button></b-col
       >
       <b-col cols="12" md="auto"></b-col>
       <b-col col lg="3"

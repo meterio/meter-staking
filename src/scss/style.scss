@@ -38,7 +38,6 @@ $grid-breakpoints: (
   xl: 1234px,
 );
 $bv-enable-table-stacked: false;
-$primary: #6171ff;
 
 // Include Bootstrap and BootstrapVue SCSS files
 @import '~bootstrap/scss/bootstrap.scss';
@@ -51,6 +50,10 @@ body {
 
 .b-pagination-pills .page-item .page-link {
   border-radius: 4px !important;
+}
+
+.page-item.active .page-link {
+  background-color: $myprimary-color !important;
 }
 
 .fact-card {
@@ -77,7 +80,7 @@ body {
   }
 
   .value.primary {
-    color: $primary;
+    color: $myprimary-color;
     font-weight: bold;
   }
 }
@@ -102,4 +105,8 @@ body {
   border-radius: 4px;
   margin-top: 1px;
   padding: 4px 8px;
+}
+
+a {
+  color: $myprimary-color !important;
 }

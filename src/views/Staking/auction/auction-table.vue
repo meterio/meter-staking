@@ -3,7 +3,7 @@
     <b-row class="p-3">
       <b-col>
         <div class="d-flex justify-space-between">
-          <b-button variant="primary" @click="auctionBid" type="button" class="ml-2"
+          <b-button variant="myprimary" @click="auctionBid" class="ml-2"
             ><b-icon icon="plus" />New Bid</b-button
           >
         </div></b-col

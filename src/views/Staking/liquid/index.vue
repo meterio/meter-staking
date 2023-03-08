@@ -1,6 +1,6 @@
 <template>
   <div class="data-table-content">
-    <b-tabs pills card>
+    <b-tabs pills card active-nav-item-class="bg-myprimary-color">
         <b-tab title="Stake" active>
           <LiquidStake />
         </b-tab>

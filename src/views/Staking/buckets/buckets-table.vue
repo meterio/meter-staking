@@ -7,7 +7,7 @@
             <b-form-select v-model="bucketFilterSelection" :options="bucketFilterOptions"></b-form-select>
           </b-form-group>
 
-          <b-button variant="primary" @click="createVote" type="button" class="ml-2"
+          <b-button variant="myprimary" @click="createVote" class="ml-2"
             ><b-icon icon="plus" />New Vote</b-button
           >
         </div></b-col

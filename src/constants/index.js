@@ -30,8 +30,8 @@ export const supportNetworkList = [
     blockExplorer: 'https://scan-warringstakes.meter.io',
     infoUrl: 'https://warringstakes.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
-    liquidAddress: '0xCe388290705DA7d70a900D5a7F7ABC387e015d5A',  // stMTRG
-    wrapAddress: '0xD4339E93B57F5040fcDd5d7532f7343DdD73E67F',    // wstMTRG
+    liquidAddress: '0x3AA6f408280AE817E5D3e4E8f53c64816c6483C2',  // stMTRG
+    wrapAddress: '0x04b5525cEE30C05A6A58B0BD4634E8B76ee990f9',    // wstMTRG
     mtrgAddress: '0x8A419Ef4941355476cf04933E90Bf3bbF2F73814',
     mode: 'testnet',
   },

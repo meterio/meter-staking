@@ -45,19 +45,19 @@
             </div>
           </template>
           <template #cell(id)="data">
-            <b-link @click="info(data.item)">{{ data.item.id | abbr }}</b-link>
+            <b-link class="opt-btn" @click="info(data.item)">{{ data.item.id | abbr }}</b-link>
           </template>
           <template #cell(candidateName)="data">
-            <b-link @click="candidateInfo(data.item)">{{ data.item.candidateName }}</b-link>
+            <b-link class="opt-btn" @click="candidateInfo(data.item)">{{ data.item.candidateName }}</b-link>
           </template>
           <template #cell(action)="data">
             <div v-if="data.item.owned" class="token-operation">
-              <b-link @click="addmore(data.item)">Vote More</b-link>
+              <b-link class="opt-btn" @click="addmore(data.item)">Vote More</b-link>
               <b-button :id="`b-action-${data.index}`" variant="light" class="ml-1 py-0 px-2" size="small"
                 >···</b-button
               >
               <b-popover :target="`b-action-${data.index}`" triggers="hover">
-                <b-link v-if="!data.item.unbounded" @click="unbound(data.item)">Unbound</b-link>
+                <b-link class="opt-btn" v-if="!data.item.unbounded" @click="unbound(data.item)">Unbound</b-link>
 
                 <b-link
                   v-if="data.item.candidate === '0x0000000000000000000000000000000000000000'"
@@ -67,7 +67,7 @@
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
 
-                <b-link v-if="appStatus === 'mainnet' && !data.item.unbounded" @click="subVote(data.item)">Partial Unbound</b-link>
+                <b-link class="opt-btn" v-if="appStatus === 'mainnet' && !data.item.unbounded" @click="subVote(data.item)">Partial Unbound</b-link>
               </b-popover>
             </div>
           </template>

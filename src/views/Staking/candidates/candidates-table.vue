@@ -39,7 +39,7 @@
             </div>
           </template>
           <template #cell(name)="data">
-            <b-link @click="info(data.item)">{{ data.item.name }}</b-link>
+            <b-link class="opt-btn" @click="info(data.item)">{{ data.item.name }}</b-link>
           </template>
           <template #cell(action)="data">
             <div class="token-operation d-flex justify-content-start">
@@ -53,9 +53,9 @@
                   >···</b-button
                 >
                 <b-popover triggers="hover" :target="`c-action-${data.index}`">
-                  <b-link @click="update(data.item)">Update</b-link>
-                  <b-link class="d-block" @click="uncandidate(data.item)">Uncandidate</b-link>
-                  <b-link class="d-block" v-if="data.item.jailed" @click="bailOut(data.item)">Bailout</b-link>
+                  <b-link class="opt-btn" @click="update(data.item)">Update</b-link>
+                  <b-link class="d-block opt-btn" @click="uncandidate(data.item)">Uncandidate</b-link>
+                  <b-link class="d-block opt-btn" v-if="data.item.jailed" @click="bailOut(data.item)">Bailout</b-link>
                 </b-popover>
               </div>
             </div>

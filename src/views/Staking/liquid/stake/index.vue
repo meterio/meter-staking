@@ -27,7 +27,7 @@
           </b-button>
           <b-button v-if="hash" class="w-100 mt-2" variant="success" @click="viewOnScan">View on Meter Scan</b-button>
           <div v-if="opt === 'Deposit'" class="d-flex justify-content-between">
-            <span class="text-muted font-small-size">Staked Balance</span>
+            <span class="text-muted font-small-size">stMTRG Balance</span>
             <span>{{ stBalance }}</span>
           </div>
       </b-form>

@@ -66,6 +66,8 @@ const actions = {
       return {
         error: e.data ? (e.data.message ? e.data.message : e.message) : e.message
       }
+    } finally {
+      commit('setCurrentAction', '')
     }
   },
   async withdraw({ rootState, state, dispatch }, { amount }) {
@@ -135,6 +137,8 @@ const actions = {
       return {
         error: e.data ? (e.data.message ? e.data.message : e.message) : e.message
       }
+    } finally {
+      commit('setWCurrentAction', '')
     }
   },
   async unwrap({ rootState, state, dispatch }, { amount }) {

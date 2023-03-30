@@ -31,7 +31,7 @@ export const supportNetworkList = [
     infoUrl: 'https://warringstakes.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
     liquidAddress: '0x500102fd528b08edc8d2485e58b79cc9732b9e32',  // stMTRG
-    wrapAddress: '0x04b5525cEE30C05A6A58B0BD4634E8B76ee990f9',    // wstMTRG
+    wrapAddress: '0x51AB78FBF08d89d0e8fd8E001b8dDeb1E9c77f28',    // wstMTRG
     mtrgAddress: '0x8A419Ef4941355476cf04933E90Bf3bbF2F73814',
     mode: 'testnet',
   },

@@ -22,7 +22,7 @@
     ]
   },
   "dependencies": {
-    "@meterio/devkit": "^1.6.10",
+    "@meterio/devkit": "^1.8.0",
     "@web3-onboard/coinbase": "^2.0.6",
     "@web3-onboard/core": "^2.3.0",
     "@web3-onboard/injected-wallets": "^2.0.11",

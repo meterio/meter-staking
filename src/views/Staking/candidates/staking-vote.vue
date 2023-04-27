@@ -115,6 +115,11 @@ export default {
     }
   },
   watch: {
+    'voteParams.show'(val) {
+      if (!val) {
+        this.formData.amount = ''
+      }
+    },
     'voteParams.data'() {
       this.formData.candidate = this.voteParams.data.address
     },

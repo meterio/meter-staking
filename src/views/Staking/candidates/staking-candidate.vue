@@ -138,6 +138,21 @@ export default {
     }
   },
   watch: {
+    'stakingCandidateParams.show'(v) {
+      if (!v) {
+        this.formData = {
+          amount: '',
+          name: '',
+          description: '',
+          ip: '',
+          port: 8670,
+          commisstionRate: '10',
+          textarea: '',
+          publicKey: '',
+          autoBid: true,
+        }
+      }
+    },
     stakingCandidateHash(newVal, oldVal) {
       if (newVal === '' && oldVal.includes('0x')) {
         this.closeModal()

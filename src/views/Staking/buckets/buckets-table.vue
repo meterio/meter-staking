@@ -67,7 +67,7 @@
                 >
                 <b-link v-else class="opt-btn d-block" @click="undelegate(data.item)">Undelegate</b-link>
 
-                <b-link class="opt-btn" v-if="appStatus === 'mainnet' && !data.item.unbounded" @click="subVote(data.item)">Partial Unbound</b-link>
+                <b-link class="opt-btn" v-if="!data.item.unbounded" @click="subVote(data.item)">Partial Unbound</b-link>
               </b-popover>
             </div>
           </template>
@@ -245,7 +245,7 @@ export default {
             type: b.autobid >= 100 ? 'on' : 'off',
             owned: b.owner.toLowerCase() === this.account.toLowerCase(),
           }
-          console.log(t)
+          // console.log(t)
 
           if (b.bonusVotes) {
             t.bonus =

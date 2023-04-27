@@ -59,7 +59,7 @@ import { mapActions, mapState } from 'vuex'
 import { BigNumber } from 'bignumber.js'
 import { ScriptEngine } from '@meterio/devkit'
 
-import { getMeterScanUrl } from '@/api'
+import { getMeterScanUrl, getBucketById } from '@/api'
 
 export default {
   name: 'AddBucketModal',
@@ -87,10 +87,15 @@ export default {
     }
   },
   watch: {
-    'bucketParams.data'(v) {
-      if (Object.keys(v).length > 0) {
-        console.log(this.bucketParams.data)
-        const { id, owner, value } = this.bucketParams.data
+    'bucketParams.show'(v) {
+      if (!v) {
+        this.formData.subamount = ''
+      }
+    },
+    async 'bucketParams.data'(v) {
+      if (v && v.id) {
+        const res = await getBucketById(this.currentNetwork.infoUrl, v.id)
+        const { id, owner, value } = res
         this.formData.id = id
         this.formData.owner = owner
         this.formData.currentAmount = new BigNumber(value).div(1e18).toFormat()

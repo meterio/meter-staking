@@ -24,11 +24,11 @@
               <b-icon icon="hourglass-split" scale="0.7"></b-icon>
               <span class="font-weight-bold">Auction</span>
             </b-button>
-            <div class="mx-md-2"></div>
+            <!-- <div class="mx-md-2"></div>
             <b-button class="d-flex align-items-center" :variant="status === 'liquid' ? 'mylight' : 'myprimary'" @click="liquid">
               <b-icon icon="bounding-box" scale="0.7"></b-icon>
               <span class="font-weight-bold">Liquid</span>
-            </b-button>
+            </b-button> -->
           </b-col>
         </b-row>
       </div>

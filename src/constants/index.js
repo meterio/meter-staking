@@ -12,9 +12,9 @@ export const supportNetworkList = [
     blockExplorer: 'https://scan.meter.io',
     infoUrl: 'https://mainnet.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
-    mtrgAddress: '',
-    liquidAddress: '',
-    wrapAddress: '',
+    mtrgAddress: '0x228ebBeE999c6a7ad74A6130E81b12f9Fe237Ba3',
+    liquidAddress: '0x215d603293357ca222bE92A1bf75eEc38DeF0aad',
+    wrapAddress: '0xE2dE616fBD8cb9180B26FcFB1B761A232FE56717',
     mode: 'mainnet',
   },
   {
@@ -30,8 +30,8 @@ export const supportNetworkList = [
     blockExplorer: 'https://scan-warringstakes.meter.io',
     infoUrl: 'https://warringstakes.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
-    liquidAddress: '0x500102fd528b08edc8d2485e58b79cc9732b9e32',  // stMTRG
-    wrapAddress: '0x51AB78FBF08d89d0e8fd8E001b8dDeb1E9c77f28',    // wstMTRG
+    liquidAddress: '0x8dc543c696d391e288ae8418c67c61947eac3908',  // stMTRG
+    wrapAddress: '0x871497eb8596d2cbdbe5bb23d552d35bffbb8cf5',    // wstMTRG
     mtrgAddress: '0x8A419Ef4941355476cf04933E90Bf3bbF2F73814',
     mode: 'testnet',
   },

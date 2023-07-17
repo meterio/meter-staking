@@ -80,8 +80,8 @@ const actions = {
       const decimalsAmount = new BigNumber(amount)
       let tx;
       if (decimalsAmount.eq(state.stBalance)) {
-        console.log('exit')
-        tx = await liquidContract.exit(account)
+        console.log('withdrawAll')
+        tx = await liquidContract.withdrawAll(account)
       } else {
         tx = await liquidContract.withdraw(decimalsAmount.times(1e18).toFixed(), account)
       }
@@ -168,18 +168,26 @@ const actions = {
     }
   },
   async getStakeBalance({ rootState, commit }) {
-    const { liquidAddress } = rootState.token.currentNetwork
-    const { signer, account } = rootState.wallet
-    const liquidContract = new ethers.Contract(liquidAddress, liquidAbi, signer)
-    const balance = await liquidContract.balanceOf(account)
-    commit('setBalance', new BigNumber(String(balance)).div(1e18).toFixed())
+    try {
+      const { liquidAddress } = rootState.token.currentNetwork
+      const { signer, account } = rootState.wallet
+      const liquidContract = new ethers.Contract(liquidAddress, liquidAbi, signer)
+      const balance = await liquidContract.balanceOf(account)
+      commit('setBalance', new BigNumber(String(balance)).div(1e18).toFixed())
+    } catch(e) {
+      console.log('getStakeBalance error', e)
+    }
   },
   async getWStakeBalance({ rootState, commit }) {
-    const { wrapAddress } = rootState.token.currentNetwork
-    const { signer, account } = rootState.wallet
-    const liquidContract = new ethers.Contract(wrapAddress, wrapAbi, signer)
-    const balance = await liquidContract.balanceOf(account)
-    commit('setWBalance', new BigNumber(String(balance)).div(1e18).toFixed())
+    try {
+      const { wrapAddress } = rootState.token.currentNetwork
+      const { signer, account } = rootState.wallet
+      const liquidContract = new ethers.Contract(wrapAddress, wrapAbi, signer)
+      const balance = await liquidContract.balanceOf(account)
+      commit('setWBalance', new BigNumber(String(balance)).div(1e18).toFixed())
+    } catch(e) {
+      console.log('getWStakeBalance error', e)
+    }
   }
 }
 

@@ -30,6 +30,9 @@
             <span class="text-muted font-small-size">stMTRG Balance</span>
             <span>{{ stBalance }}</span>
           </div>
+          <div v-else class="text-muted mt-2">
+            Withdrawing stMTRG from liquid staking requires 7 days to unbound.
+          </div>
       </b-form>
     </section>
   </div>

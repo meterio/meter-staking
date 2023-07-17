@@ -4,6 +4,7 @@ export * from './token'
 export * from './bailOut'
 export * from './auction'
 export * from './probe'
+export * from './metrics'
 
 import { supportNetworkList } from '@/constants'
 

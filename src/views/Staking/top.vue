@@ -9,7 +9,7 @@
               <div class="balance-label">{{ item.balance }}</div>
             </div>
           </b-col>
-          <b-col md="6" class="d-flex flex-wrap justify-content-md-end my-3">
+          <b-col md="6" class="d-flex flex-wrap justify-content-md-end justify-content-between my-3">
             <b-button class="d-flex align-items-center" :variant="status === 'candidate' ? 'mylight' : 'myprimary'" @click="candidate">
               <b-icon icon="people-fill" scale="0.7"></b-icon>
               <span class="font-weight-bold">Candidates</span>
@@ -24,11 +24,11 @@
               <b-icon icon="hourglass-split" scale="0.7"></b-icon>
               <span class="font-weight-bold">Auction</span>
             </b-button>
-            <!-- <div class="mx-md-2"></div>
+            <div class="mx-md-2"></div>
             <b-button class="d-flex align-items-center" :variant="status === 'liquid' ? 'mylight' : 'myprimary'" @click="liquid">
               <b-icon icon="bounding-box" scale="0.7"></b-icon>
               <span class="font-weight-bold">Liquid</span>
-            </b-button> -->
+            </b-button>
           </b-col>
         </b-row>
       </div>
@@ -41,14 +41,14 @@ import { BigNumber } from 'bignumber.js'
 export default {
   name: 'WalletTop',
   computed: {
-    ...mapState('token', ['balances', 'currentNetwork']),
+    ...mapState('token', ['balances', 'currentNetwork', 'metrics']),
     ...mapState('modal', ['status']),
     computedBalance() {
-      return [
-        {
-          balance: new BigNumber(this.balances.native).toFormat(2),
-          symbol: this.currentNetwork.nativeTokenSymbol || '',
-        },
+      const data = [
+        // {
+        //   balance: new BigNumber(this.balances.native).toFormat(2),
+        //   symbol: this.currentNetwork.nativeTokenSymbol || '',
+        // },
         {
           balance: new BigNumber(this.balances.energy).toFormat(2),
           symbol: this.currentNetwork.governanceTokenSymbol || '',
@@ -58,6 +58,19 @@ export default {
           symbol: 'Locked ' + this.currentNetwork.governanceTokenSymbol || '',
         },
       ]
+      if (this.status === 'liquid') {
+        data.push({
+          // （APY/365*0.9+1)^365-1
+          balance: new BigNumber(this.metrics.staking.stakingAPY).div(365).times(0.9).plus(1).pow(365).minus(1).times(100).toFormat(2) + '%',
+          symbol: 'Liquid Staking APY'
+        })
+      } else {
+        data.push({
+          balance: new BigNumber(this.metrics.staking.stakingAPY).times(100).toFormat(2) + '%',
+          symbol: 'Staking APY'
+        })
+      }
+      return data
     },
     showAuction() {
       if ([72].includes(this.currentNetwork.networkId)) {

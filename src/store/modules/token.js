@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { getCurrentNetwork, getSupportNetworkListByMode, getBalance } from '@/api'
+import { getCurrentNetwork, getSupportNetworkListByMode, getBalance, getMetricsAll } from '@/api'
 
 const namespaced = true
 const state = {
@@ -10,6 +10,11 @@ const state = {
     energy: 0,
     bound: 0,
   },
+  metrics: {
+    staking: {
+      stakingAPY: '0'
+    }
+  },
 
   isSupportNetwork: true,
 }
@@ -19,6 +24,9 @@ const getters = {}
 const mutations = {
   setBalances(state, { native, energy, bound }) {
     state.balances = Object.assign({}, { ...state.balances }, { native, energy, bound })
+  },
+  setMetrics(state, metrics) {
+    state.metrics = metrics
   },
   setRenderLoading(state, renderLoading) {
     state.renderLoading = renderLoading
@@ -65,7 +73,8 @@ const actions = {
     commit('setCurrentNetwork', currentNetwork)
 
     try {
-      await dispatch('getTokenBalance')
+      dispatch('getTokenBalance')
+      dispatch('getMetrics')
     } catch (e) {
       console.log('occur some error: ', e)
     } finally {
@@ -86,6 +95,17 @@ const actions = {
       energy: new BigNumber(data.balance).div(1e18),
       bound: new BigNumber(data.boundbalance).div(1e18),
     })
+  },
+  async getMetrics({ commit }) {
+    console.log('get metrics')
+    const metricsUrl = 'https://api.meter.io:8000/api/metrics/all'
+    const data = await getMetricsAll(metricsUrl)
+    console.log('data', data)
+    if (!data) {
+      return
+    }
+
+    commit('setMetrics', data)
   },
 }
 

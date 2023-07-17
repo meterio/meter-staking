@@ -362,7 +362,7 @@ export default [
         "type": "address"
       }
     ],
-    "name": "exit",
+    "name": "withdrawAll",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

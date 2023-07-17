@@ -40,6 +40,7 @@
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
+          <percent-amount :amount="balances.energy" @setAmount="setAmount"></percent-amount>
           <b-button :disabled="!amountValidation" class="w-100" type="submit" variant="primary">Submit</b-button>
         </b-form>
       </div>
@@ -61,8 +62,11 @@ import { ScriptEngine } from '@meterio/devkit'
 
 import { getMeterScanUrl, getBucketById } from '@/api'
 
+import PercentAmount from '@/components/PercentAmount'
+
 export default {
   name: 'AddBucketModal',
+  components: { PercentAmount },
   props: {
     bucketParams: {
       type: Object,
@@ -148,6 +152,9 @@ export default {
     }),
     closeModal() {
       this.$emit('close')
+    },
+    setAmount(amount) {
+      this.formData.extraAmount = amount
     },
     async onSubmit() {
       const fromAddr = this.account

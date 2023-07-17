@@ -39,12 +39,15 @@
           <b-form-group v-if="formData.source === 'bound'" label="Amount:" label-for="amount">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
               <b-form-input id="amount" v-model="formData.amount" placeholder="Enter amount" required
-                :state="amountValidation"></b-form-input>
+                :state="amountValidation" autocomplete="off"></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
                 {{ amountValidationMsg }}
               </b-form-invalid-feedback>
             </b-input-group>
           </b-form-group>
+          <div v-if="formData.source === 'bound'">
+            <percent-amount :amount="balances.energy" @setAmount="setAmount"></percent-amount>
+          </div>
           <!-- bucket -->
           <b-form-group v-if="formData.source === 'delegate'" label="Existing Vote:" label-for="bucket">
             <b-form-select id="bucket" v-model="formData.bucketID" :options="bucketOptions" required></b-form-select>
@@ -75,8 +78,11 @@ import { ScriptEngine } from '@meterio/devkit'
 
 import { getMeterScanUrl, getBest, getProbe } from '@/api'
 
+import PercentAmount from '@/components/PercentAmount'
+
 export default {
   name: 'StakingVoteModal',
+  components: { PercentAmount },
   props: {
     voteParams: {
       type: Object,
@@ -310,6 +316,9 @@ export default {
       this.loading = false
 
       errMsg && alert(errMsg)
+    },
+    setAmount(amount) {
+      this.formData.amount = amount
     },
     goMeterScan() {
       const url = getMeterScanUrl(this.chainId)

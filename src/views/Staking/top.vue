@@ -10,22 +10,22 @@
             </div>
           </b-col>
           <b-col md="6" class="d-flex flex-wrap justify-content-md-end justify-content-between my-3">
-            <b-button class="d-flex align-items-center" :variant="status === 'candidate' ? 'mylight' : 'myprimary'" @click="candidate">
+            <b-button class="d-flex align-items-center my-1 my-md-0" :variant="status === 'candidate' ? 'mylight' : 'myprimary'" @click="candidate">
               <b-icon icon="people-fill" scale="0.7"></b-icon>
               <span class="font-weight-bold">Candidates</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button class="d-flex align-items-center" :variant="status === 'vote' ? 'mylight' : 'myprimary'" @click="bucket">
+            <b-button class="d-flex align-items-center my-1 my-md-0" :variant="status === 'vote' ? 'mylight' : 'myprimary'" @click="bucket">
               <b-icon icon="lock-fill" scale="0.7"></b-icon>
               <span class="font-weight-bold">Votes</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button v-if="showAuction" class="d-flex align-items-center" :variant="status === 'auction' ? 'mylight' : 'myprimary'" @click="auction">
+            <b-button v-if="showAuction" class="d-flex align-items-center my-1 my-md-0" :variant="status === 'auction' ? 'mylight' : 'myprimary'" @click="auction">
               <b-icon icon="hourglass-split" scale="0.7"></b-icon>
               <span class="font-weight-bold">Auction</span>
             </b-button>
             <div class="mx-md-2"></div>
-            <b-button class="d-flex align-items-center" :variant="status === 'liquid' ? 'mylight' : 'myprimary'" @click="liquid">
+            <b-button class="d-flex align-items-center my-1 my-md-0" :variant="status === 'liquid' ? 'mylight' : 'myprimary'" @click="liquid">
               <b-icon icon="bounding-box" scale="0.7"></b-icon>
               <span class="font-weight-bold">Liquid</span>
             </b-button>

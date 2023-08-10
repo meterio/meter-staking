@@ -6,6 +6,7 @@ import Onboard from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
 import walletConnectModule from '@web3-onboard/walletconnect'
 import coinbaseWalletModule from '@web3-onboard/coinbase'
+import gnosisModule from '@web3-onboard/gnosis'
 import Vue from 'vue'
 
 export const WalletBoardBus = new Vue()
@@ -13,6 +14,7 @@ export const WalletBoardBus = new Vue()
 const injected = injectedModule()
 const walletConnect = walletConnectModule()
 const coinbaseWalletSdk = coinbaseWalletModule()
+const gnosis = gnosisModule()
 
 export default {
   name: 'WalletBoard',
@@ -39,7 +41,7 @@ export default {
   methods: {
     async initOnboard() {
       this.onboard = Onboard({
-        wallets: [injected, walletConnect, coinbaseWalletSdk],
+        wallets: [injected, walletConnect, coinbaseWalletSdk, gnosis],
         chains: this.chains,
         accountCenter: {
           desktop: {

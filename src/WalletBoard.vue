@@ -14,15 +14,23 @@ export const WalletBoardBus = new Vue()
 const injected = injectedModule()
 const walletConnect = walletConnectModule()
 const coinbaseWalletSdk = coinbaseWalletModule()
-const gnosis = gnosisModule()
+const options = {
+  whitelistedDomains: [
+    /^https:\/\/safe\.meter\.io/,
+    /^https:\/\/gnosis-safe\.io$/,
+    /^https:\/\/app\.safe\.global$/,
+    /^https:\/\/safe\.global$/,
+  ],
+}
+const gnosis = gnosisModule(options)
 
 export default {
   name: 'WalletBoard',
   props: {
     chains: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -49,28 +57,25 @@ export default {
           },
           mobile: {
             enabled: false,
-          }
+          },
         },
         appMetadata: {
           name: 'Meter Wallet',
           icon: '<svg></svg>',
-          description: 'Meter Wallet'
-        }
+          description: 'Meter Wallet',
+        },
       })
 
       if (this.onboard) {
-
         this.connect()
 
         this.subscribe()
       }
     },
     async connect() {
-      const previouslyConnectedWallets = JSON.parse(
-        window.localStorage.getItem('connectedWallets')
-      )
+      const previouslyConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets'))
       console.log('previouslyConnectedWallets', previouslyConnectedWallets)
-      
+
       if (this.onboard) {
         if (previouslyConnectedWallets && previouslyConnectedWallets.length) {
           // Connect the most recently connected wallet (first in the array)
@@ -78,7 +83,7 @@ export default {
 
           // You can also auto connect "silently" and disable all onboard modals to avoid them flashing on page load
           await this.onboard.connectWallet({
-            autoSelect: { label: previouslyConnectedWallets[0], disableModals: true }
+            autoSelect: { label: previouslyConnectedWallets[0], disableModals: true },
           })
         } else {
           await this.onboard.connectWallet()
@@ -95,23 +100,20 @@ export default {
     },
     subscribe() {
       const state = this.onboard.state.select()
-      const { unsubscribe } = state.subscribe(update => {
-        console.log('state update: ', update);
+      const { unsubscribe } = state.subscribe((update) => {
+        console.log('state update: ', update)
         this.updateState(update.wallets)
 
         const connectedWallets = update.wallets.map(({ label }) => label)
-        window.localStorage.setItem(
-          'connectedWallets',
-          JSON.stringify(connectedWallets)
-        )
-        
+        window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWallets))
+
         this.disconnectOtherWallet()
       })
       this.unsubscribe = unsubscribe
     },
     setChain(chainId) {
       if (this.onboard) {
-        this.onboard.setChain({ chainId: `0x${Number(chainId).toString(16)}`})
+        this.onboard.setChain({ chainId: `0x${Number(chainId).toString(16)}` })
       }
     },
     disconnectWallet() {
@@ -131,13 +133,13 @@ export default {
           this.onboard.disconnectWallet({ label: wallets[1].label })
         }
       }
-    }
+    },
   },
   beforeDestroy() {
     if (this.unsubscribe) {
       this.unsubscribe()
     }
-  }
+  },
 }
 </script>
 

@@ -12,7 +12,11 @@ import Vue from 'vue'
 export const WalletBoardBus = new Vue()
 
 const injected = injectedModule()
-const walletConnect = walletConnectModule()
+const walletConnect = walletConnectModule({
+  version: 2,
+  projectId: '0a70e401bb41f5a16b5809cf0236cba1',
+  dappUrl: 'https://staking.meter.io',
+})
 const coinbaseWalletSdk = coinbaseWalletModule()
 const options = {
   whitelistedDomains: [

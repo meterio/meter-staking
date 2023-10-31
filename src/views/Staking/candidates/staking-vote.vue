@@ -30,16 +30,26 @@
               required
             ></b-form-select> -->
             <div class="v-select-container">
-              <v-select :class="{ selectError: selectValid }" v-model="formData.candidate" :options="candidateOptions"
-                :reduce="(c) => c.value"></v-select>
+              <v-select
+                :class="{ selectError: selectValid }"
+                v-model="formData.candidate"
+                :options="candidateOptions"
+                :reduce="(c) => c.value"
+              ></v-select>
               <span v-if="selectValid" class="selectStatus">{{ selectValidMsg }}</span>
             </div>
           </b-form-group>
           <!-- amount -->
           <b-form-group v-if="formData.source === 'bound'" label="Amount:" label-for="amount">
             <b-input-group :append="currentNetwork.governanceTokenSymbol || ''">
-              <b-form-input id="amount" v-model="formData.amount" placeholder="Enter amount" required
-                :state="amountValidation" autocomplete="off"></b-form-input>
+              <b-form-input
+                id="amount"
+                v-model="formData.amount"
+                placeholder="Enter amount"
+                required
+                :state="amountValidation"
+                autocomplete="off"
+              ></b-form-input>
               <b-form-invalid-feedback :state="amountValidation" tooltip>
                 {{ amountValidationMsg }}
               </b-form-invalid-feedback>
@@ -64,7 +74,8 @@
     </template>
     <template #modal-footer>
       <div class="passport-modal-footer w-100 py-4">
-        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary">Meter Scan
+        <b-button v-if="stakingVoteHash" @click="goMeterScan" class="w-100" type="button" variant="primary"
+          >Meter Scan
         </b-button>
       </div>
     </template>
@@ -146,11 +157,15 @@ export default {
         }
       }
       console.log(selfVotes.toFixed())
-      const maxVotes = new BigNumber(selfVotes).times(100)
-      console.log('maxVotes', maxVotes.toFixed())
-      const availableVotes = maxVotes.minus(candidate.totalVotes).div(1e18).toFixed()
-      console.log('available', availableVotes)
-      this.availableVotes = availableVotes
+      if (new BigNumber(selfVotes).isLessThanOrEqualTo(0)) {
+        this.availableVotes = Number.MAX_SAFE_INTEGER
+      } else {
+        const maxVotes = new BigNumber(selfVotes).times(100)
+        console.log('maxVotes', maxVotes.toFixed())
+        const availableVotes = maxVotes.minus(candidate.totalVotes).div(1e18).toFixed()
+        console.log('available', availableVotes)
+        this.availableVotes = availableVotes
+      }
     },
   },
   computed: {
@@ -206,12 +221,12 @@ export default {
           return {
             text:
               b.id.substr(0, 8) +
-              '...' +
-              b.id.substr(b.id.length - 6) +
-              ' (' +
-              new BigNumber(b.value).div(1e18).toFormat(2) +
-              ') ' +
-              this.currentNetwork.governanceTokenSymbol || '' + ')',
+                '...' +
+                b.id.substr(b.id.length - 6) +
+                ' (' +
+                new BigNumber(b.value).div(1e18).toFormat(2) +
+                ') ' +
+                this.currentNetwork.governanceTokenSymbol || '' + ')',
             value: b.id,
           }
         })

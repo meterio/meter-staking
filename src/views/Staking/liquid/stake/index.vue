@@ -147,7 +147,7 @@
       },
       setMax() {
         if (this.opt === "Deposit") {
-          this.amount = new BigNumber(this.balances.energy).toFixed(2, 1)
+          this.amount = new BigNumber(this.balances.energy).toFixed()
         } else {
           this.amount = new BigNumber(this.stBalance).toFixed()
         }

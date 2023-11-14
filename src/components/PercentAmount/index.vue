@@ -36,8 +36,9 @@ export default {
   methods: {
     setAmount(percent) {
       this.value = percent * 100
-
-      this.$emit('setAmount', new BigNumber(this.amount).times(percent).toFixed(2, 1))
+      const amount = percent === 1 ? new BigNumber(this.amount).times(percent).toFixed()
+        : new BigNumber(this.amount).times(percent).toFixed(2, 1)
+      this.$emit('setAmount', amount)
     },
     percentChange(value) {
       this.setAmount(value / 100)

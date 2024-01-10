@@ -50,17 +50,13 @@ export default {
     ...mapState('modal', ['status']),
     computedBalance() {
       const data = [
-        // {
-        //   balance: new BigNumber(this.balances.native).toFormat(2),
-        //   symbol: this.currentNetwork.nativeTokenSymbol || '',
-        // },
         {
-          balance: new BigNumber(this.balances.energy).toFormat(2),
-          symbol: this.currentNetwork.governanceTokenSymbol || '',
+          balance: new BigNumber(this.balances.energy || 0).toFormat(2),
+          symbol: this.currentNetwork.governanceTokenSymbol || 'MTRG',
         },
         {
-          balance: new BigNumber(this.balances.bound).toFormat(2),
-          symbol: 'Locked ' + this.currentNetwork.governanceTokenSymbol || '',
+          balance: new BigNumber(this.balances.bound || 0).toFormat(2),
+          symbol: `Locked ${this.currentNetwork.governanceTokenSymbol || 'MTRG'}`,
         },
       ]
       if (this.status === 'liquid') {

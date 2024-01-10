@@ -67,7 +67,7 @@
     </section>
     <section v-else>
       <div class="bg-white-color border p-3 rounded-xlg">
-        <b-button variant="myprimary" @click="auctionBid" class="w-100"><b-icon icon="plus" />New Bid</b-button>
+        <b-button variant="myprimary" @click="auctionBid" class="w-100 rounded-xlg"><b-icon icon="plus" />New Bid</b-button>
       </div>
       <div v-if="getAuctionsloading" class="d-flex justify-content-center py-5">
         <div class="spinner-border" role="status">

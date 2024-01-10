@@ -1,8 +1,14 @@
 <template>
   <div>
     <section class="d-flex justify-content-center">
-      <b-button :variant="opt === 'Deposit' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Deposit')">Deposit</b-button>
-      <b-button :variant="opt === 'Withdraw' ? 'myprimary' : 'mylight'" class="ml-2" @click="setCurrentOpt('Withdraw')">Withdraw</b-button>
+      <b-row>
+        <b-col cols="6">
+          <b-button class="w-100 px-3" :variant="opt === 'Deposit' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Deposit')">Deposit</b-button>
+        </b-col>
+        <b-col cols="6">
+          <b-button class="w-100 px-3" :variant="opt === 'Withdraw' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Withdraw')">Withdraw</b-button>
+        </b-col>
+      </b-row>
     </section>
 
     <section class="d-flex justify-content-center my-5">

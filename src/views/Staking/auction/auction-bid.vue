@@ -142,9 +142,9 @@ export default {
     },
     estimateMTRG() {
       if (Number.isNaN(this.expectedPrice)) {
-        return NaN;
+        return 0;
       }
-      return new BigNumber(this.formData.amount)
+      return new BigNumber(this.formData.amount | 0)
         .dividedBy(this.expectedPrice)
         .toFixed();
     }

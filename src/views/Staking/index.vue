@@ -4,7 +4,7 @@
     <MobileTop v-else />
     <!-- token table -->
     <BodyContainer v-if="isSupportNetwork" />
-    <div v-else class="alert alert-danger mt-2 text-center font-weight-bold" role="alert">Unsupported network</div>
+    <div v-else class="alert alert-danger text-center font-weight-bold" role="alert">Unsupported network</div>
   </div>
 </template>
 

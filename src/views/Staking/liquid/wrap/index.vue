@@ -1,8 +1,14 @@
 <template>
   <div>
     <section class="d-flex justify-content-center">
-      <b-button :variant="opt === 'Wrap' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Wrap')">Wrap</b-button>
-      <b-button :variant="opt === 'Unwrap' ? 'myprimary' : 'mylight'" class="ml-2" @click="setCurrentOpt('Unwrap')">Unwrap</b-button>
+      <b-row>
+        <b-col cols="6">
+          <b-button class="w-100 px-4" :variant="opt === 'Wrap' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Wrap')">Wrap</b-button>
+        </b-col>
+        <b-col cols="6">
+          <b-button class="w-100 px-4" :variant="opt === 'Unwrap' ? 'myprimary' : 'mylight'" @click="setCurrentOpt('Unwrap')">Unwrap</b-button>
+        </b-col>
+      </b-row>
     </section>
 
     <section class="d-flex justify-content-center my-5">

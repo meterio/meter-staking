@@ -1,70 +1,114 @@
 <template>
   <div class="data-table-content">
-    <b-row class="p-3">
-      <b-col>
-        <div class="d-flex justify-space-between">
-          <b-button variant="myprimary" @click="auctionBid" class="ml-2"
-            ><b-icon icon="plus" />New Bid</b-button
-          >
-        </div></b-col
-      >
-    </b-row>
-    <div v-if="getAuctionsloading" class="d-flex justify-content-center py-5">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+    <section v-if="!isMobile" class="bg-white-color border rounded-lg card-shadow">
+      <b-row class="p-3">
+        <b-col>
+          <div class="d-flex justify-space-between">
+            <b-button variant="myprimary" @click="auctionBid" class="ml-2"><b-icon icon="plus" />New Bid</b-button>
+          </div>
+        </b-col>
+      </b-row>
+      <div v-if="getAuctionsloading" class="d-flex justify-content-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-    </div>
-    <b-row v-else class="p-2 px-4">
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+      <b-row v-else class="p-2 px-4">
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">My Total Bids (MTR)</div>
+            <div class="value primary">{{ myBidsTotal }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">My Est. Gain (MTRG)</div>
+            <div class="value primary">{{ myEstMTRGTotal }}</div>
+          </div>
+        </b-col>
+
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">Est. Price</div>
+            <div class="value">{{ estimatePrice }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">Ends In</div>
+            <div class="value">{{ leftoverEpoch }} hour{{ leftoverEpoch > 1 ? 's' : '' }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">MTRG on Auction</div>
+            <div class="value">{{ computedData._releasedMTRG }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">Received Bids (MTR)</div>
+            <div class="value">{{ computedData._receivedMTR }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">Auction Epoch Range</div>
+            <div class="value">{{ computedData.endEpoch }} - {{ computedData.endEpoch + 24 }}</div>
+          </div>
+        </b-col>
+        <b-col md="3" class="p-3">
+          <div class="fact-card">
+            <div class="name">Current Epoch</div>
+            <div class="value">{{ best.epoch }}</div>
+          </div>
+        </b-col>
+      </b-row>
+    </section>
+    <section v-else>
+      <div class="bg-white-color border p-3 rounded-xlg">
+        <b-button variant="myprimary" @click="auctionBid" class="w-100"><b-icon icon="plus" />New Bid</b-button>
+      </div>
+      <div v-if="getAuctionsloading" class="d-flex justify-content-center py-5">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div v-else>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">My Total Bids (MTR)</div>
           <div class="value primary">{{ myBidsTotal }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">My Est. Gain (MTRG)</div>
           <div class="value primary">{{ myEstMTRGTotal }}</div>
-        </div></b-col
-      >
-
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">Est. Price</div>
           <div class="value">{{ estimatePrice }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">Ends In</div>
           <div class="value">{{ leftoverEpoch }} hour{{ leftoverEpoch > 1 ? 's' : '' }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">MTRG on Auction</div>
           <div class="value">{{ computedData._releasedMTRG }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">Received Bids (MTR)</div>
           <div class="value">{{ computedData._receivedMTR }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">Auction Epoch Range</div>
           <div class="value">{{ computedData.endEpoch }} - {{ computedData.endEpoch + 24 }}</div>
-        </div></b-col
-      >
-      <b-col md="3" class="p-3"
-        ><div class="fact-card">
+        </div>
+        <div class="fact-card mt-3 rounded-xlg">
           <div class="name">Current Epoch</div>
           <div class="value">{{ best.epoch }}</div>
-        </div></b-col
-      >
-    </b-row>
+        </div>
+      </div>
+    </section>
 
     <AuctionBidModal :auctionBidParams="auctionBidParams" @close="closeAuctionBidModal" />
   </div>
@@ -92,7 +136,7 @@ export default {
   },
   computed: {
     ...mapState('auction', ['getAuctionsloading', 'auctions', 'best']),
-    ...mapState('wallet', ['account']),
+    ...mapState('wallet', ['account', 'isMobile']),
     ...mapState('token', ['currentNetwork']),
     computedData() {
       return {
@@ -156,6 +200,7 @@ export default {
 .table-font-size {
   font-size: 14px;
 }
+
 .opt-btn {
   cursor: pointer;
 }

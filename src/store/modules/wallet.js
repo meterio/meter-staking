@@ -9,6 +9,8 @@ const state = {
   chainId: 0,
 
   walletIcon: '',
+
+  isMobile: false,
 }
 
 const getters = {}
@@ -41,6 +43,10 @@ const mutations = {
   setWalletIcon(state, icon) {
     state.walletIcon = icon
   },
+
+  setIsMobile(state, isMobile) {
+    state.isMobile = isMobile
+  }
 }
 
 const actions = {

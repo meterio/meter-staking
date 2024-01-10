@@ -1,10 +1,10 @@
 <template>
-  <div class="header position-fixed fixed-top d-flex flex-column flex-lg-row justify-content-lg-between  px-lg-4 px-3">
+  <div class="header position-fixed fixed-top d-flex flex-column flex-lg-row justify-content-lg-between px-lg-4 px-2">
     <div class="header-left w-100 d-flex justify-content-between">
       <Logo />
       <div class="more-operation d-flex d-lg-none d-block">
         <button ref="moreBtn" class="more-operation-btn font-xlarge-size font-weight-bold">
-          <div class="icon-outer-box">
+          <div class="icon-outer-box d-flex rounded-xxlg border p-2">
             <b-icon :icon="computedIcon"></b-icon>
           </div>
         </button>

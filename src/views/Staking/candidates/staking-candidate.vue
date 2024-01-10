@@ -11,7 +11,7 @@
         </div>
       </div>
       <div v-else class="candidate-modal-body">
-        <b-alert show class="mt-3">List {{ account }} as candidate</b-alert>
+        <b-alert show class="mt-3 text-break">List {{ account }} as candidate</b-alert>
         <b-form @submit.prevent="onSubmit">
           <!-- amount -->
           <b-form-group label="Amount:" label-for="amount">

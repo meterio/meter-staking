@@ -1,21 +1,17 @@
 <template>
   <div class="token-list-content container position-relative">
-    <!-- top -->
-    <div class="token-list">
-      <!-- data table -->
-      <div>
-        <div v-if="status === 'candidate'">
-          <CandidatesTable />
-        </div>
-        <div v-if="status === 'vote'">
-          <BucketsTable />
-        </div>
-        <div v-if="status === 'auction'">
-          <AuctionTable />
-        </div>
-        <div v-if="status === 'liquid'">
-          <LiquidStaking />
-        </div>
+    <div>
+      <div v-if="status === 'candidate'">
+        <CandidatesTable />
+      </div>
+      <div v-if="status === 'vote'">
+        <BucketsTable />
+      </div>
+      <div v-if="status === 'auction'">
+        <AuctionTable />
+      </div>
+      <div v-if="status === 'liquid'">
+        <LiquidStaking />
       </div>
     </div>
   </div>

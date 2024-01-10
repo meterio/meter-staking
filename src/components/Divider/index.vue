@@ -1,5 +1,5 @@
 <template>
-  <div :style="divider"></div>
+  <div :style="divider" class="flex-grow-0"></div>
 </template>
 
 <script>
@@ -13,15 +13,25 @@ export default {
     pxl: {
       type: String,
       default: '1'
+    },
+    vertical: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     divider() {
+      if (!this.vertical) {
+        return {
+          backgroundColor: this.color,
+          height: this.pxl + 'px'
+        }
+      }
       return {
         backgroundColor: this.color,
-        height: this.pxl + 'px'
+        width: this.pxl + 'px',
       }
-    }
+    },
   }
 }
 </script>

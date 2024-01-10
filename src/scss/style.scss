@@ -9,6 +9,11 @@
 @import 'position';
 
 @import 'global';
+
+@import 'border';
+
+@import 'triangle';
+
 .section {
   margin-top: 15px;
   margin-bottom: 15px;
@@ -83,6 +88,10 @@ body {
     color: $myprimary-color;
     font-weight: bold;
   }
+}
+
+.card-shadow {
+  box-shadow: 0 10px 20px rgb(0 0 0 / 12%), 0 1px 4px rgb(0 0 0 / 8%);
 }
 
 // v-select

@@ -1,6 +1,7 @@
 <template>
   <div class="wallet">
-    <TopContent />
+    <TopContent v-if="!isMobile" />
+    <MobileTop v-else />
     <!-- token table -->
     <BodyContainer v-if="isSupportNetwork" />
     <div v-else class="alert alert-danger mt-2 text-center font-weight-bold" role="alert">Unsupported network</div>
@@ -9,6 +10,7 @@
 
 <script>
 import TopContent from './top.vue'
+import MobileTop from './topMobile.vue'
 import BodyContainer from './body-container.vue'
 import { mapActions, mapState } from 'vuex'
 import { WalletBoardBus } from '@/WalletBoard'
@@ -17,6 +19,7 @@ export default {
   components: {
     TopContent,
     BodyContainer,
+    MobileTop
   },
   data() {
     return {
@@ -25,6 +28,7 @@ export default {
   },
   computed: {
     ...mapState('token', ['isSupportNetwork']),
+    ...mapState('wallet', ['isMobile'])
   },
   watch: {
     isSupportNetwork: {

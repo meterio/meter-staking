@@ -34,8 +34,34 @@ Vue.filter('abbr', function (value) {
   return value.substr(0, 12) + '...'
 })
 
+const mixin = {
+  data() {
+    return {
+      winWidth: 0,
+    }
+  },
+}
+Vue.mixin(mixin)
+
 new Vue({
   router,
   store,
   render: (h) => h(App),
+
+  mounted() {
+    this.winWidth = window.innerWidth
+    window.addEventListener('resize', () => this.winWidth = window.innerWidth);
+  },
+  watch: {
+    winWidth(val) {
+      if (val < 800) {
+        store.commit('wallet/setIsMobile', true)
+      } else {
+        store.commit('wallet/setIsMobile', false)
+      }
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', () => this.winWidth = window.innerWidth);
+  }
 }).$mount('#app')

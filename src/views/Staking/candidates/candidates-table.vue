@@ -90,7 +90,7 @@
         <select class="form-control rounded-xlg" v-model="orderBy">
           <option>Commission</option>
           <option>Total Votes</option>
-          <option>nVoter</option>
+          <option>Voters</option>
         </select>
         <b-button variant="mylight" class="rounded-xlg ml-1" @click="isDesc = !isDesc">
           <div :class="isDesc ? 'triangle-light' : 'triangle-black'"></div>
@@ -128,7 +128,7 @@
             </div>
             <divider />
             <div class="d-flex justify-content-between py-1">
-              <span class="font-weight-bold">nVoter</span>
+              <span class="font-weight-bold">Voters</span>
               <span>{{ item.bucketsLen }}</span>
             </div>
             <divider />
@@ -236,7 +236,7 @@ export default {
             return new BigNumber(item.totalVotes).div(1e18).toFormat(2)
           },
         },
-        { key: 'bucketsLen', label: 'nVoter', sortable: true },
+        { key: 'bucketsLen', label: 'Voters', sortable: true },
         { key: 'action' },
       ],
       voteParams: {
@@ -301,7 +301,7 @@ export default {
         case 'Total Votes':
           _orderBy = 'totalVotes'
           break;
-        case 'nVoter':
+        case 'Voters':
           _orderBy = 'bucketsLen'
           break;
         default:

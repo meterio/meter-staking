@@ -223,10 +223,10 @@ export default {
         const res = await axios.get(url, { timeout: 2500 })
         data = res.data.result
       } catch (e) {
-        throw new Error(`port ${this.formData.port} is not open`)
+        throw new Error(`can't get publicKey from ${this.formData.ip}: ${e.message}`)
       }
       if (!data || (!data.hasOwnProperty('bestQC') || !data.hasOwnProperty('bestBlock') || !data.hasOwnProperty('pubkey'))) {
-        throw `meter is not correctly running on node ${this.formData.ip}`
+        throw new Error(`meter is not correctly running on node ${this.formData.ip}`)
       }
       if (data.pubkey != this.formData.publicKey) {
         throw new Error(

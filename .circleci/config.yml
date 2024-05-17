@@ -30,10 +30,10 @@ jobs:
           command: VUE_APP_STATUS=mainnet npm run build
       - run:
           name: s3 sync
-          command: aws s3 sync ./dist/ s3://staking.meter.io/ --delete
+          command: aws s3 sync ./dist/ s3://staking-meter-io/ --delete
       - run:
           name: invalidation
-          command: aws cloudfront create-invalidation --distribution-id E22FGRZFQ9IRVB --paths "/*"
+          command: aws cloudfront create-invalidation --distribution-id E6MEGPA7VY3T4 --paths "/*"
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -67,10 +67,10 @@ jobs:
           command: VUE_APP_STATUS=staging npm run build
       - run:
           name: s3 sync
-          command: aws s3 sync ./dist/ s3://staging.meter.io/ --delete
+          command: aws s3 sync ./dist/ s3://staging-meter-io/ --delete
       - run:
           name: invalidation
-          command: aws cloudfront create-invalidation --distribution-id E1OUMGRDHVAG7D --paths "/*"
+          command: aws cloudfront create-invalidation --distribution-id E1UOEAVTH2TKKE --paths "/*"
       - slack/notify:
           event: fail
           template: basic_fail_1

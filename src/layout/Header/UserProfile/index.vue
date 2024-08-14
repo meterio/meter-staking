@@ -27,7 +27,7 @@ export default {
   computed: {
     ...mapState('wallet', ['account', 'walletIcon']),
     computedIcon() {
-      return this.walletIcon
+      return `<img src="${this.walletIcon}" />`
     },
     computedAccount() {
       if (new RegExp(regExpList.address).test(this.account)) {

@@ -28,10 +28,10 @@ export const supportNetworkList = [
     governanceTokenDecimals: 18,
     rpcUrl: 'https://rpctest.meter.io',
     blockExplorer: 'https://scan-warringstakes.meter.io',
-    infoUrl: 'https://warringstakes.meter.io',
+    infoUrl: 'https://testnet.meter.io',
     stakingAddress: '0x616B696e672D6D6F64756c652d61646472657373',
-    liquidAddress: '0x8dc543c696d391e288ae8418c67c61947eac3908',  // stMTRG
-    wrapAddress: '0x871497eb8596d2cbdbe5bb23d552d35bffbb8cf5',    // wstMTRG
+    liquidAddress: '0x8dc543c696d391e288ae8418c67c61947eac3908', // stMTRG
+    wrapAddress: '0x871497eb8596d2cbdbe5bb23d552d35bffbb8cf5', // wstMTRG
     mtrgAddress: '0x8A419Ef4941355476cf04933E90Bf3bbF2F73814',
     mode: 'testnet',
   },

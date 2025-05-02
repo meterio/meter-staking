@@ -1,9 +1,8 @@
 import axios from "axios"
-
-const preUrl = "https://api.meter.io:8000/probe"
+import { Base_Url } from "../constants"
 
 export const getProbe = async (ip) => {
-  const res = await axios.get(`${preUrl}/${ip}`)
+  const res = await axios.get(`${Base_Url}/probe/${ip}`)
 
   return res.data.result
 }

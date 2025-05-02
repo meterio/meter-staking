@@ -104,7 +104,7 @@ import { mapActions, mapState } from 'vuex'
 import axios from 'axios'
 import { ScriptEngine } from '@meterio/devkit'
 
-import { getMeterScanUrl } from '@/api'
+import { getMeterScanUrl, getProbe } from '@/api'
 import { regExpList } from '@/constants'
 
 export default {
@@ -216,12 +216,9 @@ export default {
       this.$emit('close')
     },
     async checkWithProbe() {
-      // const url = `http://${this.formData.ip}:${this.formData.port}/probe`
-      const url = `https://api.meter.io:8000/probe/${this.formData.ip}`
       let data = { pubkey: '' }
       try {
-        const res = await axios.get(url, { timeout: 2500 })
-        data = res.data.result
+        data = await getProbe(this.formData.ip)
       } catch (e) {
         throw new Error(`can't get publicKey from ${this.formData.ip}: ${e.message}`)
       }

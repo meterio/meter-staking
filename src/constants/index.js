@@ -56,3 +56,5 @@ export const regExpList = {
   address: '^0x[A-Za-z0-9]{40}$',
   ip: /([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))(\.([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))){3}/,
 }
+
+export const Base_Url = "https://api-scan.meter.io"

@@ -98,8 +98,7 @@ const actions = {
   },
   async getMetrics({ commit }) {
     console.log('get metrics')
-    const metricsUrl = 'https://api.meter.io:8000/api/metrics/all'
-    const data = await getMetricsAll(metricsUrl)
+    const data = await getMetricsAll()
     console.log('data', data)
     if (!data) {
       return

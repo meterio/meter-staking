@@ -1,21 +1,27 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.6.0
+  node: circleci/node@7.0.0
   slack: circleci/slack@4.4.4
 jobs:
   build_and_deploy_mainnet:
     resource_class: large
     docker:
-      - image: 'cimg/node:16.17'
+      - image: 'cimg/node:20.19'
+    environment:
+      DEPLOY_HOST: 34.53.102.108
+      DEPLOY_FOLDER: staking-meter-io
+      SSH_OPTIONS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:48o4O3yWCP1MbjxhyGvDL+NNUsYcRJVodZjzg7nV0C4"
+      - run:
+          name: install rsync
+          command: |
+            sudo apt-get update 
+            sudo apt-get install -y rsync
       - checkout
-      - run:
-          name: download & unzip awscli v2
-          command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
-      - run:
-          name: install awscli v2
-          command: sudo ./aws/install
       - restore_cache:
           key: meter-staking-deps-{{ checksum "package.json" }}
       - run:
@@ -29,11 +35,10 @@ jobs:
           name: production build
           command: VUE_APP_STATUS=mainnet npm run build
       - run:
-          name: s3 sync
-          command: aws s3 sync ./dist/ s3://staking-meter-io/ --delete
-      - run:
-          name: invalidation
-          command: aws cloudfront create-invalidation --distribution-id E6MEGPA7VY3T4 --paths "/*"
+          name: deploy
+          command: |
+            rsync -e "ssh $SSH_OPTIONS" -rzvh --delete ./dist/ root@$DEPLOY_HOST:/var/www/$DEPLOY_FOLDER/
+            ssh $SSH_OPTIONS root@$DEPLOY_HOST "service nginx restart"
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -45,14 +50,20 @@ jobs:
     resource_class: large
     docker:
       - image: 'cimg/node:16.17'
+    environment:
+      DEPLOY_HOST: 34.53.102.108
+      DEPLOY_FOLDER: staking-meter-io
+      SSH_OPTIONS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:48o4O3yWCP1MbjxhyGvDL+NNUsYcRJVodZjzg7nV0C4"
+      - run:
+          name: install rsync
+          command: |
+            sudo apt-get update 
+            sudo apt-get install -y rsync
       - checkout
-      - run:
-          name: download & unzip awscli v2
-          command: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
-      - run:
-          name: install awscli v2
-          command: sudo ./aws/install
       - restore_cache:
           key: meter-staking-deps-{{ checksum "package.json" }}
       - run:
@@ -66,11 +77,10 @@ jobs:
           name: testnet build
           command: VUE_APP_STATUS=staging npm run build
       - run:
-          name: s3 sync
-          command: aws s3 sync ./dist/ s3://staging-meter-io/ --delete
-      - run:
-          name: invalidation
-          command: aws cloudfront create-invalidation --distribution-id E1UOEAVTH2TKKE --paths "/*"
+          name: deploy
+          command: |
+            rsync -e "ssh $SSH_OPTIONS" -rzvh --delete ./dist/ root@$DEPLOY_HOST:/var/www/$DEPLOY_FOLDER/
+            ssh $SSH_OPTIONS root@$DEPLOY_HOST "service nginx restart"
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -83,7 +93,6 @@ workflows:
     jobs:
       - build_and_deploy_staging:
           context:
-            - aws-2023
             - slack-secrets
           filters:
             branches:
@@ -91,7 +100,6 @@ workflows:
                 - main
       - build_and_deploy_mainnet:
           context:
-            - aws-2023
             - slack-secrets
           filters:
             tags:

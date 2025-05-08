@@ -124,7 +124,7 @@ export default {
         try {
           probe = await getProbe(currentCandidate.ipAddr)
         } catch (e) {
-          const conf = confirm(`Can not get your best block, still bail out?`)
+          const conf = confirm(`Can not get your best block from ${currentCandidate.ipAddr}:8670, still bail out?`)
           if (conf) {
             return await this.bailOut()
           } else {

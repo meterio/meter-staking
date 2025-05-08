@@ -7,7 +7,7 @@ jobs:
   build_and_deploy_mainnet:
     resource_class: large
     docker:
-      - image: 'cimg/node:20.19'
+      - image: 'cimg/node:16.17'
     environment:
       DEPLOY_HOST: 34.53.102.108
       DEPLOY_FOLDER: staking-meter-io
@@ -52,7 +52,7 @@ jobs:
       - image: 'cimg/node:16.17'
     environment:
       DEPLOY_HOST: 34.53.102.108
-      DEPLOY_FOLDER: staking-meter-io
+      DEPLOY_FOLDER: staging-meter-io
       SSH_OPTIONS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
     steps:
       - add_ssh_keys:
